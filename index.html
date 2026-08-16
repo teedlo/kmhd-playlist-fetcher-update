@@ -4,23 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KMHD Playlist Fetcher</title>
+    <script>
+        // Applied before first paint so there's no flash of the wrong theme.
+        // Defaults to the visitor's OS/browser preference; a saved manual
+        // choice (from the toggle button) overrides that default.
+        (function () {
+            try {
+                const saved = localStorage.getItem('theme');
+                if (saved === 'dark' || saved === 'light') {
+                    document.documentElement.setAttribute('data-theme', saved);
+                }
+            } catch (e) { /* localStorage unavailable; fall back to OS preference via CSS */ }
+        })();
+    </script>
     <style>
+        :root {
+            --bg: #fff;
+            --fg: #333;
+            --header-bg: #eee;
+            --border: #ddd;
+            --placeholder-bg: #eee;
+            --highlight-bg: #ffffcc;
+            --link: #06c;
+            --muted: #666;
+            --error: #a00;
+            --badge-bg: #eef3fb;
+            --badge-fg: #345;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --bg: #16181c;
+                --fg: #e2e2e2;
+                --header-bg: #23262b;
+                --border: #33363c;
+                --placeholder-bg: #23262b;
+                --highlight-bg: #3a3820;
+                --link: #6cb2ff;
+                --muted: #999;
+                --error: #ff8080;
+                --badge-bg: #1f2a38;
+                --badge-fg: #9cc0e8;
+            }
+        }
+        :root[data-theme="dark"] {
+            --bg: #16181c;
+            --fg: #e2e2e2;
+            --header-bg: #23262b;
+            --border: #33363c;
+            --placeholder-bg: #23262b;
+            --highlight-bg: #3a3820;
+            --link: #6cb2ff;
+            --muted: #999;
+            --error: #ff8080;
+            --badge-bg: #1f2a38;
+            --badge-fg: #9cc0e8;
+        }
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
             text-align: center;
-            color: #333;
+            color: var(--fg);
+            background: var(--bg);
         }
         h1 {
             margin-bottom: 20px;
         }
         form {
             margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 5px;
         }
         input[type="date"], button {
             font-size: 1.5em;
             padding: 10px;
             margin: 5px;
+        }
+        #themeToggle {
+            font-size: 1.3em;
+            padding: 8px 12px;
+            cursor: pointer;
+            background: var(--header-bg);
+            color: var(--fg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
         }
         table {
             width: 100%;
@@ -30,15 +99,18 @@
             margin-top: 20px;
         }
         td {
-            border-top: 1px solid #ddd;
-            border-bottom: 1px solid #ddd;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
             padding: 8px;
             text-align: left;
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        a {
+            color: var(--link);
+        }
         .hour-header {
-            background-color: #eee;
+            background-color: var(--header-bg);
             font-weight: bold;
             text-align: center;
         }
@@ -54,7 +126,7 @@
             height: 100%;
         }
         .album-placeholder {
-            background-color: #eee;
+            background-color: var(--placeholder-bg);
         }
         .play-button, .pause-button {
             position: absolute;
@@ -93,23 +165,43 @@
         .small {
             font-size: 0.9em;
             font-style: italic;
+            color: var(--muted);
+        }
+        .genre-badge {
+            display: inline-block;
+            font-size: 0.75em;
+            font-style: normal;
+            font-weight: bold;
+            padding: 1px 6px;
+            border-radius: 3px;
+            background: var(--badge-bg);
+            color: var(--badge-fg);
+            margin-left: 6px;
+        }
+        .track-links {
+            margin-top: 3px;
+            font-size: 0.8em;
+        }
+        .track-links a {
+            margin-right: 10px;
+            white-space: nowrap;
         }
         .highlight {
-            background-color: #ffffcc;
+            background-color: var(--highlight-bg);
         }
         #loading, #error {
             display: none;
         }
         #error {
-            color: #a00;
+            color: var(--error);
         }
         footer {
             margin-top: 20px;
             font-size: 0.8em;
-            color: #666;
+            color: var(--muted);
         }
         footer a {
-            color: #666;
+            color: var(--muted);
         }
         footer a:hover {
             text-decoration: underline;
@@ -139,6 +231,7 @@
     <form id="dateForm" action="" method="get">
         <input type="date" id="dateInput" name="date" required>
         <button type="submit" id="submitButton" disabled>Fetch Playlist</button>
+        <button type="button" id="themeToggle" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
     </form>
 
     <div id="loading">Loading...</div>
@@ -256,19 +349,58 @@
                 artistEl.className = 'bold track-artist';
                 artistEl.textContent = artist;
                 detailsCell.appendChild(titleEl);
+
+                // Genre badge (filled in later by iTunes enrichment, when available)
+                const genreBadge = document.createElement('span');
+                genreBadge.className = 'genre-badge track-genre';
+                genreBadge.style.display = 'none';
+                detailsCell.appendChild(genreBadge);
+
                 detailsCell.appendChild(document.createTextNode(' by '));
                 detailsCell.appendChild(artistEl);
-                if (album) {
+
+                const year = PlaylistUtils.trackYear(item);
+                if (album || year) {
                     detailsCell.appendChild(document.createElement('br'));
                     const albumLine = document.createElement('span');
                     albumLine.className = 'small';
-                    albumLine.appendChild(document.createTextNode('from '));
-                    const albumEl = document.createElement('span');
-                    albumEl.className = 'bold track-album';
-                    albumEl.textContent = album;
-                    albumLine.appendChild(albumEl);
+                    if (album) {
+                        albumLine.appendChild(document.createTextNode('from '));
+                        const albumEl = document.createElement('span');
+                        albumEl.className = 'bold track-album';
+                        albumEl.textContent = album;
+                        albumLine.appendChild(albumEl);
+                    }
+                    if (year) {
+                        albumLine.appendChild(document.createTextNode(album ? ` (${year})` : `(${year})`));
+                    }
                     detailsCell.appendChild(albumLine);
                 }
+
+                // Search links: YouTube (live video), Apple Music (via iTunes
+                // enrichment below), Tidal, eBay (vinyl) and Wikipedia (band).
+                // These are plain search-results links, so they work
+                // instantly for every track with no extra API calls.
+                if (title && artist) {
+                    const links = PlaylistUtils.searchLinks({ title, artist, album });
+                    const linksRow = document.createElement('div');
+                    linksRow.className = 'track-links';
+                    const addLink = (url, label) => {
+                        if (!url) return;
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.target = '_blank';
+                        a.rel = 'noopener';
+                        a.textContent = label;
+                        linksRow.appendChild(a);
+                    };
+                    addLink(links.youtube, 'YouTube (live)');
+                    addLink(links.tidal, 'Tidal');
+                    addLink(links.ebayVinyl, 'eBay (vinyl)');
+                    addLink(links.wiki, 'Wiki');
+                    detailsCell.appendChild(linksRow);
+                }
+
                 row.appendChild(detailsCell);
 
                 tbody.appendChild(row);
@@ -355,7 +487,13 @@
                     trackViewUrl: r.trackViewUrl || null,
                     artistViewUrl: r.artistViewUrl || null,
                     collectionViewUrl: r.collectionViewUrl || null,
-                    collectionName: r.collectionName || null
+                    collectionName: r.collectionName || null,
+                    // iTunes' genre is the best "niched" genre we can get
+                    // without asking you to sign up for another API key
+                    // (e.g. Last.fm) — it's often more specific than a
+                    // station-wide label, e.g. "Bebop" or "Vocal Jazz".
+                    primaryGenreName: r.primaryGenreName || null,
+                    releaseDate: r.releaseDate || null
                 } : null);
             };
             script.onerror = () => finish(null);
@@ -390,6 +528,24 @@
             linkify(row.querySelector('.track-title'), info.trackViewUrl);
             linkify(row.querySelector('.track-artist'), info.artistViewUrl);
             linkify(row.querySelector('.track-album'), info.collectionViewUrl);
+
+            // Explicit "Apple Music" link alongside the other search links
+            const linksRow = row.querySelector('.track-links');
+            if (linksRow && info.trackViewUrl) {
+                const a = document.createElement('a');
+                a.href = info.trackViewUrl;
+                a.target = '_blank';
+                a.rel = 'noopener';
+                a.textContent = 'Apple Music';
+                linksRow.insertBefore(a, linksRow.firstChild);
+            }
+
+            // Genre badge (best available "niched" genre, from iTunes)
+            const genreBadge = row.querySelector('.track-genre');
+            if (genreBadge && info.primaryGenreName) {
+                genreBadge.textContent = info.primaryGenreName;
+                genreBadge.style.display = 'inline-block';
+            }
 
             // 30-second preview player
             if (info.previewUrl) {
@@ -502,6 +658,36 @@
             header.appendChild(a);
         }
 
+        // ---------------- dark mode toggle ----------------
+        // Defaults to the visitor's OS/browser preference (via the
+        // prefers-color-scheme CSS media query); the button lets them
+        // override that manually, and the override is remembered.
+
+        function systemPrefersDark() {
+            return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        }
+
+        function currentTheme() {
+            const saved = (() => { try { return localStorage.getItem('theme'); } catch (e) { return null; } })();
+            if (saved === 'dark' || saved === 'light') return saved;
+            return systemPrefersDark() ? 'dark' : 'light';
+        }
+
+        function applyThemeButtonLabel() {
+            const btn = document.getElementById('themeToggle');
+            btn.textContent = currentTheme() === 'dark' ? '☀️' : '🌙';
+        }
+
+        function setupThemeToggle() {
+            applyThemeButtonLabel();
+            document.getElementById('themeToggle').addEventListener('click', () => {
+                const next = currentTheme() === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', next);
+                try { localStorage.setItem('theme', next); } catch (e) { /* ignore */ }
+                applyThemeButtonLabel();
+            });
+        }
+
         function enableSubmitButton() {
             const dateInput = document.getElementById('dateInput');
             const submitButton = document.getElementById('submitButton');
@@ -527,6 +713,7 @@
             dateInput.value = date;
             fetchPlaylist(date);
             enableSubmitButton();
+            setupThemeToggle();
         });
     </script>
 

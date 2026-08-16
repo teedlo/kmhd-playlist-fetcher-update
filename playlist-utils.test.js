@@ -4,7 +4,7 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { trackStartDate, mapItemFields, cacheKey } = require('./playlist-utils.js');
+const { trackStartDate, mapItemFields, cacheKey, trackYear, searchLinks } = require('./playlist-utils.js');
 
 test('trackStartDate: reads the new KMHD schema (start.utc)', () => {
     const item = {
@@ -80,4 +80,35 @@ test('cacheKey: is case-insensitive so differently-cased duplicates share a cach
     const a = cacheKey('itunes1:', { artist: 'The Beatles', title: 'Help!' });
     const b = cacheKey('itunes1:', { artist: 'the beatles', title: 'HELP!' });
     assert.equal(a, b);
+});
+
+test('trackYear: reads a 4-digit year out of releaseDate', () => {
+    assert.equal(trackYear({ releaseDate: '2019-05-17' }), 2019);
+    assert.equal(trackYear({ releaseDate: '1977' }), 1977);
+});
+
+test('trackYear: returns null when there is no usable release date', () => {
+    assert.equal(trackYear({}), null);
+    assert.equal(trackYear(null), null);
+    assert.equal(trackYear({ releaseDate: 'unknown' }), null);
+});
+
+test('trackYear: rejects out-of-range years as bad data', () => {
+    assert.equal(trackYear({ releaseDate: '3099-01-01' }), null);
+});
+
+test('searchLinks: builds search URLs for youtube, tidal, ebay and wikipedia', () => {
+    const links = searchLinks({ artist: 'Allen Toussaint', title: 'Sweet Dreams', album: 'Connected' });
+    assert.equal(links.youtube, 'https://www.youtube.com/results?search_query=Allen%20Toussaint%20Sweet%20Dreams%20live');
+    assert.equal(links.tidal, 'https://listen.tidal.com/search?q=Allen%20Toussaint%20Sweet%20Dreams');
+    assert.equal(links.ebayVinyl, 'https://www.ebay.com/sch/i.html?_nkw=Allen%20Toussaint%20Connected%20vinyl');
+    assert.equal(links.wiki, 'https://en.wikipedia.org/wiki/Special:Search?search=Allen%20Toussaint');
+});
+
+test('searchLinks: returns null links when there is no artist/title/album to search for', () => {
+    const links = searchLinks({});
+    assert.equal(links.youtube, null);
+    assert.equal(links.tidal, null);
+    assert.equal(links.ebayVinyl, null);
+    assert.equal(links.wiki, null);
 });

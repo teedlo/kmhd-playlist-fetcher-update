@@ -54,5 +54,45 @@
         return prefix + `${artist}|${title}`.toLowerCase();
     }
 
-    return { trackStartDate, mapItemFields, cacheKey };
+    // Pulls a 4-digit release year out of whatever date-ish field is
+    // available: the new KMHD schema's `releaseDate`, or an iTunes
+    // enrichment result's `releaseDate` (also ISO-ish). Returns null
+    // rather than a garbage year if nothing usable is found.
+    function trackYear(item) {
+        if (!item) return null;
+        const raw = item.releaseDate || item.release_date || null;
+        if (!raw) return null;
+        const match = String(raw).match(/(\d{4})/);
+        if (!match) return null;
+        const year = parseInt(match[1], 10);
+        if (year < 1900 || year > 2100) return null;
+        return year;
+    }
+
+    // Builds plain search-link URLs for services that don't have (or
+    // aren't worth the setup cost of) a per-track lookup API. Every link
+    // is a search results page rather than a guaranteed exact match, so
+    // it degrades gracefully instead of ever 404ing.
+    function searchLinks(meta) {
+        const artist = (meta && meta.artist) || '';
+        const title = (meta && meta.title) || '';
+        const album = (meta && meta.album) || '';
+        const artistTitle = `${artist} ${title}`.trim();
+        return {
+            youtube: artistTitle
+                ? `https://www.youtube.com/results?search_query=${encodeURIComponent(artistTitle + ' live')}`
+                : null,
+            tidal: artistTitle
+                ? `https://listen.tidal.com/search?q=${encodeURIComponent(artistTitle)}`
+                : null,
+            ebayVinyl: (artist || album)
+                ? `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(`${artist} ${album} vinyl`.trim())}`
+                : null,
+            wiki: artist
+                ? `https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(artist)}`
+                : null
+        };
+    }
+
+    return { trackStartDate, mapItemFields, cacheKey, trackYear, searchLinks };
 }));
