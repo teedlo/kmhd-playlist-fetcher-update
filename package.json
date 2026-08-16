@@ -1,0 +1,8 @@
+{
+  "name": "kmhd-playlist-fetcher-update",
+  "private": true,
+  "description": "A little single-serving web page that browses the daily playlist archives of Portland's KMHD radio station.",
+  "scripts": {
+    "test": "node --test"
+  }
+}
