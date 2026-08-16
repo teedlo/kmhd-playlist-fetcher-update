@@ -1,0 +1,34 @@
+name: Deploy to DreamHost
+
+# Runs automatically every time you push to the main branch.
+# Uploads index.html to the /1/ folder on teedlo.com via SFTP.
+#
+# Requires three repository secrets (Settings → Secrets and variables → Actions):
+#   SFTP_HOST      e.g. teedlo.com
+#   SFTP_USERNAME  your DreamHost SFTP/shell username
+#   SFTP_PASSWORD  that user's password
+#
+# If your DreamHost web directory isn't /home/<username>/teedlo.com,
+# adjust remote_path below to match.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}   # also lets you trigger it manually from the Actions tab
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Upload index.html via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          server: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          sftp_only: true
+          local_path: './index.html'
+          remote_path: '/home/${{ secrets.SFTP_USERNAME }}/teedlo.com/1'
