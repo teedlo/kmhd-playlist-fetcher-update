@@ -4,7 +4,10 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { trackStartDate, mapItemFields, cacheKey, trackYear, searchLinks } = require('./playlist-utils.js');
+const {
+    trackStartDate, mapItemFields, cacheKey, trackYear, searchLinks,
+    minutesOfDay, trackInSlot, pastWeekdayDates
+} = require('./playlist-utils.js');
 
 test('trackStartDate: reads the new KMHD schema (start.utc)', () => {
     const item = {
@@ -111,4 +114,57 @@ test('searchLinks: returns null links when there is no artist/title/album to sea
     assert.equal(links.tidal, null);
     assert.equal(links.ebayVinyl, null);
     assert.equal(links.wiki, null);
+});
+
+// ---------------- "By Show" helpers ----------------
+// These tests run with TZ=UTC (confirmed via Intl.DateTimeFormat in this
+// environment), so an item's start.utc hour equals what trackInSlot's
+// d.getHours() will read — keeping the fixtures simple and predictable.
+
+test('minutesOfDay: converts HH:MM to minutes since midnight', () => {
+    assert.equal(minutesOfDay('00:00'), 0);
+    assert.equal(minutesOfDay('06:30'), 390);
+    assert.equal(minutesOfDay('23:59'), 1439);
+});
+
+test('trackInSlot: true when the track starts inside the slot', () => {
+    const item = { start: { utc: '2026-08-14T19:05:00Z' } };  // 19:05
+    const slot = { start: '18:00', end: '20:00' };
+    assert.equal(trackInSlot(item, slot), true);
+});
+
+test('trackInSlot: false when the track starts before or after the slot', () => {
+    const before = { start: { utc: '2026-08-14T17:59:00Z' } };
+    const after = { start: { utc: '2026-08-14T20:00:00Z' } };  // end is exclusive
+    const slot = { start: '18:00', end: '20:00' };
+    assert.equal(trackInSlot(before, slot), false);
+    assert.equal(trackInSlot(after, slot), false);
+});
+
+test('trackInSlot: end "24:00" includes tracks up to (not including) midnight', () => {
+    const item = { start: { utc: '2026-08-14T23:59:00Z' } };
+    const slot = { start: '22:00', end: '24:00' };
+    assert.equal(trackInSlot(item, slot), true);
+});
+
+test('trackInSlot: false for a track with no usable timestamp', () => {
+    assert.equal(trackInSlot({}, { start: '18:00', end: '20:00' }), false);
+    assert.equal(trackInSlot(null, { start: '18:00', end: '20:00' }), false);
+});
+
+test('pastWeekdayDates: returns the given weekday going back, most recent first', () => {
+    // 2026-08-16 is a Sunday (weekday 0). Asking for Friday (5) on/before
+    // that date should start at 2026-08-14, then step back a week at a time.
+    const dates = pastWeekdayDates(5, 3, '2026-08-16');
+    assert.deepEqual(dates, ['2026-08-14', '2026-08-07', '2026-07-31']);
+});
+
+test('pastWeekdayDates: when fromDate IS the target weekday, it is included as the first result', () => {
+    // 2026-08-14 is itself a Friday.
+    const dates = pastWeekdayDates(5, 2, '2026-08-14');
+    assert.deepEqual(dates, ['2026-08-14', '2026-08-07']);
+});
+
+test('pastWeekdayDates: returns an empty array for an unparsable date', () => {
+    assert.deepEqual(pastWeekdayDates(5, 3, 'not-a-date'), []);
 });

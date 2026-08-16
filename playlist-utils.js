@@ -94,5 +94,53 @@
         };
     }
 
-    return { trackStartDate, mapItemFields, cacheKey, trackYear, searchLinks };
+    // ---------------- "By Show" helpers ----------------
+    // These support browsing a show's history by cross-referencing its
+    // recurring weekly time slot (from shows-schedule.js) against the
+    // existing per-day playlist API — KMHD doesn't offer a per-show
+    // archive endpoint, so this reconstructs one client-side.
+
+    // "HH:MM" -> minutes since midnight.
+    function minutesOfDay(hhmm) {
+        const [h, m] = String(hhmm).split(':').map(Number);
+        return (h || 0) * 60 + (m || 0);
+    }
+
+    // True if `item`'s local start time falls within [slot.start, slot.end).
+    // slot.end === '24:00' is treated as end-of-day (inclusive of 23:59).
+    function trackInSlot(item, slot) {
+        if (!item || !slot) return false;
+        const d = trackStartDate(item);
+        if (!d) return false;
+        const mins = d.getHours() * 60 + d.getMinutes();
+        const startMin = minutesOfDay(slot.start);
+        const endMin = slot.end === '24:00' ? 1440 : minutesOfDay(slot.end);
+        if (endMin > startMin) return mins >= startMin && mins < endMin;
+        // Overnight slot (wraps past midnight) — not currently used by any
+        // KMHD show, but handled for completeness.
+        return mins >= startMin || mins < endMin;
+    }
+
+    // Returns `count` ISO dates (YYYY-MM-DD), most recent first, for the
+    // given weekday (0=Sun..6=Sat) on or before `fromDateIso`. Used to
+    // generate the list of past dates to fetch for a show's recurring slot.
+    function pastWeekdayDates(weekday, count, fromDateIso) {
+        const from = new Date(fromDateIso + 'T00:00:00');
+        if (isNaN(from.getTime())) return [];
+        const diff = (from.getDay() - weekday + 7) % 7;
+        const mostRecent = new Date(from);
+        mostRecent.setDate(from.getDate() - diff);
+        const dates = [];
+        for (let i = 0; i < count; i++) {
+            const d = new Date(mostRecent);
+            d.setDate(mostRecent.getDate() - i * 7);
+            dates.push(d.toISOString().split('T')[0]);
+        }
+        return dates;
+    }
+
+    return {
+        trackStartDate, mapItemFields, cacheKey, trackYear, searchLinks,
+        minutesOfDay, trackInSlot, pastWeekdayDates
+    };
 }));
