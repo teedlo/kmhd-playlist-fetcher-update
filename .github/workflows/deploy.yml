@@ -40,19 +40,29 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v4
 
-      # Stage only the actual site files into their own folder, so tests,
-      # package.json, README, etc. never get uploaded to the live site.
-      - name: Prepare site files
-        run: |
-          mkdir -p site
-          cp index.html playlist-utils.js site/
-
-      - name: Upload site files via SFTP
+      # wlixcc/SFTP-Deploy-Action does `sftp put -r <local_path>`, which
+      # (like plain `sftp put -r`) creates a same-named subdirectory at the
+      # destination rather than uploading contents directly. Pointing
+      # local_path at a *folder* (e.g. "./site") therefore lands files at
+      # /1/site/... instead of /1/... — learned this the hard way on the
+      # first run with multiple files. Uploading each file individually
+      # (local_path: a single file) avoids that nesting.
+      - name: Upload index.html via SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
           server: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           sftp_only: true
-          local_path: './site'
+          local_path: './index.html'
+          remote_path: '/home/${{ secrets.SFTP_USERNAME }}/teedlo.com/1'
+
+      - name: Upload playlist-utils.js via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          server: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          sftp_only: true
+          local_path: './playlist-utils.js'
           remote_path: '/home/${{ secrets.SFTP_USERNAME }}/teedlo.com/1'
