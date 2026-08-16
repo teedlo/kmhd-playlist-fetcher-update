@@ -1,7 +1,9 @@
 name: Deploy to DreamHost
 
 # Runs automatically every time you push to the main branch.
-# Uploads index.html to the /1/ folder on teedlo.com via SFTP.
+# Runs the unit tests first; if they fail, the site is NOT deployed.
+# Uploads index.html (and its sibling playlist-utils.js) to the /1/
+# folder on teedlo.com via SFTP.
 #
 # Requires three repository secrets (Settings → Secrets and variables → Actions):
 #   SFTP_HOST      e.g. teedlo.com
@@ -17,18 +19,40 @@ on:
   workflow_dispatch: {}   # also lets you trigger it manually from the Actions tab
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
 
-      - name: Upload index.html via SFTP
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run unit tests
+        run: node --test
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      # Stage only the actual site files into their own folder, so tests,
+      # package.json, README, etc. never get uploaded to the live site.
+      - name: Prepare site files
+        run: |
+          mkdir -p site
+          cp index.html playlist-utils.js site/
+
+      - name: Upload site files via SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
           server: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           sftp_only: true
-          local_path: './index.html'
+          local_path: './site'
           remote_path: '/home/${{ secrets.SFTP_USERNAME }}/teedlo.com/1'
