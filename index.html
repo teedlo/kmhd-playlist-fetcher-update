@@ -138,7 +138,7 @@
             font-size: 1.1em;
             padding: 10px 8px;
         }
-        #showSelect {
+        #showSelect, #sortSelect {
             font-size: 1.1em;
             padding: 10px;
             margin: 5px;
@@ -147,6 +147,9 @@
             color: var(--fg);
             border: 1px solid var(--border);
             border-radius: 6px;
+        }
+        #sortWrap {
+            text-align: center;
         }
         #backToDate {
             display: none;
@@ -299,6 +302,15 @@
         <button type="button" id="themeToggle" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
     </form>
 
+    <!-- Lives outside #dateForm (which is hidden while browsing "By Show")
+         so this sort control stays visible and usable in both views. -->
+    <div id="sortWrap">
+        <select id="sortSelect" aria-label="Sort tracks">
+            <option value="time" selected>Sort: Time</option>
+            <option value="year">Sort: Year (oldest first)</option>
+        </select>
+    </div>
+
     <div id="backToDate"><a id="backToDateLink">&larr; Back to date view</a></div>
 
     <div id="loading">Loading...</div>
@@ -410,33 +422,14 @@
             row.appendChild(artCell);
 
             // Details cell (plain text now; iTunes enrichment upgrades to links).
-            // Each piece of info is its own line: title, then "Year - Genre"
-            // right under the title, then "by Artist", then "from Album".
+            // Each piece of info is its own line, in order: title, "by
+            // Artist", "from Album", "Year - Genre", then the links row.
             const detailsCell = document.createElement('td');
             detailsCell.className = 'column-details';
             const titleEl = document.createElement('span');
             titleEl.className = 'bold track-title';
             titleEl.textContent = title;
             detailsCell.appendChild(titleEl);
-
-            // "Year - Genre" line, directly under the title. Genre is filled
-            // in later by iTunes enrichment (when available); until then this
-            // line just shows the year, or is empty (zero height — a <div>
-            // with no content doesn't leave a blank gap).
-            const year = PlaylistUtils.trackYear(item);
-            const yearGenreLine = document.createElement('div');
-            yearGenreLine.className = 'small track-yeargenre';
-            if (year) {
-                const yearEl = document.createElement('span');
-                yearEl.className = 'track-year';
-                yearEl.textContent = year;
-                yearGenreLine.appendChild(yearEl);
-            }
-            const genreBadge = document.createElement('span');
-            genreBadge.className = 'track-genre';
-            genreBadge.style.display = 'none';
-            yearGenreLine.appendChild(genreBadge);
-            detailsCell.appendChild(yearGenreLine);
 
             // "by Artist" line
             const artistLine = document.createElement('div');
@@ -448,7 +441,8 @@
             artistLine.appendChild(artistEl);
             detailsCell.appendChild(artistLine);
 
-            // "from Album" line (no year here — it's shown above, under the title)
+            // "from Album" line (no year here — it's shown below, in the
+            // "Year - Genre" line)
             if (album) {
                 const albumLine = document.createElement('div');
                 albumLine.className = 'small track-line';
@@ -459,6 +453,25 @@
                 albumLine.appendChild(albumEl);
                 detailsCell.appendChild(albumLine);
             }
+
+            // "Year - Genre" line, below the album, above the links. Genre
+            // is filled in later by iTunes enrichment (when available);
+            // until then this line just shows the year, or is empty (zero
+            // height — a <div> with no content doesn't leave a blank gap).
+            const year = PlaylistUtils.trackYear(item);
+            const yearGenreLine = document.createElement('div');
+            yearGenreLine.className = 'small track-yeargenre track-line';
+            if (year) {
+                const yearEl = document.createElement('span');
+                yearEl.className = 'track-year';
+                yearEl.textContent = year;
+                yearGenreLine.appendChild(yearEl);
+            }
+            const genreBadge = document.createElement('span');
+            genreBadge.className = 'track-genre';
+            genreBadge.style.display = 'none';
+            yearGenreLine.appendChild(genreBadge);
+            detailsCell.appendChild(yearGenreLine);
 
             // Search links: YouTube (live video), Apple Music (via iTunes
             // enrichment below), Tidal, eBay (vinyl) and Wikipedia (band).
@@ -494,11 +507,61 @@
             return row;
         }
 
+        // ---------------- sort control (Time / Year) ----------------
+        // Shared by both the daily view and "By Show" — lives outside
+        // #dateForm in the HTML so it stays visible/usable in both. Sorting
+        // by year mixes tracks from different hours/dates together, so in
+        // year mode the hour/date group headers are replaced with year
+        // headers instead (reusing the .hour-header look).
+
+        let currentSort = 'time';   // 'time' | 'year'
+        let lastDailyData = [];     // last-rendered daily-view data, so switching sort re-renders without refetching
+
+        function sortedByYear(items) {
+            return items.slice().sort((a, b) => {
+                const ya = PlaylistUtils.trackYear(a);
+                const yb = PlaylistUtils.trackYear(b);
+                if (ya == null && yb == null) return 0;
+                if (ya == null) return 1;   // unknown year sorts last
+                if (yb == null) return -1;
+                if (ya !== yb) return ya - yb;   // oldest first
+                // Same year: fall back to original air time for a stable, sensible order
+                const ta = PlaylistUtils.trackStartDate(a);
+                const tb = PlaylistUtils.trackStartDate(b);
+                return (ta ? ta.getTime() : 0) - (tb ? tb.getTime() : 0);
+            });
+        }
+
+        function renderGroupedByYear(tbody, items) {
+            let lastLabel;   // undefined, so the very first item always starts a new header
+            sortedByYear(items).forEach(item => {
+                const year = PlaylistUtils.trackYear(item);
+                const label = year ? String(year) : 'Unknown year';
+                if (label !== lastLabel) {
+                    const headerRow = document.createElement('tr');
+                    const headerCell = document.createElement('td');
+                    headerCell.colSpan = 3;
+                    headerCell.className = 'hour-header';
+                    headerCell.textContent = label;
+                    headerRow.appendChild(headerCell);
+                    tbody.appendChild(headerRow);
+                    lastLabel = label;
+                }
+                tbody.appendChild(buildTrackRow(item));
+            });
+        }
+
         function renderPlaylist(data) {
+            lastDailyData = data;
             const tbody = document.querySelector('#playlistTable tbody');
             tbody.innerHTML = '';  // Clear existing rows
-            let lastHour = null;
 
+            if (currentSort === 'year') {
+                renderGroupedByYear(tbody, data);
+                return;
+            }
+
+            let lastHour = null;
             data.forEach(item => {
                 const startTime = PlaylistUtils.trackStartDate(item);
                 const currentHour = startTime ? startTime.toLocaleTimeString([], { hour: 'numeric', hour12: true }).replace(/^0/, '') : '';
@@ -866,6 +929,7 @@
         let currentShow = null;      // the show currently being browsed, or null
         let showBatchesLoaded = 0;   // how many SHOW_BATCH_SIZE pages have been fetched so far
         let showDatesShown = null;   // Set of dates already rendered, to avoid duplicates across slots
+        let showAllItems = [];       // { date, item } accumulated so far, so switching sort can re-render without refetching
 
         function populateShowSelect() {
             const select = document.getElementById('showSelect');
@@ -889,6 +953,7 @@
             currentShow = show;
             showBatchesLoaded = 0;
             showDatesShown = new Set();
+            showAllItems = [];
             showFetchToken++;          // invalidate any still-in-flight fetches from a previous show/view
             showFetchInFlight = false;
 
@@ -982,6 +1047,27 @@
             }
         }
 
+        // Rebuilds the whole By Show table from everything loaded so far
+        // (showAllItems), for whichever sort is currently active. Used both
+        // when the sort control changes and (in year mode) each time a new
+        // batch of dates resolves, since year-grouping mixes tracks across
+        // dates and can't be appended incrementally the way date sections can.
+        function rerenderShowFromAccumulated() {
+            const tbody = document.querySelector('#playlistTable tbody');
+            tbody.innerHTML = '';
+            if (currentSort === 'year') {
+                renderGroupedByYear(tbody, showAllItems.map(entry => entry.item));
+                return;
+            }
+            const byDate = {};
+            showAllItems.forEach(entry => {
+                (byDate[entry.date] = byDate[entry.date] || []).push(entry.item);
+            });
+            Object.keys(byDate)
+                .sort((a, b) => b.localeCompare(a))   // newest date first
+                .forEach(date => insertShowDateSection(date, byDate[date]));
+        }
+
         // Fetches the next batch of past occurrences for the show currently
         // being browsed (SHOW_BATCH_SIZE weeks further back per slot the
         // show airs in). Each date renders as soon as ITS fetch resolves
@@ -1047,7 +1133,16 @@
                     if (items.length > 0 && !showDatesShown.has(c.date)) {
                         showDatesShown.add(c.date);
                         anyRendered = true;
-                        insertShowDateSection(c.date, items);
+                        items.forEach(item => showAllItems.push({ date: c.date, item }));
+                        if (currentSort === 'year') {
+                            // Year-grouping mixes tracks across dates, so it
+                            // can't be appended incrementally the way date
+                            // sections can — rebuild from everything loaded
+                            // so far instead.
+                            rerenderShowFromAccumulated();
+                        } else {
+                            insertShowDateSection(c.date, items);
+                        }
                     }
                 }).catch(() => { /* fetchDayPlaylist already resolves [] on failure; nothing else to do */ }).finally(() => {
                     if (token !== showFetchToken) return;
@@ -1072,6 +1167,17 @@
             });
             document.getElementById('backToDateLink').addEventListener('click', backToDateView);
             document.getElementById('loadMoreButton').addEventListener('click', loadMoreShowHistory);
+        }
+
+        function setupSort() {
+            document.getElementById('sortSelect').addEventListener('change', e => {
+                currentSort = e.target.value;
+                if (currentShow) {
+                    rerenderShowFromAccumulated();
+                } else {
+                    renderPlaylist(lastDailyData);
+                }
+            });
         }
 
         // ---------------- dark mode toggle ----------------
@@ -1131,6 +1237,7 @@
             enableSubmitButton();
             setupThemeToggle();
             setupShowBrowsing();
+            setupSort();
         });
     </script>
 
