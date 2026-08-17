@@ -155,6 +155,10 @@
             border: 1px solid var(--border);
             border-radius: 6px;
         }
+        #loadMoreWrap button:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
         .album-cover-container {
             position: relative;
             display: block;
@@ -324,11 +328,8 @@
         function fetchPlaylist(date) {
             document.getElementById('loading').style.display = 'block';
             document.getElementById('error').style.display = 'none';
-            const apiUrl = `https://www.kmhd.org/pf/api/v3/content/fetch/playlist?query=${encodeURIComponent(JSON.stringify({ day: date }))}`;
-            fetch(apiUrl)
-                .then(response => response.json())
+            fetchDayPlaylist(date)
                 .then(data => {
-                    if (!Array.isArray(data)) throw new Error('Unexpected API response');
                     renderPlaylist(data);
                     updatePageHeader(date);
                     document.getElementById('loading').style.display = 'none';
@@ -698,6 +699,67 @@
             }
         }
 
+        // ---------------- day-playlist cache ----------------
+        // Caches each day's *raw* KMHD API response in localStorage, keyed
+        // by date. Both the daily view and "By Show" browsing go through
+        // this, so: (a) revisiting a date, or reselecting a show, is
+        // instant instead of re-hitting KMHD's API every time, and (b) "By
+        // Show" and the daily view share a cache entry for any date they
+        // both touch. TTL is short-ish (6 hours) because KMHD's playlist
+        // API has been observed to return a day's data with hours missing
+        // if fetched before that day's log has fully caught up — a short
+        // TTL means a stale/incomplete cached day self-heals reasonably
+        // soon rather than being stuck wrong for weeks.
+        const DAY_CACHE_PREFIX = 'kmhdDay1:';
+        const DAY_CACHE_TTL_MS = 6 * 60 * 60 * 1000;  // 6 hours
+
+        function dayCacheGet(date) {
+            try {
+                const raw = localStorage.getItem(DAY_CACHE_PREFIX + date);
+                if (!raw) return undefined;
+                const entry = JSON.parse(raw);
+                if (!entry || (Date.now() - entry.t) > DAY_CACHE_TTL_MS) {
+                    localStorage.removeItem(DAY_CACHE_PREFIX + date);
+                    return undefined;
+                }
+                return entry.d;
+            } catch (e) {
+                return undefined;
+            }
+        }
+
+        function dayCacheSet(date, data) {
+            try {
+                localStorage.setItem(DAY_CACHE_PREFIX + date, JSON.stringify({ t: Date.now(), d: data }));
+            } catch (e) {
+                // Quota full: drop oldest cached days and retry once
+                try {
+                    const keys = [];
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const k = localStorage.key(i);
+                        if (k && k.indexOf(DAY_CACHE_PREFIX) === 0) keys.push(k);
+                    }
+                    keys.slice(0, Math.ceil(keys.length / 2)).forEach(k => localStorage.removeItem(k));
+                    localStorage.setItem(DAY_CACHE_PREFIX + date, JSON.stringify({ t: Date.now(), d: data }));
+                } catch (e2) { /* give up quietly */ }
+            }
+        }
+
+        // Fetches one day's playlist, via cache when possible. Always
+        // resolves (never rejects) — network/parse failures resolve to [].
+        function fetchDayPlaylist(date) {
+            const cached = dayCacheGet(date);
+            if (cached !== undefined) return Promise.resolve(cached);
+            return fetch(`https://www.kmhd.org/pf/api/v3/content/fetch/playlist?query=${encodeURIComponent(JSON.stringify({ day: date }))}`)
+                .then(r => r.json())
+                .then(data => {
+                    const arr = Array.isArray(data) ? data : [];
+                    dayCacheSet(date, arr);
+                    return arr;
+                })
+                .catch(() => []);
+        }
+
         // ---------------- date handling ----------------
 
         function getYesterday() {
@@ -757,11 +819,14 @@
             currentShow = show;
             showBatchesLoaded = 0;
             showDatesShown = new Set();
+            showFetchToken++;          // invalidate any still-in-flight fetches from a previous show
+            showFetchInFlight = false;
 
             document.getElementById('dateForm').style.display = 'none';
             document.getElementById('backToDate').style.display = 'block';
             document.querySelector('#playlistTable tbody').innerHTML = '';
             document.getElementById('loadMoreWrap').style.display = 'none';
+            document.getElementById('loadMoreButton').disabled = false;
 
             const header = document.getElementById('pageHeader');
             header.textContent = show.host ? `${show.name} — hosted by ${show.host}` : show.name;
@@ -771,6 +836,8 @@
 
         function backToDateView() {
             currentShow = null;
+            showFetchToken++;          // invalidate any still-in-flight "By Show" fetches
+            showFetchInFlight = false;
             document.getElementById('dateForm').style.display = 'flex';
             document.getElementById('backToDate').style.display = 'none';
             document.getElementById('loadMoreWrap').style.display = 'none';
@@ -794,11 +861,57 @@
                 && typeof KmhdShows !== 'undefined';
         }
 
+        let showFetchInFlight = false;   // re-entrancy guard: ignore triggers while a batch is loading
+        let showFetchToken = 0;          // bumped on every startShowHistory(); stale in-flight fetches self-cancel
+
+        // Inserts a date section (header row + that date's tracks, in
+        // chronological order) into the table at the right spot to keep
+        // the whole list sorted newest-date-first, even though dates can
+        // now arrive out of order (cached dates resolve instantly, live
+        // fetches trickle in later).
+        function insertShowDateSection(date, items) {
+            const tbody = document.querySelector('#playlistTable tbody');
+            const dateObj = new Date(date + 'T00:00:00');
+            const dateHeaderRow = document.createElement('tr');
+            const dateHeaderCell = document.createElement('td');
+            dateHeaderCell.colSpan = 3;
+            dateHeaderCell.className = 'date-header';
+            dateHeaderCell.dataset.date = date;
+            dateHeaderCell.textContent = dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+            dateHeaderRow.appendChild(dateHeaderCell);
+
+            const frag = document.createDocumentFragment();
+            frag.appendChild(dateHeaderRow);
+            items
+                .slice()
+                .sort((a, b) => {
+                    const da = PlaylistUtils.trackStartDate(a);
+                    const db = PlaylistUtils.trackStartDate(b);
+                    return (da ? da.getTime() : 0) - (db ? db.getTime() : 0);
+                })
+                .forEach(item => frag.appendChild(buildTrackRow(item)));
+
+            // Find the first existing date-header that's older than this
+            // one, and insert before it; otherwise append at the end.
+            const existingHeaders = Array.from(tbody.querySelectorAll('.date-header'));
+            const insertBeforeHeader = existingHeaders.find(h => h.dataset.date < date);
+            if (insertBeforeHeader) {
+                tbody.insertBefore(frag, insertBeforeHeader.closest('tr'));
+            } else {
+                tbody.appendChild(frag);
+            }
+        }
+
         // Fetches the next batch of past occurrences for the show currently
         // being browsed (SHOW_BATCH_SIZE weeks further back per slot the
-        // show airs in), and appends any that had tracks to the table.
+        // show airs in). Each date renders as soon as ITS fetch resolves
+        // (via fetchDayPlaylist's cache when available — instant — or a
+        // live network call) rather than waiting for the whole batch, so
+        // one slow date doesn't stall everything else. Re-selecting a show
+        // or revisiting dates you've already loaded is fast because
+        // fetchDayPlaylist caches each day's raw response in localStorage.
         function loadMoreShowHistory() {
-            if (!currentShow) return;
+            if (!currentShow || showFetchInFlight) return;
 
             if (!showBrowsingSupported()) {
                 document.getElementById('loading').style.display = 'none';
@@ -808,6 +921,7 @@
                 return;
             }
 
+            const token = showFetchToken;
             let candidates;
             try {
                 const todayIso = new Date().toISOString().split('T')[0];
@@ -822,7 +936,7 @@
                         .slice(startWeek);
                     dates.forEach(date => candidates.push({ date, slot }));
                 });
-                candidates.sort((a, b) => b.date.localeCompare(a.date));
+                candidates = candidates.filter(c => !showDatesShown.has(c.date));
                 showBatchesLoaded++;
             } catch (e) {
                 console.error('Error building By Show date range:', e);
@@ -831,65 +945,50 @@
                 return;
             }
 
+            showFetchInFlight = true;
             document.getElementById('loading').style.display = 'block';
             document.getElementById('error').style.display = 'none';
-            document.getElementById('loadMoreWrap').style.display = 'none';
+            document.getElementById('loadMoreButton').disabled = true;
+            document.getElementById('loadMoreWrap').style.display = 'block';
 
-            Promise.all(candidates.map(c =>
-                fetch(`https://www.kmhd.org/pf/api/v3/content/fetch/playlist?query=${encodeURIComponent(JSON.stringify({ day: c.date }))}`)
-                    .then(r => r.json())
-                    .then(data => ({
-                        date: c.date,
-                        items: Array.isArray(data) ? data.filter(item => PlaylistUtils.trackInSlot(item, c.slot)) : []
-                    }))
-                    .catch(() => ({ date: c.date, items: [] }))
-            )).then(results => {
+            let remaining = candidates.length;
+            let anyRendered = false;
+            if (remaining === 0) {
+                showFetchInFlight = false;
                 document.getElementById('loading').style.display = 'none';
-                const tbody = document.querySelector('#playlistTable tbody');
-                let anyRendered = false;
+                document.getElementById('loadMoreButton').disabled = false;
+                return;
+            }
 
-                results
-                    .filter(r => r.items.length > 0 && !showDatesShown.has(r.date))
-                    .sort((a, b) => b.date.localeCompare(a.date))
-                    .forEach(r => {
-                        showDatesShown.add(r.date);
+            candidates.forEach(c => {
+                fetchDayPlaylist(c.date).then(data => {
+                    if (token !== showFetchToken) return;  // a different show was selected meanwhile — drop this result
+                    const items = data.filter(item => PlaylistUtils.trackInSlot(item, c.slot));
+                    if (items.length > 0 && !showDatesShown.has(c.date)) {
+                        showDatesShown.add(c.date);
                         anyRendered = true;
-
-                        const dateObj = new Date(r.date + 'T00:00:00');
-                        const dateHeaderRow = document.createElement('tr');
-                        const dateHeaderCell = document.createElement('td');
-                        dateHeaderCell.colSpan = 3;
-                        dateHeaderCell.className = 'date-header';
-                        dateHeaderCell.textContent = dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-                        dateHeaderRow.appendChild(dateHeaderCell);
-                        tbody.appendChild(dateHeaderRow);
-
-                        r.items
-                            .slice()
-                            .sort((a, b) => {
-                                const da = PlaylistUtils.trackStartDate(a);
-                                const db = PlaylistUtils.trackStartDate(b);
-                                return (da ? da.getTime() : 0) - (db ? db.getTime() : 0);
-                            })
-                            .forEach(item => tbody.appendChild(buildTrackRow(item)));
-                    });
-
-                if (!anyRendered && showDatesShown.size === 0) {
-                    document.getElementById('error').textContent = `No playlist data found yet for ${currentShow.name}. Try loading earlier episodes.`;
-                    document.getElementById('error').style.display = 'block';
-                }
-                document.getElementById('loadMoreWrap').style.display = 'block';
-            }).catch(() => {
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('error').style.display = 'block';
-                document.getElementById('loadMoreWrap').style.display = 'block';
+                        insertShowDateSection(c.date, items);
+                    }
+                }).catch(() => { /* fetchDayPlaylist already resolves [] on failure; nothing else to do */ }).finally(() => {
+                    if (token !== showFetchToken) return;
+                    remaining--;
+                    if (remaining === 0) {
+                        showFetchInFlight = false;
+                        document.getElementById('loading').style.display = 'none';
+                        document.getElementById('loadMoreButton').disabled = false;
+                        if (!anyRendered && showDatesShown.size === 0) {
+                            document.getElementById('error').textContent = `No playlist data found yet for ${currentShow.name}. Try loading earlier episodes.`;
+                            document.getElementById('error').style.display = 'block';
+                        }
+                    }
+                });
             });
         }
 
         function setupShowBrowsing() {
             populateShowSelect();
             document.getElementById('showSelect').addEventListener('change', e => {
-                if (e.target.value) startShowHistory(e.target.value);
+                if (e.target.value && !showFetchInFlight) startShowHistory(e.target.value);
             });
             document.getElementById('backToDateLink').addEventListener('click', backToDateView);
             document.getElementById('loadMoreButton').addEventListener('click', loadMoreShowHistory);
