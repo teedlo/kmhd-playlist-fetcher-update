@@ -234,16 +234,8 @@
             font-style: italic;
             color: var(--muted);
         }
-        .genre-badge {
-            display: inline-block;
-            font-size: 0.75em;
-            font-style: normal;
-            font-weight: bold;
-            padding: 1px 6px;
-            border-radius: 3px;
-            background: var(--badge-bg);
-            color: var(--badge-fg);
-            margin-left: 6px;
+        .track-line {
+            margin-top: 2px;
         }
         .track-links {
             margin-top: 8px;
@@ -417,47 +409,55 @@
             artCell.appendChild(albumCoverContainer);
             row.appendChild(artCell);
 
-            // Details cell (plain text now; iTunes enrichment upgrades to links)
+            // Details cell (plain text now; iTunes enrichment upgrades to links).
+            // Each piece of info is its own line: title, then "Year - Genre"
+            // right under the title, then "by Artist", then "from Album".
             const detailsCell = document.createElement('td');
             detailsCell.className = 'column-details';
             const titleEl = document.createElement('span');
             titleEl.className = 'bold track-title';
             titleEl.textContent = title;
+            detailsCell.appendChild(titleEl);
+
+            // "Year - Genre" line, directly under the title. Genre is filled
+            // in later by iTunes enrichment (when available); until then this
+            // line just shows the year, or is empty (zero height — a <div>
+            // with no content doesn't leave a blank gap).
+            const year = PlaylistUtils.trackYear(item);
+            const yearGenreLine = document.createElement('div');
+            yearGenreLine.className = 'small track-yeargenre';
+            if (year) {
+                const yearEl = document.createElement('span');
+                yearEl.className = 'track-year';
+                yearEl.textContent = year;
+                yearGenreLine.appendChild(yearEl);
+            }
+            const genreBadge = document.createElement('span');
+            genreBadge.className = 'track-genre';
+            genreBadge.style.display = 'none';
+            yearGenreLine.appendChild(genreBadge);
+            detailsCell.appendChild(yearGenreLine);
+
+            // "by Artist" line
+            const artistLine = document.createElement('div');
+            artistLine.className = 'track-line';
             const artistEl = document.createElement('span');
             artistEl.className = 'bold track-artist';
             artistEl.textContent = artist;
-            detailsCell.appendChild(titleEl);
+            artistLine.appendChild(document.createTextNode('by '));
+            artistLine.appendChild(artistEl);
+            detailsCell.appendChild(artistLine);
 
-            detailsCell.appendChild(document.createTextNode(' by '));
-            detailsCell.appendChild(artistEl);
-
-            // Genre badge (filled in later by iTunes enrichment, when
-            // available). Placed after the album/year line below — reads
-            // "from Album (Year) [Genre]" — rather than right next to the
-            // title, so the year comes before the genre.
-            const genreBadge = document.createElement('span');
-            genreBadge.className = 'genre-badge track-genre';
-            genreBadge.style.display = 'none';
-
-            const year = PlaylistUtils.trackYear(item);
-            if (album || year) {
-                detailsCell.appendChild(document.createElement('br'));
-                const albumLine = document.createElement('span');
-                albumLine.className = 'small';
-                if (album) {
-                    albumLine.appendChild(document.createTextNode('from '));
-                    const albumEl = document.createElement('span');
-                    albumEl.className = 'bold track-album';
-                    albumEl.textContent = album;
-                    albumLine.appendChild(albumEl);
-                }
-                if (year) {
-                    albumLine.appendChild(document.createTextNode(album ? ` (${year})` : `(${year})`));
-                }
+            // "from Album" line (no year here — it's shown above, under the title)
+            if (album) {
+                const albumLine = document.createElement('div');
+                albumLine.className = 'small track-line';
+                albumLine.appendChild(document.createTextNode('from '));
+                const albumEl = document.createElement('span');
+                albumEl.className = 'bold track-album';
+                albumEl.textContent = album;
+                albumLine.appendChild(albumEl);
                 detailsCell.appendChild(albumLine);
-                detailsCell.appendChild(genreBadge);
-            } else {
-                detailsCell.appendChild(genreBadge);
             }
 
             // Search links: YouTube (live video), Apple Music (via iTunes
@@ -646,11 +646,15 @@
                 linksRow.insertBefore(a, linksRow.firstChild);
             }
 
-            // Genre badge (best available "niched" genre, from iTunes)
+            // Genre (best available "niched" genre, from iTunes) — shown as
+            // "Year - Genre" on the line under the title, or just "Genre"
+            // alone when there's no year for this track.
             const genreBadge = row.querySelector('.track-genre');
             if (genreBadge && info.primaryGenreName) {
-                genreBadge.textContent = info.primaryGenreName;
-                genreBadge.style.display = 'inline-block';
+                const yearGenreLine = genreBadge.closest('.track-yeargenre');
+                const hasYear = !!(yearGenreLine && yearGenreLine.querySelector('.track-year'));
+                genreBadge.textContent = (hasYear ? ' - ' : '') + info.primaryGenreName;
+                genreBadge.style.display = 'inline';
             }
 
             // 30-second preview player
