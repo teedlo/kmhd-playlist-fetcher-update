@@ -326,10 +326,18 @@
         let currentRow = null;
 
         function fetchPlaylist(date) {
+            // Shares the same generation token used by the "By Show" view
+            // (see showFetchToken below) so that whichever view the user
+            // switched to most recently "wins": if the user leaves this
+            // view before the fetch resolves, viewToken() will have moved
+            // on and the stale result is dropped instead of clobbering
+            // whatever view is now on screen.
+            const token = viewToken();
             document.getElementById('loading').style.display = 'block';
             document.getElementById('error').style.display = 'none';
             fetchDayPlaylist(date)
                 .then(data => {
+                    if (token !== viewToken()) return;  // stale — user switched views since this fetch started
                     renderPlaylist(data);
                     updatePageHeader(date);
                     document.getElementById('loading').style.display = 'none';
@@ -339,6 +347,7 @@
                     }
                 })
                 .catch(error => {
+                    if (token !== viewToken()) return;  // stale — user switched views since this fetch started
                     console.error('Error fetching playlist:', error);
                     document.getElementById('loading').style.display = 'none';
                     document.getElementById('error').style.display = 'block';
@@ -819,7 +828,7 @@
             currentShow = show;
             showBatchesLoaded = 0;
             showDatesShown = new Set();
-            showFetchToken++;          // invalidate any still-in-flight fetches from a previous show
+            showFetchToken++;          // invalidate any still-in-flight fetches from a previous show/view
             showFetchInFlight = false;
 
             document.getElementById('dateForm').style.display = 'none';
@@ -862,7 +871,17 @@
         }
 
         let showFetchInFlight = false;   // re-entrancy guard: ignore triggers while a batch is loading
-        let showFetchToken = 0;          // bumped on every startShowHistory(); stale in-flight fetches self-cancel
+        // showFetchToken doubles as a *shared* "which view is current" token:
+        // it's bumped whenever the user switches views at all (startShowHistory
+        // for -> By Show, backToDateView for -> daily view), and both
+        // fetchPlaylist() and loadMoreShowHistory() capture it before starting
+        // a fetch and re-check it before touching the DOM. Whichever view the
+        // user is on *now* wins, even if an older fetch from the view they
+        // left resolves later — fixes a race where quickly switching views
+        // let a stale fetchPlaylist() response overwrite the By Show view
+        // (or vice versa).
+        let showFetchToken = 0;
+        function viewToken() { return showFetchToken; }
 
         // Inserts a date section (header row + that date's tracks, in
         // chronological order) into the table at the right spot to keep
