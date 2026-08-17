@@ -401,16 +401,20 @@
             const startTime = PlaylistUtils.trackStartDate(item);
             const options = { hour: 'numeric', minute: 'numeric', hour12: true };
             const localTime = startTime ? startTime.toLocaleTimeString([], options).replace(/^0/, '') : '';
+            const rowYear = PlaylistUtils.trackYear(item);
 
             const { title, artist, album } = PlaylistUtils.mapItemFields(item);
 
             const row = document.createElement('tr');
             row.className = 'track-row';
 
-            // Time cell
+            // Time cell — shows the clock time in Time-sort mode, or the
+            // track's release year in Year-sort mode (since the rows are no
+            // longer grouped/ordered by time of day there, the time isn't
+            // meaningful, but the year is the whole point of that view).
             const timeCell = document.createElement('td');
             timeCell.className = 'start-time';
-            timeCell.textContent = localTime;
+            timeCell.textContent = currentSort === 'year' ? (rowYear ? String(rowYear) : '') : localTime;
             row.appendChild(timeCell);
 
             // Artwork cell
@@ -468,13 +472,12 @@
             // is filled in later by iTunes enrichment (when available);
             // until then this line just shows the year, or is empty (zero
             // height — a <div> with no content doesn't leave a blank gap).
-            const year = PlaylistUtils.trackYear(item);
             const yearGenreLine = document.createElement('div');
             yearGenreLine.className = 'small track-yeargenre track-line';
-            if (year) {
+            if (rowYear) {
                 const yearEl = document.createElement('span');
                 yearEl.className = 'track-year';
-                yearEl.textContent = year;
+                yearEl.textContent = rowYear;
                 yearGenreLine.appendChild(yearEl);
             }
             const genreBadge = document.createElement('span');
@@ -593,7 +596,16 @@
 
         // ---------------- iTunes Search enrichment ----------------
 
+        // Shared, server-side enrichment cache (same Cloudflare Worker that
+        // proxies/caches the playlist API). When a track has already been
+        // looked up by anyone, any visitor, this returns instantly with no
+        // iTunes rate-limit wait at all. If the Worker doesn't have this
+        // route yet (older deploy) or is unreachable, this cleanly falls
+        // back to the original per-browser throttled iTunes JSONP lookup.
+        const ENRICH_PROXY_URL = 'https://kmhd-playlist-cache.teedlo.workers.dev/';
+
         const ITUNES_INTERVAL_MS = 3500;   // ~17 req/min, under iTunes' ~20/min limit
+        const SHARED_CACHE_INTERVAL_MS = 250;  // just enough to avoid a tight loop; the rate-limit-sensitive work happens on the Worker, not here
         const CACHE_PREFIX = 'itunes1:';
         const CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000;  // 30 days
         const enrichQueue = [];
@@ -638,11 +650,37 @@
         function processNext() {
             const job = enrichQueue.shift();
             if (!job) { queueTimer = null; return; }
-            queueTimer = setTimeout(() => { queueTimer = null; processNext(); }, ITUNES_INTERVAL_MS);
-            itunesLookup(job.meta, result => {
-                cacheSet(job.meta, result);
-                if (result) applyEnrichment(job, result);
+            enrichViaSharedCache(job.meta, result => {
+                if (result !== undefined) {
+                    // The Worker answered (hit or a confirmed no-match) — no
+                    // iTunes rate limit was touched, so there's no need to
+                    // wait before starting the next one.
+                    cacheSet(job.meta, result);
+                    if (result) applyEnrichment(job, result);
+                    queueTimer = setTimeout(() => { queueTimer = null; processNext(); }, SHARED_CACHE_INTERVAL_MS);
+                    return;
+                }
+                // Shared cache unreachable — fall back to the original
+                // direct-to-iTunes lookup, throttled to stay under their
+                // rate limit.
+                queueTimer = setTimeout(() => { queueTimer = null; processNext(); }, ITUNES_INTERVAL_MS);
+                itunesLookup(job.meta, result2 => {
+                    cacheSet(job.meta, result2);
+                    if (result2) applyEnrichment(job, result2);
+                });
             });
+        }
+
+        function enrichViaSharedCache(meta, done) {
+            if (!ENRICH_PROXY_URL) { done(undefined); return; }
+            const url = `${ENRICH_PROXY_URL}?type=enrich&title=${encodeURIComponent(meta.title)}&artist=${encodeURIComponent(meta.artist)}`;
+            fetch(url)
+                .then(r => {
+                    if (!r.ok) throw new Error('enrich proxy responded ' + r.status);
+                    return r.json();
+                })
+                .then(data => done(data || null))
+                .catch(() => done(undefined));
         }
 
         function itunesLookup(meta, done) {
@@ -730,7 +768,9 @@
                 genreBadge.style.display = 'inline';
             }
 
-            // 30-second preview player
+            // 30-second preview player — disabled for now (album art only).
+            // Kept here, commented out, in case we want to re-enable it later.
+            /*
             if (info.previewUrl) {
                 coverContainer.style.cursor = 'pointer';
 
@@ -776,6 +816,7 @@
                     currentRow = row;
                 });
             }
+            */
         }
 
         // ---------------- localStorage cache ----------------
