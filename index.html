@@ -106,6 +106,22 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        /* Bigger, roomier "card" look for each track row — easier to tap
+           and read on mobile. Same data/links as before, just more space. */
+        .track-row {
+            cursor: pointer;
+        }
+        .track-row td {
+            padding: 14px 10px;
+        }
+        .track-row:active td {
+            background-color: var(--highlight-bg);
+        }
+        @media (hover: hover) {
+            .track-row:hover td {
+                background-color: var(--header-bg);
+            }
+        }
         a {
             color: var(--link);
         }
@@ -163,8 +179,8 @@
             position: relative;
             display: block;
             margin: 0 auto;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
         }
         .album-cover, .album-placeholder {
             width: 100%;
@@ -175,12 +191,12 @@
         }
         .play-button, .pause-button {
             position: absolute;
-            bottom: 5px;
-            left: 5px;
-            width: 16px;
-            height: 16px;
+            bottom: 6px;
+            left: 6px;
+            width: 18px;
+            height: 18px;
             color: white;
-            font-size: 16px;
+            font-size: 18px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -207,6 +223,12 @@
         .bold {
             font-weight: bold;
         }
+        .track-title {
+            font-size: 1.06em;
+        }
+        .track-artist {
+            font-size: 0.98em;
+        }
         .small {
             font-size: 0.9em;
             font-style: italic;
@@ -224,12 +246,15 @@
             margin-left: 6px;
         }
         .track-links {
-            margin-top: 3px;
-            font-size: 0.8em;
+            margin-top: 8px;
+            font-size: 0.85em;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 16px;
         }
         .track-links a {
-            margin-right: 10px;
             white-space: nowrap;
+            padding: 4px 0;
         }
         .highlight {
             background-color: var(--highlight-bg);
@@ -366,6 +391,7 @@
             const { title, artist, album } = PlaylistUtils.mapItemFields(item);
 
             const row = document.createElement('tr');
+            row.className = 'track-row';
 
             // Time cell
             const timeCell = document.createElement('td');
@@ -402,14 +428,16 @@
             artistEl.textContent = artist;
             detailsCell.appendChild(titleEl);
 
-            // Genre badge (filled in later by iTunes enrichment, when available)
+            detailsCell.appendChild(document.createTextNode(' by '));
+            detailsCell.appendChild(artistEl);
+
+            // Genre badge (filled in later by iTunes enrichment, when
+            // available). Placed after the album/year line below — reads
+            // "from Album (Year) [Genre]" — rather than right next to the
+            // title, so the year comes before the genre.
             const genreBadge = document.createElement('span');
             genreBadge.className = 'genre-badge track-genre';
             genreBadge.style.display = 'none';
-            detailsCell.appendChild(genreBadge);
-
-            detailsCell.appendChild(document.createTextNode(' by '));
-            detailsCell.appendChild(artistEl);
 
             const year = PlaylistUtils.trackYear(item);
             if (album || year) {
@@ -427,6 +455,9 @@
                     albumLine.appendChild(document.createTextNode(album ? ` (${year})` : `(${year})`));
                 }
                 detailsCell.appendChild(albumLine);
+                detailsCell.appendChild(genreBadge);
+            } else {
+                detailsCell.appendChild(genreBadge);
             }
 
             // Search links: YouTube (live video), Apple Music (via iTunes
