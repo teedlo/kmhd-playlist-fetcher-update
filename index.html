@@ -91,6 +91,15 @@
             border: 1px solid var(--border);
             border-radius: 6px;
         }
+        #headnodButton {
+            font-size: 1.1em;
+            padding: 10px 14px;
+            cursor: pointer;
+            background: var(--badge-bg);
+            color: var(--badge-fg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
         table {
             width: 100%;
             max-width: 60em;
@@ -299,6 +308,7 @@
         <select id="showSelect" aria-label="Browse by show">
             <option value="">By Show ▾</option>
         </select>
+        <button type="button" id="headnodButton" title="Jump straight to The Headnod Show">★ Headnod Show</button>
         <button type="button" id="themeToggle" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
     </form>
 
@@ -950,6 +960,7 @@
         function startShowHistory(name) {
             const show = showByName(name);
             if (!show) return;
+            document.getElementById('showSelect').value = name;   // keep the dropdown in sync, e.g. when jumped to via the Headnod Show button
             currentShow = show;
             showBatchesLoaded = 0;
             showDatesShown = new Set();
@@ -1160,10 +1171,17 @@
             });
         }
 
+        // Jumps straight to a specific show, bypassing the dropdown — used
+        // by the "★ Headnod Show" quick-jump button.
+        const HEADNOD_SHOW_NAME = 'The Headnod Show';
+
         function setupShowBrowsing() {
             populateShowSelect();
             document.getElementById('showSelect').addEventListener('change', e => {
                 if (e.target.value && !showFetchInFlight) startShowHistory(e.target.value);
+            });
+            document.getElementById('headnodButton').addEventListener('click', () => {
+                if (!showFetchInFlight) startShowHistory(HEADNOD_SHOW_NAME);
             });
             document.getElementById('backToDateLink').addEventListener('click', backToDateView);
             document.getElementById('loadMoreButton').addEventListener('click', loadMoreShowHistory);
