@@ -785,13 +785,39 @@
             }
         }
 
+        // Server-side cache (Cloudflare Worker) that sits in front of
+        // KMHD's API. Shared across every visitor — the first person to
+        // ask for a given date pays the slow KMHD round-trip, everyone
+        // after that (until the Worker's own cache expires) gets it back
+        // fast from Cloudflare's edge instead of every browser hitting
+        // KMHD separately. This is on top of, not instead of, the
+        // per-browser localStorage cache below (dayCacheGet/Set): that one
+        // still makes a *repeat visit from the same browser* instant with
+        // zero network round-trip at all.
+        const KMHD_PROXY_URL = 'https://kmhd-playlist-cache.teedlo.workers.dev/';
+
+        function directKmhdUrl(date) {
+            return `https://www.kmhd.org/pf/api/v3/content/fetch/playlist?query=${encodeURIComponent(JSON.stringify({ day: date }))}`;
+        }
+
         // Fetches one day's playlist, via cache when possible. Always
         // resolves (never rejects) — network/parse failures resolve to [].
         function fetchDayPlaylist(date) {
             const cached = dayCacheGet(date);
             if (cached !== undefined) return Promise.resolve(cached);
-            return fetch(`https://www.kmhd.org/pf/api/v3/content/fetch/playlist?query=${encodeURIComponent(JSON.stringify({ day: date }))}`)
-                .then(r => r.json())
+
+            const proxyUrl = KMHD_PROXY_URL ? `${KMHD_PROXY_URL}?day=${encodeURIComponent(date)}` : null;
+            const request = proxyUrl
+                // Prefer the shared server-side cache; if it's ever down,
+                // misconfigured, or just not set up, fall straight through
+                // to KMHD directly so the page still works either way.
+                ? fetch(proxyUrl).then(r => {
+                    if (!r.ok) throw new Error('proxy responded ' + r.status);
+                    return r.json();
+                }).catch(() => fetch(directKmhdUrl(date)).then(r => r.json()))
+                : fetch(directKmhdUrl(date)).then(r => r.json());
+
+            return request
                 .then(data => {
                     const arr = Array.isArray(data) ? data : [];
                     dayCacheSet(date, arr);
