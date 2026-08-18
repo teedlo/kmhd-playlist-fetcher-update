@@ -667,6 +667,12 @@
                 itunesLookup(job.meta, result2 => {
                     cacheSet(job.meta, result2);
                     if (result2) applyEnrichment(job, result2);
+                    // Share a real find with every other visitor so nobody
+                    // else has to wait on iTunes for this track again.
+                    // (Confirmed no-matches aren't pushed — a transient
+                    // lookup hiccup shouldn't get permanently cached as
+                    // "this track doesn't exist" for everyone.)
+                    if (result2) pushToSharedCache(job.meta, result2);
                 });
             });
         }
@@ -681,6 +687,23 @@
                 })
                 .then(data => done(data || null))
                 .catch(() => done(undefined));
+        }
+
+        // Shared secret matching the Worker's PURGE_KEY — not treated as a
+        // high-security secret (worst case someone fills the cache with
+        // junk lookups), just enough to keep the write endpoint from being
+        // a wide-open public button. Fire-and-forget: a failure here just
+        // means this visitor's browser keeps doing the lookup itself next
+        // time too, same as before this cache existed.
+        const ENRICH_STORE_KEY = '70ce6e7a581f43cee202a6439864b576';
+
+        function pushToSharedCache(meta, result) {
+            if (!ENRICH_PROXY_URL) return;
+            fetch(`${ENRICH_PROXY_URL}?type=enrich`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title: meta.title, artist: meta.artist, key: ENRICH_STORE_KEY, data: result })
+            }).catch(() => {});
         }
 
         function itunesLookup(meta, done) {
