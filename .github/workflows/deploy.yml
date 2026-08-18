@@ -67,12 +67,12 @@ jobs:
           local_path: './playlist-utils.js'
           remote_path: '/home/${{ secrets.SFTP_USERNAME }}/teedlo.com/1'
 
-      - name: Upload shows-schedule.js via SFTP
+      - name: Upload itunes-cache.json via SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
           server: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           sftp_only: true
-          local_path: './shows-schedule.js'
+          local_path: './itunes-cache.json'
           remote_path: '/home/${{ secrets.SFTP_USERNAME }}/teedlo.com/1'
