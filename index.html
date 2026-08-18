@@ -606,6 +606,34 @@
 
         const ITUNES_INTERVAL_MS = 3500;   // ~17 req/min, under iTunes' ~20/min limit
         const SHARED_CACHE_INTERVAL_MS = 250;  // just enough to avoid a tight loop; the rate-limit-sensitive work happens on the Worker, not here
+
+        // ---------------- static enrichment cache file ----------------
+        // itunes-cache.json is a snapshot of iTunes lookup results baked
+        // right into the site (deployed next to this page). It's fetched
+        // ONCE at startup — one small same-origin request — and after that
+        // every track in it gets its art/links applied instantly, with no
+        // per-track network lookups at all. Unlike the Cloudflare edge
+        // cache it can never be evicted, doesn't vary by datacenter, and
+        // survives any cache reset: redeploying this one file re-seeds
+        // everything. Tracks NOT in the file fall through to the shared
+        // Worker cache, then to a live iTunes lookup, same as before.
+        const STATIC_ENRICH_URL = 'itunes-cache.json';
+        let staticEnrich = null;          // Map: "artist|title" (lowercased) -> enrichment object
+        let staticEnrichSettled = false;  // true once the fetch finished, success or not
+        const staticEnrichLoaded = fetch(STATIC_ENRICH_URL, { cache: 'no-cache' })
+            .then(r => r.ok ? r.json() : null)
+            .then(data => {
+                if (data && data.tracks) staticEnrich = new Map(Object.entries(data.tracks));
+            })
+            .catch(() => {})
+            .finally(() => { staticEnrichSettled = true; });
+
+        function staticEnrichGet(meta) {
+            if (!staticEnrich) return undefined;
+            const key = `${meta.artist}|${meta.title}`.toLowerCase();
+            return staticEnrich.has(key) ? staticEnrich.get(key) : undefined;
+        }
+
         const CACHE_PREFIX = 'itunes1:';
         const CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000;  // 30 days
         const enrichQueue = [];
@@ -627,15 +655,40 @@
 
         function observeForEnrichment(row, coverContainer, meta) {
             const job = { row, coverContainer, meta };
-            const cached = cacheGet(meta);
-            if (cached !== undefined) {
-                // Cached (hit or known miss): apply immediately, no API call needed
-                if (cached) applyEnrichment(job, cached);
+            if (tryKnownSources(job)) return;
+            if (!staticEnrichSettled) {
+                // The static cache file is still downloading (one small
+                // fetch at startup) — wait for it rather than kicking off
+                // slow network lookups for tracks it probably covers.
+                staticEnrichLoaded.then(() => {
+                    if (!tryKnownSources(job)) observeJob(job);
+                });
                 return;
             }
+            observeJob(job);
+        }
+
+        // Instant, no-network sources: the static cache file first, then
+        // this browser's localStorage. Returns true if the job is fully
+        // handled (art/links applied, or a known no-match).
+        function tryKnownSources(job) {
+            const s = staticEnrichGet(job.meta);
+            if (s !== undefined) {
+                if (s) applyEnrichment(job, s);
+                return true;
+            }
+            const cached = cacheGet(job.meta);
+            if (cached !== undefined) {
+                if (cached) applyEnrichment(job, cached);
+                return true;
+            }
+            return false;
+        }
+
+        function observeJob(job) {
             if (intersectionObserver) {
-                row._enrichJob = job;
-                intersectionObserver.observe(row);
+                job.row._enrichJob = job;
+                intersectionObserver.observe(job.row);
             } else {
                 enrichQueue.push(job);
                 pumpQueue();
@@ -651,27 +704,29 @@
             const job = enrichQueue.shift();
             if (!job) { queueTimer = null; return; }
             enrichViaSharedCache(job.meta, result => {
-                if (result !== undefined) {
-                    // The Worker answered (hit or a confirmed no-match) — no
-                    // iTunes rate limit was touched, so there's no need to
-                    // wait before starting the next one.
+                if (result) {
+                    // Shared cache HIT — no iTunes rate limit was touched,
+                    // so there's no need to wait before the next one.
                     cacheSet(job.meta, result);
-                    if (result) applyEnrichment(job, result);
+                    applyEnrichment(job, result);
                     queueTimer = setTimeout(() => { queueTimer = null; processNext(); }, SHARED_CACHE_INTERVAL_MS);
                     return;
                 }
-                // Shared cache unreachable — fall back to the original
-                // direct-to-iTunes lookup, throttled to stay under their
-                // rate limit.
+                // IMPORTANT: a null from the Worker means "not cached
+                // yet", NOT "this track has no Apple Music match" — treat
+                // it exactly like the Worker being unreachable and do the
+                // iTunes lookup ourselves, throttled for their rate
+                // limit, then share what we find with everyone else.
+                // (An earlier version cached that null as a permanent
+                // no-match, which silently stopped ALL art/links from
+                // loading — never repeat that.)
                 queueTimer = setTimeout(() => { queueTimer = null; processNext(); }, ITUNES_INTERVAL_MS);
                 itunesLookup(job.meta, result2 => {
                     cacheSet(job.meta, result2);
                     if (result2) applyEnrichment(job, result2);
-                    // Share a real find with every other visitor so nobody
-                    // else has to wait on iTunes for this track again.
-                    // (Confirmed no-matches aren't pushed — a transient
+                    // Confirmed no-matches aren't pushed — a transient
                     // lookup hiccup shouldn't get permanently cached as
-                    // "this track doesn't exist" for everyone.)
+                    // "this track doesn't exist" for everyone.
                     if (result2) pushToSharedCache(job.meta, result2);
                 });
             });
@@ -857,7 +912,16 @@
                     localStorage.removeItem(cacheKey(meta));
                     return undefined;
                 }
-                return entry.d;  // may be null = known "no match"
+                if (entry.d === null) {
+                    // Stored "no match" entries are discarded rather than
+                    // trusted: a bug once wrote cache-miss nulls here as if
+                    // they were confirmed no-matches, silently blanking all
+                    // art/links for 30 days. Retrying a real no-match
+                    // occasionally is a far cheaper failure mode.
+                    localStorage.removeItem(cacheKey(meta));
+                    return undefined;
+                }
+                return entry.d;
             } catch (e) {
                 return undefined;
             }
