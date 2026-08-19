@@ -76,3 +76,13 @@ jobs:
           sftp_only: true
           local_path: './itunes-cache.json'
           remote_path: '/home/${{ secrets.SFTP_USERNAME }}/teedlo.com/1'
+
+      - name: Upload .htaccess via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          server: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          sftp_only: true
+          local_path: './.htaccess'
+          remote_path: '/home/${{ secrets.SFTP_USERNAME }}/teedlo.com/1'
