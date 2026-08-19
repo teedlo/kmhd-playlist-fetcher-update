@@ -1,0 +1,10 @@
+# Force browsers to revalidate index.html on every visit (still fast --
+# results in a cheap 304 if unchanged -- via ETag/Last-Modified) instead of
+# blindly reusing a stale cached copy for up to 10 minutes after a deploy.
+# Versioned assets (playlist-utils.js?v=..., shows-schedule.js?v=...) don't
+# need this since their query string already busts the cache on change.
+<IfModule mod_headers.c>
+    <FilesMatch "\.html$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
+</IfModule>
