@@ -343,8 +343,8 @@
          breaks anything that calls a function the cached copy doesn't have
          yet (this has bitten us twice: "trackYear is not a function" after
          the dark-mode deploy, and a blank "By Show" page after this one). -->
-    <script src="playlist-utils.js?v=20260830a"></script>
-    <script src="shows-schedule.js?v=20260830a"></script>
+    <script src="playlist-utils.js?v=20260830b"></script>
+    <script src="shows-schedule.js?v=20260830b"></script>
     <script>
         // ------------------------------------------------------------------
         // KMHD changed their playlist API in 2026: it no longer returns
@@ -1036,7 +1036,8 @@
         function getYesterday() {
             const date = new Date();
             date.setDate(date.getDate() - 1);
-            return date.toISOString().split('T')[0];
+            // Local calendar date, not toISOString() — see PlaylistUtils.toIsoDate.
+            return PlaylistUtils.toIsoDate(date);
         }
 
         function updatePageHeader(date) {
@@ -1229,7 +1230,7 @@
             const token = showFetchToken;
             let candidates;
             try {
-                const todayIso = new Date().toISOString().split('T')[0];
+                const todayIso = PlaylistUtils.toIsoDate(new Date());
                 const startWeek = showBatchesLoaded * SHOW_BATCH_SIZE;
 
                 // Build the list of candidate dates for this batch, across all

@@ -6,7 +6,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const {
     trackStartDate, mapItemFields, cacheKey, trackYear, searchLinks,
-    minutesOfDay, trackInSlot, pastWeekdayDates
+    minutesOfDay, trackInSlot, pastWeekdayDates, toIsoDate
 } = require('./playlist-utils.js');
 
 test('trackStartDate: reads the new KMHD schema (start.utc)', () => {
@@ -160,6 +160,23 @@ test('trackInSlot: end "24:00" includes tracks up to (not including) midnight', 
 test('trackInSlot: false for a track with no usable timestamp', () => {
     assert.equal(trackInSlot({}, { start: '18:00', end: '20:00' }), false);
     assert.equal(trackInSlot(null, { start: '18:00', end: '20:00' }), false);
+});
+
+test('toIsoDate: formats a Date as YYYY-MM-DD in local time', () => {
+    assert.equal(toIsoDate(new Date(2026, 7, 14)), '2026-08-14');
+    assert.equal(toIsoDate(new Date(2026, 0, 5)), '2026-01-05');    // zero-padded month and day
+    assert.equal(toIsoDate(new Date(2026, 11, 31)), '2026-12-31');
+});
+
+test('toIsoDate: local midnight keeps its own date, whatever the timezone', () => {
+    // The regression this guards: toISOString() would return the *previous*
+    // day here for any timezone east of UTC, because local midnight is
+    // still yesterday in UTC. pastWeekdayDates fed exactly this into the
+    // playlist fetch, so European visitors browsed the wrong day.
+    const midnight = new Date(2026, 7, 14, 0, 0, 0);
+    assert.equal(toIsoDate(midnight), '2026-08-14');
+    const almostMidnight = new Date(2026, 7, 14, 23, 59, 59);
+    assert.equal(toIsoDate(almostMidnight), '2026-08-14');
 });
 
 test('pastWeekdayDates: returns the given weekday going back, most recent first', () => {

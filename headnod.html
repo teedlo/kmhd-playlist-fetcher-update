@@ -295,8 +295,8 @@
 <!-- Cache-busting query param: bump whenever these files change (see the
      same note in index.html — a stale cached copy silently breaks any
      function the old copy doesn't have yet). -->
-<script src="playlist-utils.js?v=20260830a"></script>
-<script src="shows-schedule.js?v=20260830a"></script>
+<script src="playlist-utils.js?v=20260830b"></script>
+<script src="shows-schedule.js?v=20260830b"></script>
 <script>
     // ------------------------------------------------------------------
     // The Headnod Show, on its own page.
@@ -358,14 +358,7 @@
         const local = new Date(laDate + 'T00:00:00');
         if (isNaN(local.getTime())) return null;
         local.setDate(local.getDate() - ((local.getDay() - 5 + 7) % 7));
-        return toIsoDate(local);
-    }
-
-    // Local-time YYYY-MM-DD. Deliberately not toISOString(), which shifts
-    // to UTC and can land on the wrong day for anyone west of Greenwich.
-    function toIsoDate(d) {
-        const pad = n => String(n).padStart(2, '0');
-        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+        return PlaylistUtils.toIsoDate(local);
     }
 
     function loadMixcloudEpisodes() {
@@ -1024,7 +1017,7 @@
 
     function renderFridays(count) {
         const container = document.getElementById('episodes');
-        const today = toIsoDate(new Date());
+        const today = PlaylistUtils.toIsoDate(new Date());
         const dates = PlaylistUtils.pastWeekdayDates(5, fridaysShown + count, today).slice(fridaysShown);
         dates.forEach(date => container.appendChild(buildEpisodeCard(date, episodesByDate.get(date) || null)));
         fridaysShown += dates.length;

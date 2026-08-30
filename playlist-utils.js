@@ -154,6 +154,6 @@
 
     return {
         trackStartDate, mapItemFields, cacheKey, trackYear, searchLinks,
-        minutesOfDay, trackInSlot, pastWeekdayDates
+        minutesOfDay, trackInSlot, pastWeekdayDates, toIsoDate
     };
 }));
