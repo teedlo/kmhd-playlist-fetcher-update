@@ -57,6 +57,16 @@ jobs:
           local_path: './index.html'
           remote_path: '/home/${{ secrets.SFTP_USERNAME }}/teedlo.com/1'
 
+      - name: Upload headnod.html via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          server: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          sftp_only: true
+          local_path: './headnod.html'
+          remote_path: '/home/${{ secrets.SFTP_USERNAME }}/teedlo.com/1'
+
       - name: Upload playlist-utils.js via SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
@@ -65,6 +75,20 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}
           sftp_only: true
           local_path: './playlist-utils.js'
+          remote_path: '/home/${{ secrets.SFTP_USERNAME }}/teedlo.com/1'
+
+      # Already live (uploaded by hand at some point) and byte-identical to
+      # this copy, but it was never part of the deploy — headnod.html reads
+      # the show's time slot from it, so wire it up rather than leave it
+      # drifting out of the pipeline.
+      - name: Upload shows-schedule.js via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          server: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          sftp_only: true
+          local_path: './shows-schedule.js'
           remote_path: '/home/${{ secrets.SFTP_USERNAME }}/teedlo.com/1'
 
       - name: Upload itunes-cache.json via SFTP

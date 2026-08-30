@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Headnod Show — KMHD Playlist History</title>
+    <script>
+        // Applied before first paint so there's no flash of the wrong theme.
+        // Shares the 'theme' localStorage key with index.html, so toggling
+        // dark mode on either page carries over to the other.
+        (function () {
+            try {
+                const saved = localStorage.getItem('theme');
+                if (saved === 'dark' || saved === 'light') {
+                    document.documentElement.setAttribute('data-theme', saved);
+                }
+            } catch (e) { /* localStorage unavailable; fall back to OS preference via CSS */ }
+        })();
+    </script>
+    <style>
+        /* Same palette as index.html, with the low-contrast values darkened/
+           lightened to clear WCAG AAA (7:1) rather than just AA:
+             --muted  dark #b9bcc2 = 9.3:1, light #545861 = 7.1:1
+             --link   dark #6cb2ff = 8.0:1, light #0a4fbf = 7.3:1
+           Base font is also a step larger here than on the main playlist
+           page — this one is meant to be read on a phone from the couch. */
+        :root {
+            --bg: #fff;
+            --fg: #333;
+            --header-bg: #eee;
+            --border: #ddd;
+            --placeholder-bg: #eee;
+            --card-bg: #fafafa;
+            --link: #0a4fbf;
+            --muted: #545861;
+            --error: #a00;
+            --badge-bg: #eef3fb;
+            --badge-fg: #345;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --bg: #16181c;
+                --fg: #e2e2e2;
+                --header-bg: #23262b;
+                --border: #33363c;
+                --placeholder-bg: #23262b;
+                --card-bg: #1b1e23;
+                --link: #6cb2ff;
+                --muted: #b9bcc2;
+                --error: #ff8080;
+                --badge-bg: #1f2a38;
+                --badge-fg: #9cc0e8;
+            }
+        }
+        :root[data-theme="dark"] {
+            --bg: #16181c;
+            --fg: #e2e2e2;
+            --header-bg: #23262b;
+            --border: #33363c;
+            --placeholder-bg: #23262b;
+            --card-bg: #1b1e23;
+            --link: #6cb2ff;
+            --muted: #b9bcc2;
+            --error: #ff8080;
+            --badge-bg: #1f2a38;
+            --badge-fg: #9cc0e8;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px 16px 40px;
+            color: var(--fg);
+            background: var(--bg);
+        }
+        .wrap {
+            max-width: 60em;
+            margin: 0 auto;
+        }
+        header.page {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        h1 {
+            font-size: 2.1em;
+            margin: 0 0 6px;
+        }
+        .tagline {
+            margin: 0 0 4px;
+            font-size: 1.05em;
+        }
+        .subline {
+            margin: 0 0 16px;
+            font-size: 0.95em;
+            color: var(--muted);
+        }
+        nav.page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        a { color: var(--link); }
+        button {
+            font-family: inherit;
+            font-size: 1em;
+            padding: 10px 16px;
+            cursor: pointer;
+            background: var(--header-bg);
+            color: var(--fg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+        button:disabled { opacity: 0.6; cursor: default; }
+        .back-link {
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--header-bg);
+            text-decoration: none;
+        }
+
+        /* ---------------- episode cards ---------------- */
+        .episode {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 18px;
+        }
+        .ep-head {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        .ep-art, .ep-art-placeholder {
+            width: 120px;
+            height: 120px;
+            flex: 0 0 120px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+        .ep-art-placeholder {
+            background: var(--placeholder-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+        }
+        .ep-meta { flex: 1 1 auto; min-width: 0; }
+        .ep-date {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 0 0 2px;
+        }
+        .ep-title {
+            font-size: 1em;
+            font-weight: normal;
+            color: var(--muted);
+            margin: 0 0 8px;
+        }
+        .ep-facts {
+            font-size: 0.9em;
+            color: var(--muted);
+            margin-bottom: 12px;
+        }
+        .ep-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        .ep-actions button { font-size: 0.95em; padding: 9px 14px; }
+        .ep-play {
+            background: var(--badge-bg);
+            color: var(--badge-fg);
+            font-weight: bold;
+        }
+        .ep-noaudio {
+            font-size: 0.9em;
+            color: var(--muted);
+            font-style: italic;
+        }
+        .ep-player { margin-top: 14px; }
+        .ep-player iframe {
+            width: 100%;
+            height: 120px;
+            border: 0;
+            border-radius: 6px;
+        }
+        .ep-tracklist { margin-top: 14px; }
+        .ep-status {
+            font-size: 0.95em;
+            color: var(--muted);
+            padding: 8px 0;
+        }
+
+        /* ---------------- track rows (same shape as index.html) ------- */
+        table.tracks {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table.tracks td {
+            border-top: 1px solid var(--border);
+            padding: 12px 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .album-cover-container {
+            position: relative;
+            display: block;
+            width: 60px;
+            height: 60px;
+        }
+        .album-cover, .album-placeholder {
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+        }
+        .album-placeholder { background-color: var(--placeholder-bg); }
+        .start-time {
+            white-space: nowrap;
+            width: 1%;
+            text-align: right;
+            color: var(--muted);
+            font-size: 0.95em;
+        }
+        .column-details { width: 99%; word-wrap: break-word; }
+        .bold { font-weight: bold; }
+        .track-title { font-size: 1.05em; }
+        .track-artist { font-size: 1em; }
+        .small { font-size: 0.9em; font-style: italic; color: var(--muted); }
+        .track-line { margin-top: 3px; }
+        .track-links {
+            margin-top: 9px;
+            font-size: 0.85em;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 16px;
+        }
+        .track-links a { white-space: nowrap; padding: 4px 0; }
+
+        #loading, #error { text-align: center; padding: 12px; }
+        #error { color: var(--error); display: none; }
+        #loadMoreWrap { text-align: center; margin: 20px 0; display: none; }
+        footer {
+            margin-top: 32px;
+            text-align: center;
+            font-size: 0.85em;
+            color: var(--muted);
+        }
+        footer a { color: var(--muted); }
+
+        @media (max-width: 600px) {
+            body { padding: 14px 10px 30px; }
+            .episode { padding: 12px; }
+            .ep-head { gap: 12px; }
+            .ep-art, .ep-art-placeholder { width: 84px; height: 84px; flex-basis: 84px; }
+            .ep-date { font-size: 1.15em; }
+            table.tracks td { padding: 10px 4px; }
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+
+    <header class="page">
+        <h1>The Headnod Show</h1>
+        <p class="tagline">Hosted by Headnodic &middot; Fridays 6&ndash;8pm on <a href="https://www.kmhd.org/" target="_blank" rel="noopener">KMHD 89.1</a></p>
+        <p class="subline">Every episode&rsquo;s full tracklist, straight from the KMHD logs &mdash; with the audio where Mixcloud still has it.</p>
+        <nav class="page">
+            <a class="back-link" href="./">&larr; All KMHD playlists</a>
+            <button type="button" id="themeToggle" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
+        </nav>
+    </header>
+
+    <div id="loading">Loading episodes&hellip;</div>
+    <div id="error"></div>
+
+    <main id="episodes"></main>
+
+    <div id="loadMoreWrap"><button type="button" id="loadMoreButton">Load earlier Fridays</button></div>
+
+    <footer>
+        Tracklists from <a href="https://www.kmhd.org/playlist/" target="_blank" rel="noopener">KMHD</a>.
+        Audio from <a href="https://www.mixcloud.com/Headnodic/" target="_blank" rel="noopener">Headnodic on Mixcloud</a>.
+        Album art &amp; links from <a href="https://performance-partners.apple.com/search-api" target="_blank" rel="noopener">iTunes Search</a>.
+    </footer>
+
+</div>
+
+<!-- Cache-busting query param: bump whenever these files change (see the
+     same note in index.html — a stale cached copy silently breaks any
+     function the old copy doesn't have yet). -->
+<script src="playlist-utils.js?v=20260816c"></script>
+<script src="shows-schedule.js?v=20260816c"></script>
+<script>
+    // ------------------------------------------------------------------
+    // The Headnod Show, on its own page.
+    //
+    // Two sources, joined by air date:
+    //   - Mixcloud (api.mixcloud.com/Headnodic/cloudcasts/) has the AUDIO
+    //     but no tracklists, and only exposes the ~10 most recent uploads.
+    //   - KMHD's playlist API has the TRACKS (going back years) but no audio.
+    //
+    // So: list recent Fridays, attach a Mixcloud episode to each one where
+    // there is a matching upload, and pull that Friday's 6-8pm window from
+    // KMHD for the tracklist. Fridays older than Mixcloud's window still
+    // get a full tracklist card, just without a play button.
+    //
+    // The iTunes enrichment below is deliberately the same design as
+    // index.html's (static cache file -> localStorage -> shared Worker
+    // cache -> throttled iTunes JSONP). It's duplicated rather than shared
+    // because pulling it out into a module would mean rewriting the main
+    // page's script too; if a third page ever needs it, extract it then.
+    // ------------------------------------------------------------------
+
+    const MIXCLOUD_USER = 'Headnodic';
+    const MIXCLOUD_API = `https://api.mixcloud.com/${MIXCLOUD_USER}/cloudcasts/?limit=100`;
+    const MIXCLOUD_WIDGET = 'https://player-widget.mixcloud.com/?feed=';
+
+    // Fallback if shows-schedule.js is missing or ever drops the show —
+    // this page is about exactly one slot, so it shouldn't 404 itself over
+    // a stale asset.
+    const HEADNOD_SLOT = { weekday: 5, start: '18:00', end: '20:00' };
+
+    const FIRST_PAGE_FRIDAYS = 10;   // enough to cover Mixcloud's whole window
+    const MORE_FRIDAYS = 8;          // added per "Load earlier Fridays" click
+
+    let fridaysShown = 0;
+    let episodesByDate = new Map();   // 'YYYY-MM-DD' -> mixcloud cloudcast
+    let currentPlayer = null;         // only one episode plays at a time
+
+    function headnodSlot() {
+        if (typeof KmhdShows === 'undefined') return HEADNOD_SLOT;
+        const show = KmhdShows.uniqueShows().find(s => s.name === 'The Headnod Show');
+        return (show && show.slots && show.slots[0]) || HEADNOD_SLOT;
+    }
+
+    // ---------------- Mixcloud -> air date ----------------
+
+    // Mixcloud's created_time is the UPLOAD time, not the air time, and he
+    // often uploads while the show is still on (Episode 216 went up at
+    // 8:05pm on the Friday) or in the small hours after. Converting to
+    // Pacific and stepping back to the most recent Friday has matched the
+    // real air date on every episode checked so far.
+    function airDateFromUpload(isoUtc) {
+        const d = new Date(isoUtc);
+        if (isNaN(d.getTime())) return null;
+        // en-CA formats as YYYY-MM-DD, which is exactly the key we want.
+        const laDate = new Intl.DateTimeFormat('en-CA', {
+            timeZone: 'America/Los_Angeles',
+            year: 'numeric', month: '2-digit', day: '2-digit'
+        }).format(d);
+        const local = new Date(laDate + 'T00:00:00');
+        if (isNaN(local.getTime())) return null;
+        local.setDate(local.getDate() - ((local.getDay() - 5 + 7) % 7));
+        return toIsoDate(local);
+    }
+
+    // Local-time YYYY-MM-DD. Deliberately not toISOString(), which shifts
+    // to UTC and can land on the wrong day for anyone west of Greenwich.
+    function toIsoDate(d) {
+        const pad = n => String(n).padStart(2, '0');
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    }
+
+    function loadMixcloudEpisodes() {
+        return fetch(MIXCLOUD_API)
+            .then(r => r.ok ? r.json() : null)
+            .then(data => {
+                const map = new Map();
+                if (!data || !Array.isArray(data.data)) return map;
+                data.data.forEach(c => {
+                    const date = airDateFromUpload(c.created_time);
+                    // Two uploads mapping to one Friday: keep the earlier
+                    // one, which is the show itself rather than a re-post.
+                    if (date && !map.has(date)) map.set(date, c);
+                });
+                return map;
+            })
+            .catch(() => new Map());   // no audio is survivable; tracklists still render
+    }
+
+    // ---------------- episode cards ----------------
+
+    function friendlyDate(isoDate) {
+        const d = new Date(isoDate + 'T00:00:00');
+        return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    }
+
+    // "The Headnod Show Episode 216" -> "Episode 216"; anything that
+    // doesn't start with the show name is shown as-is.
+    function shortEpisodeName(name) {
+        if (!name) return '';
+        const trimmed = name.replace(/^The\s+Headnod\s+Show\s*/i, '').trim();
+        return trimmed || name;
+    }
+
+    function formatDuration(seconds) {
+        if (!seconds) return '';
+        const h = Math.floor(seconds / 3600);
+        const m = Math.round((seconds % 3600) / 60);
+        return h ? `${h} hr ${m} min` : `${m} min`;
+    }
+
+    function buildEpisodeCard(date, cloudcast) {
+        const card = document.createElement('article');
+        card.className = 'episode';
+
+        const head = document.createElement('div');
+        head.className = 'ep-head';
+
+        // Artwork (Mixcloud's, when there is an upload for this Friday)
+        const art = cloudcast && cloudcast.pictures && (cloudcast.pictures['320wx320h'] || cloudcast.pictures.large);
+        if (art) {
+            const img = document.createElement('img');
+            img.className = 'ep-art';
+            img.src = art;
+            img.alt = '';
+            img.loading = 'lazy';
+            head.appendChild(img);
+        } else {
+            const ph = document.createElement('div');
+            ph.className = 'ep-art-placeholder';
+            ph.textContent = '🎧';
+            head.appendChild(ph);
+        }
+
+        const meta = document.createElement('div');
+        meta.className = 'ep-meta';
+
+        const dateEl = document.createElement('h2');
+        dateEl.className = 'ep-date';
+        dateEl.textContent = friendlyDate(date);
+        meta.appendChild(dateEl);
+
+        if (cloudcast) {
+            const titleEl = document.createElement('div');
+            titleEl.className = 'ep-title';
+            titleEl.textContent = shortEpisodeName(cloudcast.name);
+            meta.appendChild(titleEl);
+        }
+
+        const facts = document.createElement('div');
+        facts.className = 'ep-facts';
+        const bits = [];
+        if (cloudcast && cloudcast.audio_length) bits.push(formatDuration(cloudcast.audio_length));
+        if (cloudcast && Array.isArray(cloudcast.tags) && cloudcast.tags.length) {
+            bits.push(cloudcast.tags.slice(0, 4).map(t => t.name).join(' · '));
+        }
+        facts.textContent = bits.join(' — ');
+        meta.appendChild(facts);
+
+        const actions = document.createElement('div');
+        actions.className = 'ep-actions';
+
+        const player = document.createElement('div');
+        player.className = 'ep-player';
+
+        if (cloudcast) {
+            const playBtn = document.createElement('button');
+            playBtn.type = 'button';
+            playBtn.className = 'ep-play';
+            playBtn.textContent = '▶ Play episode';
+            playBtn.addEventListener('click', () => {
+                if (player.firstChild) {          // already open — close it
+                    player.innerHTML = '';
+                    playBtn.textContent = '▶ Play episode';
+                    if (currentPlayer === player) currentPlayer = null;
+                    return;
+                }
+                // Only one episode at a time, so opening this one stops
+                // whatever was playing before.
+                if (currentPlayer) {
+                    currentPlayer.innerHTML = '';
+                    const other = currentPlayer.closest('.episode');
+                    const otherBtn = other && other.querySelector('.ep-play');
+                    if (otherBtn) otherBtn.textContent = '▶ Play episode';
+                }
+                const iframe = document.createElement('iframe');
+                iframe.src = MIXCLOUD_WIDGET + encodeURIComponent(cloudcast.key) + '&hide_cover=1&light=0&autoplay=1';
+                iframe.allow = 'autoplay';
+                iframe.title = `${cloudcast.name} (Mixcloud player)`;
+                player.appendChild(iframe);
+                playBtn.textContent = '✕ Close player';
+                currentPlayer = player;
+            });
+            actions.appendChild(playBtn);
+
+            const link = document.createElement('a');
+            link.href = cloudcast.url;
+            link.target = '_blank';
+            link.rel = 'noopener';
+            link.textContent = 'Mixcloud ↗';
+            actions.appendChild(link);
+        }
+
+        const tracksBtn = document.createElement('button');
+        tracksBtn.type = 'button';
+        tracksBtn.textContent = 'Show tracklist';
+        actions.appendChild(tracksBtn);
+
+        if (!cloudcast) {
+            const note = document.createElement('span');
+            note.className = 'ep-noaudio';
+            note.textContent = 'audio not archived';
+            note.title = 'Mixcloud only keeps the ~10 most recent uploads public.';
+            actions.appendChild(note);
+        }
+
+        meta.appendChild(actions);
+        head.appendChild(meta);
+        card.appendChild(head);
+        card.appendChild(player);
+
+        const list = document.createElement('div');
+        list.className = 'ep-tracklist';
+        card.appendChild(list);
+
+        let loaded = false;
+        let open = false;
+        tracksBtn.addEventListener('click', () => {
+            if (loaded) {
+                open = !open;
+                list.style.display = open ? 'block' : 'none';
+                tracksBtn.textContent = open ? 'Hide tracklist' : 'Show tracklist';
+                return;
+            }
+            loadTracklist(date, list, tracksBtn).then(() => { loaded = true; open = true; });
+        });
+
+        // Let the newest episode show its tracklist without a click — it's
+        // the whole point of the page, and it's one extra request.
+        card.dataset.date = date;
+        card._expand = () => tracksBtn.click();
+
+        return card;
+    }
+
+    function loadTracklist(date, container, button) {
+        button.disabled = true;
+        const status = document.createElement('div');
+        status.className = 'ep-status';
+        status.textContent = 'Loading tracklist…';
+        container.innerHTML = '';
+        container.appendChild(status);
+        container.style.display = 'block';
+
+        return fetchDayPlaylist(date).then(data => {
+            const slot = headnodSlot();
+            const items = data
+                .filter(item => PlaylistUtils.trackInSlot(item, slot))
+                .sort((a, b) => {
+                    const da = PlaylistUtils.trackStartDate(a);
+                    const db = PlaylistUtils.trackStartDate(b);
+                    return (da ? da.getTime() : 0) - (db ? db.getTime() : 0);
+                });
+
+            container.innerHTML = '';
+            button.disabled = false;
+
+            if (items.length === 0) {
+                const none = document.createElement('div');
+                none.className = 'ep-status';
+                none.textContent = 'No tracklist logged for this date.';
+                container.appendChild(none);
+                button.textContent = 'Hide tracklist';
+                return;
+            }
+
+            const table = document.createElement('table');
+            table.className = 'tracks';
+            const tbody = document.createElement('tbody');
+            items.forEach(item => tbody.appendChild(buildTrackRow(item)));
+            table.appendChild(tbody);
+            container.appendChild(table);
+            button.textContent = `Hide tracklist (${items.length})`;
+        }).catch(() => {
+            container.innerHTML = '';
+            button.disabled = false;
+            const err = document.createElement('div');
+            err.className = 'ep-status';
+            err.textContent = 'Couldn’t load the tracklist for this date.';
+            container.appendChild(err);
+        });
+    }
+
+    // ---------------- track rows ----------------
+    // Same row shape and enrichment hooks as index.html's buildTrackRow.
+
+    function buildTrackRow(item) {
+        const startTime = PlaylistUtils.trackStartDate(item);
+        const options = { hour: 'numeric', minute: 'numeric', hour12: true };
+        const localTime = startTime ? startTime.toLocaleTimeString([], options).replace(/^0/, '') : '';
+        const rowYear = PlaylistUtils.trackYear(item);
+        const { title, artist, album } = PlaylistUtils.mapItemFields(item);
+
+        const row = document.createElement('tr');
+        row.className = 'track-row';
+
+        const timeCell = document.createElement('td');
+        timeCell.className = 'start-time';
+        timeCell.textContent = localTime;
+        row.appendChild(timeCell);
+
+        const artCell = document.createElement('td');
+        const albumCoverContainer = document.createElement('div');
+        albumCoverContainer.className = 'album-cover-container';
+        if (item.artworkUrl) {
+            const img = document.createElement('img');
+            img.src = item.artworkUrl;
+            img.alt = 'Album Cover';
+            img.className = 'album-cover';
+            albumCoverContainer.appendChild(img);
+        } else {
+            const ph = document.createElement('div');
+            ph.className = 'album-placeholder';
+            albumCoverContainer.appendChild(ph);
+        }
+        artCell.appendChild(albumCoverContainer);
+        row.appendChild(artCell);
+
+        const detailsCell = document.createElement('td');
+        detailsCell.className = 'column-details';
+
+        const titleEl = document.createElement('span');
+        titleEl.className = 'bold track-title';
+        titleEl.textContent = title;
+        detailsCell.appendChild(titleEl);
+
+        const artistLine = document.createElement('div');
+        artistLine.className = 'track-line';
+        const artistEl = document.createElement('span');
+        artistEl.className = 'bold track-artist';
+        artistEl.textContent = artist;
+        artistLine.appendChild(document.createTextNode('by '));
+        artistLine.appendChild(artistEl);
+        detailsCell.appendChild(artistLine);
+
+        if (album) {
+            const albumLine = document.createElement('div');
+            albumLine.className = 'small track-line';
+            albumLine.appendChild(document.createTextNode('from '));
+            const albumEl = document.createElement('span');
+            albumEl.className = 'bold track-album';
+            albumEl.textContent = album;
+            albumLine.appendChild(albumEl);
+            detailsCell.appendChild(albumLine);
+        }
+
+        const yearGenreLine = document.createElement('div');
+        yearGenreLine.className = 'small track-yeargenre track-line';
+        if (rowYear) {
+            const yearEl = document.createElement('span');
+            yearEl.className = 'track-year';
+            yearEl.textContent = rowYear;
+            yearGenreLine.appendChild(yearEl);
+        }
+        const genreBadge = document.createElement('span');
+        genreBadge.className = 'track-genre';
+        genreBadge.style.display = 'none';
+        yearGenreLine.appendChild(genreBadge);
+        detailsCell.appendChild(yearGenreLine);
+
+        if (title && artist) {
+            const links = PlaylistUtils.searchLinks({ title, artist, album });
+            const linksRow = document.createElement('div');
+            linksRow.className = 'track-links';
+            const addLink = (url, label) => {
+                if (!url) return;
+                const a = document.createElement('a');
+                a.href = url;
+                a.target = '_blank';
+                a.rel = 'noopener';
+                a.textContent = label;
+                linksRow.appendChild(a);
+            };
+            addLink(links.youtube, 'YouTube (live)');
+            addLink(links.tidal, 'Tidal');
+            addLink(links.ebayVinyl, 'eBay (vinyl)');
+            addLink(links.wiki, 'Wiki');
+            detailsCell.appendChild(linksRow);
+        }
+
+        row.appendChild(detailsCell);
+
+        if (title && artist) {
+            observeForEnrichment(row, albumCoverContainer, { title, artist, album });
+        }
+
+        return row;
+    }
+
+    // ---------------- iTunes enrichment ----------------
+    // Mirrors index.html: static cache file, then localStorage, then the
+    // shared Worker cache, then a throttled live iTunes JSONP lookup.
+
+    const ENRICH_PROXY_URL = 'https://kmhd-playlist-cache.teedlo.workers.dev/';
+    const ENRICH_STORE_KEY = '70ce6e7a581f43cee202a6439864b576';
+    const ITUNES_INTERVAL_MS = 3500;         // ~17 req/min, under iTunes' ~20/min limit
+    const SHARED_CACHE_INTERVAL_MS = 250;
+    const STATIC_ENRICH_URL = 'itunes-cache.json';
+    const CACHE_PREFIX = 'itunes1:';         // shared with index.html on purpose
+    const CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+
+    let staticEnrich = null;
+    let staticEnrichSettled = false;
+    const staticEnrichLoaded = fetch(STATIC_ENRICH_URL, { cache: 'no-cache' })
+        .then(r => r.ok ? r.json() : null)
+        .then(data => { if (data && data.tracks) staticEnrich = new Map(Object.entries(data.tracks)); })
+        .catch(() => {})
+        .finally(() => { staticEnrichSettled = true; });
+
+    function staticEnrichGet(meta) {
+        if (!staticEnrich) return undefined;
+        const key = `${meta.artist}|${meta.title}`.toLowerCase();
+        return staticEnrich.has(key) ? staticEnrich.get(key) : undefined;
+    }
+
+    const enrichQueue = [];
+    let queueTimer = null;
+    let jsonpCounter = 0;
+
+    const intersectionObserver = ('IntersectionObserver' in window)
+        ? new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && entry.target._enrichJob) {
+                    enrichQueue.push(entry.target._enrichJob);
+                    delete entry.target._enrichJob;
+                    intersectionObserver.unobserve(entry.target);
+                    pumpQueue();
+                }
+            });
+        }, { rootMargin: '200px' })
+        : null;
+
+    function observeForEnrichment(row, coverContainer, meta) {
+        const job = { row, coverContainer, meta };
+        if (tryKnownSources(job)) return;
+        if (!staticEnrichSettled) {
+            staticEnrichLoaded.then(() => { if (!tryKnownSources(job)) observeJob(job); });
+            return;
+        }
+        observeJob(job);
+    }
+
+    function tryKnownSources(job) {
+        const s = staticEnrichGet(job.meta);
+        if (s !== undefined) {
+            if (s) applyEnrichment(job, s);
+            return true;
+        }
+        const cached = cacheGet(job.meta);
+        if (cached !== undefined) {
+            if (cached) applyEnrichment(job, cached);
+            return true;
+        }
+        return false;
+    }
+
+    function observeJob(job) {
+        if (intersectionObserver) {
+            job.row._enrichJob = job;
+            intersectionObserver.observe(job.row);
+        } else {
+            enrichQueue.push(job);
+            pumpQueue();
+        }
+    }
+
+    function pumpQueue() {
+        if (queueTimer || enrichQueue.length === 0) return;
+        processNext();
+    }
+
+    function processNext() {
+        const job = enrichQueue.shift();
+        if (!job) { queueTimer = null; return; }
+        enrichViaSharedCache(job.meta, result => {
+            if (result) {
+                cacheSet(job.meta, result);
+                applyEnrichment(job, result);
+                queueTimer = setTimeout(() => { queueTimer = null; processNext(); }, SHARED_CACHE_INTERVAL_MS);
+                return;
+            }
+            // A null from the Worker means "not cached yet", NOT "no such
+            // track" — do the lookup ourselves rather than caching a
+            // permanent no-match (see the same warning in index.html).
+            queueTimer = setTimeout(() => { queueTimer = null; processNext(); }, ITUNES_INTERVAL_MS);
+            itunesLookup(job.meta, result2 => {
+                cacheSet(job.meta, result2);
+                if (result2) {
+                    applyEnrichment(job, result2);
+                    pushToSharedCache(job.meta, result2);
+                }
+            });
+        });
+    }
+
+    function enrichViaSharedCache(meta, done) {
+        const url = `${ENRICH_PROXY_URL}?type=enrich&title=${encodeURIComponent(meta.title)}&artist=${encodeURIComponent(meta.artist)}`;
+        fetch(url)
+            .then(r => { if (!r.ok) throw new Error('enrich proxy responded ' + r.status); return r.json(); })
+            .then(data => done(data || null))
+            .catch(() => done(undefined));
+    }
+
+    function pushToSharedCache(meta, result) {
+        fetch(`${ENRICH_PROXY_URL}?type=enrich`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title: meta.title, artist: meta.artist, key: ENRICH_STORE_KEY, data: result })
+        }).catch(() => {});
+    }
+
+    function itunesLookup(meta, done) {
+        const term = `${meta.artist} ${meta.title}`;
+        const cbName = `itunesCb${++jsonpCounter}`;
+        const script = document.createElement('script');
+        let finished = false;
+        const finish = result => {
+            if (finished) return;
+            finished = true;
+            delete window[cbName];
+            script.remove();
+            done(result);
+        };
+        window[cbName] = data => {
+            const r = (data && data.results && data.results[0]) || null;
+            finish(r ? {
+                artworkUrl100: r.artworkUrl100 || null,
+                previewUrl: r.previewUrl || null,
+                trackViewUrl: r.trackViewUrl || null,
+                artistViewUrl: r.artistViewUrl || null,
+                collectionViewUrl: r.collectionViewUrl || null,
+                collectionName: r.collectionName || null,
+                primaryGenreName: r.primaryGenreName || null,
+                releaseDate: r.releaseDate || null
+            } : null);
+        };
+        script.onerror = () => finish(null);
+        setTimeout(() => finish(null), 15000);
+        script.src = `https://itunes.apple.com/search?media=music&entity=song&limit=1&term=${encodeURIComponent(term)}&callback=${cbName}`;
+        document.head.appendChild(script);
+    }
+
+    function applyEnrichment(job, info) {
+        const { row, coverContainer } = job;
+
+        if (info.artworkUrl100) {
+            coverContainer.innerHTML = '';
+            const img = document.createElement('img');
+            img.src = info.artworkUrl100;
+            img.alt = 'Album Cover';
+            img.className = 'album-cover';
+            coverContainer.appendChild(img);
+        }
+
+        const linkify = (el, url) => {
+            if (!el || !url) return;
+            const a = document.createElement('a');
+            a.href = url;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.className = el.className;
+            a.textContent = el.textContent;
+            el.replaceWith(a);
+        };
+        linkify(row.querySelector('.track-title'), info.trackViewUrl);
+        linkify(row.querySelector('.track-artist'), info.artistViewUrl);
+        linkify(row.querySelector('.track-album'), info.collectionViewUrl);
+
+        const linksRow = row.querySelector('.track-links');
+        if (linksRow && info.trackViewUrl) {
+            const a = document.createElement('a');
+            a.href = info.trackViewUrl;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.textContent = 'Apple Music';
+            linksRow.insertBefore(a, linksRow.firstChild);
+        }
+
+        const genreBadge = row.querySelector('.track-genre');
+        if (genreBadge && info.primaryGenreName) {
+            const yearGenreLine = genreBadge.closest('.track-yeargenre');
+            const hasYear = !!(yearGenreLine && yearGenreLine.querySelector('.track-year'));
+            genreBadge.textContent = (hasYear ? ' - ' : '') + info.primaryGenreName;
+            genreBadge.style.display = 'inline';
+        }
+    }
+
+    // ---------------- caches ----------------
+
+    function cacheGet(meta) {
+        try {
+            const key = PlaylistUtils.cacheKey(CACHE_PREFIX, meta);
+            const raw = localStorage.getItem(key);
+            if (!raw) return undefined;
+            const entry = JSON.parse(raw);
+            if (!entry || (Date.now() - entry.t) > CACHE_TTL_MS) {
+                localStorage.removeItem(key);
+                return undefined;
+            }
+            // Stored "no match" nulls are discarded rather than trusted —
+            // a bug once blanked all art/links for 30 days that way.
+            if (entry.d === null) {
+                localStorage.removeItem(key);
+                return undefined;
+            }
+            return entry.d;
+        } catch (e) {
+            return undefined;
+        }
+    }
+
+    function cacheSet(meta, data) {
+        const key = PlaylistUtils.cacheKey(CACHE_PREFIX, meta);
+        try {
+            localStorage.setItem(key, JSON.stringify({ t: Date.now(), d: data }));
+        } catch (e) {
+            try {
+                const keys = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const k = localStorage.key(i);
+                    if (k && k.indexOf(CACHE_PREFIX) === 0) keys.push(k);
+                }
+                keys.slice(0, Math.ceil(keys.length / 2)).forEach(k => localStorage.removeItem(k));
+                localStorage.setItem(key, JSON.stringify({ t: Date.now(), d: data }));
+            } catch (e2) { /* give up quietly */ }
+        }
+    }
+
+    // Day cache — same key prefix as index.html, so a Friday already
+    // fetched over there loads instantly here and vice versa.
+    const DAY_CACHE_PREFIX = 'kmhdDay1:';
+    const DAY_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
+    const KMHD_PROXY_URL = 'https://kmhd-playlist-cache.teedlo.workers.dev/';
+
+    function dayCacheGet(date) {
+        try {
+            const raw = localStorage.getItem(DAY_CACHE_PREFIX + date);
+            if (!raw) return undefined;
+            const entry = JSON.parse(raw);
+            if (!entry || (Date.now() - entry.t) > DAY_CACHE_TTL_MS) {
+                localStorage.removeItem(DAY_CACHE_PREFIX + date);
+                return undefined;
+            }
+            return entry.d;
+        } catch (e) {
+            return undefined;
+        }
+    }
+
+    function dayCacheSet(date, data) {
+        try {
+            localStorage.setItem(DAY_CACHE_PREFIX + date, JSON.stringify({ t: Date.now(), d: data }));
+        } catch (e) {
+            try {
+                const keys = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const k = localStorage.key(i);
+                    if (k && k.indexOf(DAY_CACHE_PREFIX) === 0) keys.push(k);
+                }
+                keys.slice(0, Math.ceil(keys.length / 2)).forEach(k => localStorage.removeItem(k));
+                localStorage.setItem(DAY_CACHE_PREFIX + date, JSON.stringify({ t: Date.now(), d: data }));
+            } catch (e2) { /* give up quietly */ }
+        }
+    }
+
+    function directKmhdUrl(date) {
+        return `https://www.kmhd.org/pf/api/v3/content/fetch/playlist?query=${encodeURIComponent(JSON.stringify({ day: date }))}`;
+    }
+
+    function fetchDayPlaylist(date) {
+        const cached = dayCacheGet(date);
+        if (cached !== undefined) return Promise.resolve(cached);
+
+        return fetch(`${KMHD_PROXY_URL}?day=${encodeURIComponent(date)}`)
+            .then(r => { if (!r.ok) throw new Error('proxy responded ' + r.status); return r.json(); })
+            .catch(() => fetch(directKmhdUrl(date)).then(r => r.json()))
+            .then(data => {
+                const arr = Array.isArray(data) ? data : [];
+                // Only cache a day that actually has tracks. Caching an
+                // empty result would pin a transient proxy/network failure
+                // in place for the full 6-hour TTL, leaving the visitor
+                // staring at "No tracklist logged" for a date that has one.
+                if (arr.length) dayCacheSet(date, arr);
+                return arr;
+            })
+            .catch(() => []);
+    }
+
+    // ---------------- theme toggle ----------------
+
+    function systemPrefersDark() {
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+
+    function currentTheme() {
+        const saved = (() => { try { return localStorage.getItem('theme'); } catch (e) { return null; } })();
+        if (saved === 'dark' || saved === 'light') return saved;
+        return systemPrefersDark() ? 'dark' : 'light';
+    }
+
+    function applyThemeButtonLabel() {
+        document.getElementById('themeToggle').textContent = currentTheme() === 'dark' ? '☀️' : '🌙';
+    }
+
+    function setupThemeToggle() {
+        applyThemeButtonLabel();
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            const next = currentTheme() === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            try { localStorage.setItem('theme', next); } catch (e) { /* ignore */ }
+            applyThemeButtonLabel();
+        });
+    }
+
+    // ---------------- page ----------------
+
+    function renderFridays(count) {
+        const container = document.getElementById('episodes');
+        const today = toIsoDate(new Date());
+        const dates = PlaylistUtils.pastWeekdayDates(5, fridaysShown + count, today).slice(fridaysShown);
+        dates.forEach(date => container.appendChild(buildEpisodeCard(date, episodesByDate.get(date) || null)));
+        fridaysShown += dates.length;
+        document.getElementById('loadMoreWrap').style.display = 'block';
+        return dates;
+    }
+
+    window.addEventListener('load', () => {
+        setupThemeToggle();
+
+        if (typeof PlaylistUtils === 'undefined' || typeof PlaylistUtils.pastWeekdayDates !== 'function') {
+            document.getElementById('loading').style.display = 'none';
+            const err = document.getElementById('error');
+            err.textContent = 'This page needs to reload to pick up a recent update. Please refresh (Ctrl/Cmd+Shift+R) and try again.';
+            err.style.display = 'block';
+            return;
+        }
+
+        loadMixcloudEpisodes().then(map => {
+            episodesByDate = map;
+            document.getElementById('loading').style.display = 'none';
+            const dates = renderFridays(FIRST_PAGE_FRIDAYS);
+            // Open the newest Friday's tracklist automatically.
+            const first = document.querySelector('.episode');
+            if (first && first._expand) first._expand();
+            if (dates.length === 0) {
+                const err = document.getElementById('error');
+                err.textContent = 'Couldn’t work out which Fridays to show.';
+                err.style.display = 'block';
+            }
+        });
+
+        document.getElementById('loadMoreButton').addEventListener('click', () => {
+            renderFridays(MORE_FRIDAYS);
+        });
+    });
+</script>
+
+</body>
+</html>
