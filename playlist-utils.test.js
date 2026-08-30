@@ -117,9 +117,19 @@ test('searchLinks: returns null links when there is no artist/title/album to sea
 });
 
 // ---------------- "By Show" helpers ----------------
-// These tests run with TZ=UTC (confirmed via Intl.DateTimeFormat in this
-// environment), so an item's start.utc hour equals what trackInSlot's
-// d.getHours() will read — keeping the fixtures simple and predictable.
+// trackInSlot deliberately compares against the *viewer's* local clock
+// (d.getHours()), which is what the page wants — a slot is "6-8pm" as the
+// listener sees it. That makes a hardcoded UTC-string fixture depend on
+// the machine's timezone: these tests passed on CI (UTC runners) but
+// failed on a Pacific laptop, where 19:05Z reads back as 12:05.
+//
+// So build fixtures from *local* components instead. The resulting
+// instant differs by timezone, but the local hour trackInSlot reads is
+// whatever we asked for, everywhere.
+function itemAtLocalTime(hours, minutes) {
+    const d = new Date(2026, 7, 14, hours, minutes, 0);   // 2026-08-14, local time
+    return { start: { utc: d.toISOString() } };
+}
 
 test('minutesOfDay: converts HH:MM to minutes since midnight', () => {
     assert.equal(minutesOfDay('00:00'), 0);
@@ -128,21 +138,21 @@ test('minutesOfDay: converts HH:MM to minutes since midnight', () => {
 });
 
 test('trackInSlot: true when the track starts inside the slot', () => {
-    const item = { start: { utc: '2026-08-14T19:05:00Z' } };  // 19:05
+    const item = itemAtLocalTime(19, 5);
     const slot = { start: '18:00', end: '20:00' };
     assert.equal(trackInSlot(item, slot), true);
 });
 
 test('trackInSlot: false when the track starts before or after the slot', () => {
-    const before = { start: { utc: '2026-08-14T17:59:00Z' } };
-    const after = { start: { utc: '2026-08-14T20:00:00Z' } };  // end is exclusive
+    const before = itemAtLocalTime(17, 59);
+    const after = itemAtLocalTime(20, 0);   // end is exclusive
     const slot = { start: '18:00', end: '20:00' };
     assert.equal(trackInSlot(before, slot), false);
     assert.equal(trackInSlot(after, slot), false);
 });
 
 test('trackInSlot: end "24:00" includes tracks up to (not including) midnight', () => {
-    const item = { start: { utc: '2026-08-14T23:59:00Z' } };
+    const item = itemAtLocalTime(23, 59);
     const slot = { start: '22:00', end: '24:00' };
     assert.equal(trackInSlot(item, slot), true);
 });

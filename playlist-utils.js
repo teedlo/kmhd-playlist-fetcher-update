@@ -121,6 +121,19 @@
         return mins >= startMin || mins < endMin;
     }
 
+    // Formats a Date as YYYY-MM-DD in *local* time.
+    //
+    // Deliberately not toISOString(), which converts to UTC first: these
+    // Dates are built from local components (midnight local), so anywhere
+    // east of UTC that midnight is still the previous day in UTC and every
+    // date came back shifted a day earlier. That turned "the last 3
+    // Fridays" into three Thursdays for every visitor in Europe or Asia,
+    // which fetched the wrong show's playlist entirely.
+    function toIsoDate(d) {
+        const pad = n => String(n).padStart(2, '0');
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    }
+
     // Returns `count` ISO dates (YYYY-MM-DD), most recent first, for the
     // given weekday (0=Sun..6=Sat) on or before `fromDateIso`. Used to
     // generate the list of past dates to fetch for a show's recurring slot.
@@ -134,7 +147,7 @@
         for (let i = 0; i < count; i++) {
             const d = new Date(mostRecent);
             d.setDate(mostRecent.getDate() - i * 7);
-            dates.push(d.toISOString().split('T')[0]);
+            dates.push(toIsoDate(d));
         }
         return dates;
     }
