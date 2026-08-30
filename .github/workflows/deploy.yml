@@ -1,112 +1,58 @@
 name: Deploy to DreamHost
 
-# Runs automatically every time you push to the main branch.
-# Runs the unit tests first; if they fail, the site is NOT deployed.
-# Uploads index.html (and its sibling playlist-utils.js) to the /1/
-# folder on teedlo.com via SFTP.
+# Push to main -> run unit tests -> publish to teedlo.com/1/.
+# Tests gate the deploy: if `node --test` fails, nothing is uploaded.
 #
-# Requires three repository secrets (Settings → Secrets and variables → Actions):
-#   SFTP_HOST      e.g. teedlo.com
-#   SFTP_USERNAME  your DreamHost SFTP/shell username
-#   SFTP_PASSWORD  that user's password
-#
-# If your DreamHost web directory isn't /home/<username>/teedlo.com,
-# adjust remote_path below to match.
+# Repository secrets required:
+#   DEPLOY_KEY     private half of ~/.ssh/dreamhost_deploy
+#   SFTP_HOST      teedlo.com
+#   SFTP_USERNAME  DreamHost shell user
 
 on:
   push:
     branches: [main]
-  workflow_dispatch: {}   # also lets you trigger it manually from the Actions tab
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repo
-        uses: actions/checkout@v4
-
-      - name: Set up Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
-
       - name: Run unit tests
         run: node --test
 
   deploy:
     needs: test
     runs-on: ubuntu-latest
+    env:
+      # Unlike the other teedlo.com repos, this one has no site/ directory --
+      # the publishable files sit at the repo root alongside tests, package.json
+      # and CLAUDE.md. So the deploy names its files explicitly rather than
+      # syncing a directory. Add new published files here.
+      FILES: .htaccess index.html headnod.html playlist-utils.js shows-schedule.js itunes-cache.json
+      REMOTE_DIR: teedlo.com/1/
     steps:
-      - name: Check out repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      # wlixcc/SFTP-Deploy-Action does `sftp put -r <local_path>`, which
-      # (like plain `sftp put -r`) creates a same-named subdirectory at the
-      # destination rather than uploading contents directly. Pointing
-      # local_path at a *folder* (e.g. "./site") therefore lands files at
-      # /1/site/... instead of /1/... — learned this the hard way on the
-      # first run with multiple files. Uploading each file individually
-      # (local_path: a single file) avoids that nesting.
-      - name: Upload index.html via SFTP
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-        with:
-          server: ${{ secrets.SFTP_HOST }}
-          username: ${{ secrets.SFTP_USERNAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          sftp_only: true
-          local_path: './index.html'
-          remote_path: '/home/${{ secrets.SFTP_USERNAME }}/teedlo.com/1'
+      - name: Install deploy key
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.SFTP_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
 
-      - name: Upload headnod.html via SFTP
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-        with:
-          server: ${{ secrets.SFTP_HOST }}
-          username: ${{ secrets.SFTP_USERNAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          sftp_only: true
-          local_path: './headnod.html'
-          remote_path: '/home/${{ secrets.SFTP_USERNAME }}/teedlo.com/1'
-
-      - name: Upload playlist-utils.js via SFTP
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-        with:
-          server: ${{ secrets.SFTP_HOST }}
-          username: ${{ secrets.SFTP_USERNAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          sftp_only: true
-          local_path: './playlist-utils.js'
-          remote_path: '/home/${{ secrets.SFTP_USERNAME }}/teedlo.com/1'
-
-      # Already live (uploaded by hand at some point) and byte-identical to
-      # this copy, but it was never part of the deploy — headnod.html reads
-      # the show's time slot from it, so wire it up rather than leave it
-      # drifting out of the pipeline.
-      - name: Upload shows-schedule.js via SFTP
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-        with:
-          server: ${{ secrets.SFTP_HOST }}
-          username: ${{ secrets.SFTP_USERNAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          sftp_only: true
-          local_path: './shows-schedule.js'
-          remote_path: '/home/${{ secrets.SFTP_USERNAME }}/teedlo.com/1'
-
-      - name: Upload itunes-cache.json via SFTP
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-        with:
-          server: ${{ secrets.SFTP_HOST }}
-          username: ${{ secrets.SFTP_USERNAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          sftp_only: true
-          local_path: './itunes-cache.json'
-          remote_path: '/home/${{ secrets.SFTP_USERNAME }}/teedlo.com/1'
-
-      - name: Upload .htaccess via SFTP
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-        with:
-          server: ${{ secrets.SFTP_HOST }}
-          username: ${{ secrets.SFTP_USERNAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          sftp_only: true
-          local_path: './.htaccess'
-          remote_path: '/home/${{ secrets.SFTP_USERNAME }}/teedlo.com/1'
+      # No --delete: the file list is explicit, and /1/ also holds a stray site/
+      # directory left by an old sftp nesting bug that is not this repo's to remove.
+      - name: Deploy
+        run: |
+          rsync -az --itemize-changes \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
+            $FILES \
+            "${{ secrets.SFTP_USERNAME }}@${{ secrets.SFTP_HOST }}:$REMOTE_DIR"
