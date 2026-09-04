@@ -95,6 +95,13 @@
             font-size: 1.1em;
             padding: 10px 14px;
             cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
+            line-height: normal;
+            /* Sibling <button>s pick this up from the input/button rule
+               above; an <a> doesn't, and without it this control sits
+               tighter against its neighbours than they do to each other. */
+            margin: 5px;
             background: var(--badge-bg);
             color: var(--badge-fg);
             border: 1px solid var(--border);
@@ -308,7 +315,7 @@
         <select id="showSelect" aria-label="Browse by show">
             <option value="">By Show ▾</option>
         </select>
-        <button type="button" id="headnodButton" title="Jump straight to The Headnod Show">★ Headnod Show</button>
+        <a id="headnodButton" href="headnod.html" title="The Headnod Show — every episode, with tracklists and audio">★ Headnod Show</a>
         <button type="button" id="themeToggle" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
     </form>
 
@@ -1300,17 +1307,14 @@
             });
         }
 
-        // Jumps straight to a specific show, bypassing the dropdown — used
-        // by the "★ Headnod Show" quick-jump button.
-        const HEADNOD_SHOW_NAME = 'The Headnod Show';
-
+        // The "★ Headnod Show" control is a plain link to headnod.html, the
+        // dedicated page for that show (tracklists plus Mixcloud audio), so
+        // it needs no handler here. The Headnod Show is still in the "By
+        // Show" dropdown like every other show if you want it inline.
         function setupShowBrowsing() {
             populateShowSelect();
             document.getElementById('showSelect').addEventListener('change', e => {
                 if (e.target.value && !showFetchInFlight) startShowHistory(e.target.value);
-            });
-            document.getElementById('headnodButton').addEventListener('click', () => {
-                if (!showFetchInFlight) startShowHistory(HEADNOD_SHOW_NAME);
             });
             document.getElementById('backToDateLink').addEventListener('click', backToDateView);
             document.getElementById('loadMoreButton').addEventListener('click', loadMoreShowHistory);
