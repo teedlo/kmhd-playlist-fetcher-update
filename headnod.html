@@ -1015,10 +1015,34 @@
 
     // ---------------- page ----------------
 
+    // The show airs 6-8pm Pacific. Until it has finished airing there is no
+    // upload and no logged tracklist for the current Friday, so leading with
+    // it means the page opens on an empty card for a show that hasn't
+    // happened yet — every Friday, for most of the day. Anchor to the most
+    // recent Friday that has actually finished instead.
+    //
+    // Pacific, not the viewer's zone: the show ends at 8pm in Portland
+    // whether you're reading this in Portland or Paris.
+    function airedFridays(count, skip) {
+        const parts = {};
+        new Intl.DateTimeFormat('en-CA', {
+            timeZone: 'America/Los_Angeles',
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            weekday: 'short', hour: '2-digit', hourCycle: 'h23'
+        }).formatToParts(new Date()).forEach(p => { parts[p.type] = p.value; });
+
+        const pacificToday = `${parts.year}-${parts.month}-${parts.day}`;
+        const stillAiring = parts.weekday === 'Fri' && parseInt(parts.hour, 10) < 20;
+        // Ask for one extra when today's show is dropped, so a full page
+        // of episodes still comes back.
+        const dates = PlaylistUtils.pastWeekdayDates(
+            5, skip + count + (stillAiring ? 1 : 0), pacificToday);
+        return stillAiring ? dates.slice(skip + 1) : dates.slice(skip);
+    }
+
     function renderFridays(count) {
         const container = document.getElementById('episodes');
-        const today = PlaylistUtils.toIsoDate(new Date());
-        const dates = PlaylistUtils.pastWeekdayDates(5, fridaysShown + count, today).slice(fridaysShown);
+        const dates = airedFridays(count, fridaysShown);
         dates.forEach(date => container.appendChild(buildEpisodeCard(date, episodesByDate.get(date) || null)));
         fridaysShown += dates.length;
         document.getElementById('loadMoreWrap').style.display = 'block';
