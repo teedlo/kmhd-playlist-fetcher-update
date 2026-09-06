@@ -1,0 +1,13 @@
+# Deployed to teedlo.com/1/.htaccess — NOT this repo's own .htaccess.
+#
+# The pages moved from /1/ to /kmhd/. The old copies are still sitting in
+# /1/ because the deploy runs without --delete, so without this they would
+# go on serving a duplicate of the site frozen at the last /1/ deploy —
+# indexable, and drifting further from /kmhd/ with every release. This
+# points /1/ at the real thing instead of leaving a stale twin behind.
+#
+# (Nothing depends on the old URL — it was never shared — so deleting the
+# /1/ files outright would work equally well; this just avoids doing
+# anything destructive on the server to achieve it.)
+RedirectMatch 301 ^/1/?$ /kmhd/
+RedirectMatch 301 ^/1/(.+)$ /kmhd/$1

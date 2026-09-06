@@ -37,7 +37,7 @@ jobs:
       # and CLAUDE.md. So the deploy names its files explicitly rather than
       # syncing a directory. Add new published files here.
       FILES: .htaccess index.html headnod.html playlist-utils.js shows-schedule.js itunes-cache.json
-      REMOTE_DIR: teedlo.com/1/
+      REMOTE_DIR: teedlo.com/kmhd/
     steps:
       - uses: actions/checkout@v5
 
@@ -50,9 +50,27 @@ jobs:
 
       # No --delete: the file list is explicit, and /1/ also holds a stray site/
       # directory left by an old sftp nesting bug that is not this repo's to remove.
+      # rsync does not create a missing destination directory, and /kmhd/
+      # is new, so ensure it exists before the first deploy lands.
+      - name: Ensure remote directory exists
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes \
+            "${{ secrets.SFTP_USERNAME }}@${{ secrets.SFTP_HOST }}" \
+            'mkdir -p teedlo.com/kmhd'
+
       - name: Deploy
         run: |
           rsync -az --itemize-changes \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
             $FILES \
             "${{ secrets.SFTP_USERNAME }}@${{ secrets.SFTP_HOST }}:$REMOTE_DIR"
+
+      # Stops the old /1/ copies serving as a stale twin of the site (the
+      # deploy runs without --delete, so they are still there). Renamed on
+      # arrival: it is /1/'s .htaccess, not this repo's.
+      - name: Deploy /1/ redirect
+        run: |
+          rsync -az --itemize-changes \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
+            legacy-1.htaccess \
+            "${{ secrets.SFTP_USERNAME }}@${{ secrets.SFTP_HOST }}:teedlo.com/1/.htaccess"
