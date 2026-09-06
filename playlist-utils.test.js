@@ -195,3 +195,32 @@ test('pastWeekdayDates: when fromDate IS the target weekday, it is included as t
 test('pastWeekdayDates: returns an empty array for an unparsable date', () => {
     assert.deepEqual(pastWeekdayDates(5, 3, 'not-a-date'), []);
 });
+
+// ---------------- Apple Music / per-day enrichment helpers ----------------
+
+test('enrichKey: is "artist|title", lowercased, and what cacheKey builds on', () => {
+    const { enrichKey } = require('./playlist-utils.js');
+    assert.equal(enrichKey({ artist: 'Art Farmer', title: 'Big Blues' }), 'art farmer|big blues');
+    assert.equal(enrichKey({}), '|');
+    assert.equal(cacheKey('itunes1:', { artist: 'Art Farmer', title: 'Big Blues' }), 'itunes1:' + enrichKey({ artist: 'Art Farmer', title: 'Big Blues' }));
+});
+
+test('trackDate: reads the KMHD (Portland-local) day straight off start.local', () => {
+    const { trackDate } = require('./playlist-utils.js');
+    // 21:53 Portland on the 5th is already the 6th in UTC; the day file is the 5th.
+    const item = { start: { utc: '2026-09-06T04:53:01Z', local: '2026-09-05T21:53:01-07:00', timezone: 'America/Los_Angeles' } };
+    assert.equal(trackDate(item), '2026-09-05');
+});
+
+test('trackDate: falls back to the old schema and to nothing at all', () => {
+    const { trackDate } = require('./playlist-utils.js');
+    assert.equal(trackDate({ _start_time: '2023-08-03T18:57:25.000-07:00' }), '2023-08-03');
+    assert.equal(trackDate({}), null);
+    assert.equal(trackDate(null), null);
+});
+
+test('searchLinks: builds an Apple Music search link, the instant stand-in for the exact track link', () => {
+    const links = searchLinks({ artist: 'Allen Toussaint', title: 'Sweet Dreams', album: 'Connected' });
+    assert.equal(links.appleMusic, 'https://music.apple.com/us/search?term=Allen%20Toussaint%20Sweet%20Dreams');
+    assert.equal(searchLinks({}).appleMusic, null);
+});

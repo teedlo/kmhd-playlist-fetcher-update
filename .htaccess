@@ -7,4 +7,17 @@
     <FilesMatch "\.html$">
         Header set Cache-Control "no-cache, must-revalidate"
     </FilesMatch>
+    # The per-day Apple Music link files (enrich/YYYY-MM-DD.json) are
+    # rebuilt every few hours for the current day, so they must not inherit
+    # the server's 2-day default for JSON. A day's file is reused for 5
+    # minutes of browsing, then revalidated (a cheap 304 when unchanged).
+    <FilesMatch "^[0-9]{4}-[0-9]{2}-[0-9]{2}\.json$">
+        Header set Cache-Control "max-age=300, must-revalidate"
+    </FilesMatch>
+</IfModule>
+
+# The server gzips HTML and JS on its own but not JSON. A day's link file
+# is ~120 KB raw and ~27 KB compressed, and it's fetched on every playlist.
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE application/json
 </IfModule>

@@ -45,13 +45,35 @@
         return { title, artist, album };
     }
 
-    // Builds the localStorage cache key used for iTunes Search lookups.
+    // The one key every iTunes-lookup store agrees on: "artist|title",
+    // lowercased. Used verbatim by the per-day enrichment files under
+    // enrich/ (built by scripts/build-enrich.js), by the in-page static
+    // map that loads them, and (with a prefix) by the localStorage cache.
     // Deliberately case-insensitive so "The Beatles" and "the beatles"
-    // share a cache entry.
-    function cacheKey(prefix, meta) {
+    // share an entry.
+    function enrichKey(meta) {
         const artist = (meta && meta.artist) || '';
         const title = (meta && meta.title) || '';
-        return prefix + `${artist}|${title}`.toLowerCase();
+        return `${artist}|${title}`.toLowerCase();
+    }
+
+    // Builds the localStorage cache key used for iTunes Search lookups.
+    function cacheKey(prefix, meta) {
+        return prefix + enrichKey(meta);
+    }
+
+    // The KMHD playlist "day" a track belongs to, as YYYY-MM-DD. KMHD
+    // buckets its per-day API by Portland-local date, and every item
+    // carries that date at the front of start.local (old schema:
+    // _start_time), so this is a string slice, not timezone math. Falls
+    // back to the viewer-local calendar date only if neither is present.
+    function trackDate(item) {
+        if (!item) return null;
+        const local = (item.start && item.start.local) || item._start_time;
+        const match = local ? String(local).match(/^(\d{4}-\d{2}-\d{2})/) : null;
+        if (match) return match[1];
+        const d = trackStartDate(item);
+        return d ? toIsoDate(d) : null;
     }
 
     // Pulls a 4-digit release year out of whatever date-ish field is
@@ -73,12 +95,20 @@
     // aren't worth the setup cost of) a per-track lookup API. Every link
     // is a search results page rather than a guaranteed exact match, so
     // it degrades gracefully instead of ever 404ing.
+    //
+    // appleMusic is the search page too: it renders instantly with the
+    // rest, and when an exact iTunes match is known (from the per-day
+    // enrich/ file or a live lookup) the page swaps that same link's
+    // href for the track's own Apple Music URL in place.
     function searchLinks(meta) {
         const artist = (meta && meta.artist) || '';
         const title = (meta && meta.title) || '';
         const album = (meta && meta.album) || '';
         const artistTitle = `${artist} ${title}`.trim();
         return {
+            appleMusic: artistTitle
+                ? `https://music.apple.com/us/search?term=${encodeURIComponent(artistTitle)}`
+                : null,
             youtube: artistTitle
                 ? `https://www.youtube.com/results?search_query=${encodeURIComponent(artistTitle + ' live')}`
                 : null,
@@ -153,7 +183,7 @@
     }
 
     return {
-        trackStartDate, mapItemFields, cacheKey, trackYear, searchLinks,
+        trackStartDate, trackDate, mapItemFields, enrichKey, cacheKey, trackYear, searchLinks,
         minutesOfDay, trackInSlot, pastWeekdayDates, toIsoDate
     };
 }));

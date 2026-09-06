@@ -243,6 +243,38 @@
         }
         .track-links a { white-space: nowrap; padding: 4px 0; }
 
+        /* ---------------- sort / genre controls ---------------- */
+        .track-controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px 20px;
+            margin: 0 0 18px;
+        }
+        .track-controls label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95em;
+            color: var(--muted);
+        }
+        .track-controls select {
+            font-family: inherit;
+            font-size: 1em;
+            padding: 9px 12px;
+            max-width: 16em;
+            background: var(--header-bg);
+            color: var(--fg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+        table.tracks tr.group-header td {
+            background: var(--header-bg);
+            font-weight: bold;
+            text-align: center;
+            padding: 8px;
+        }
+
         #loading, #error { text-align: center; padding: 12px; }
         #error { color: var(--error); display: none; }
         #loadMoreWrap { text-align: center; margin: 20px 0; display: none; }
@@ -280,6 +312,24 @@
     <div id="loading">Loading episodes&hellip;</div>
     <div id="error"></div>
 
+    <!-- Apply to every open tracklist. Picking a genre also opens every
+         episode on the page, since the question is "where did he play
+         funk", not "in this one". -->
+    <div class="track-controls">
+        <label>Sort tracks
+            <select id="sortSelect" aria-label="Sort tracks">
+                <option value="time" selected>by time played</option>
+                <option value="year">by year (oldest first)</option>
+                <option value="genre">by genre</option>
+            </select>
+        </label>
+        <label>Genre
+            <select id="genreSelect" aria-label="Show only one genre">
+                <option value="">All genres</option>
+            </select>
+        </label>
+    </div>
+
     <main id="episodes"></main>
 
     <div id="loadMoreWrap"><button type="button" id="loadMoreButton">Load earlier Fridays</button></div>
@@ -295,8 +345,8 @@
 <!-- Cache-busting query param: bump whenever these files change (see the
      same note in index.html — a stale cached copy silently breaks any
      function the old copy doesn't have yet). -->
-<script src="playlist-utils.js?v=20260830b"></script>
-<script src="shows-schedule.js?v=20260830b"></script>
+<script src="playlist-utils.js?v=20260906"></script>
+<script src="shows-schedule.js?v=20260906"></script>
 <script>
     // ------------------------------------------------------------------
     // The Headnod Show, on its own page.
@@ -312,7 +362,7 @@
     // get a full tracklist card, just without a play button.
     //
     // The iTunes enrichment below is deliberately the same design as
-    // index.html's (static cache file -> localStorage -> shared Worker
+    // index.html's (per-day enrich/ file -> localStorage -> shared Worker
     // cache -> throttled iTunes JSONP). It's duplicated rather than shared
     // because pulling it out into a module would mean rewriting the main
     // page's script too; if a third page ever needs it, extract it then.
@@ -515,21 +565,30 @@
         card.appendChild(list);
 
         let loaded = false;
+        let loading = false;
         let open = false;
+        const setOpen = value => {
+            open = value;
+            list.style.display = open ? 'block' : 'none';
+            tracksBtn.textContent = open ? 'Hide tracklist' : 'Show tracklist';
+        };
+        const load = () => {
+            if (loading) return;
+            loading = true;
+            loadTracklist(date, list, tracksBtn)
+                .then(() => { loaded = true; open = true; })
+                .finally(() => { loading = false; });
+        };
         tracksBtn.addEventListener('click', () => {
-            if (loaded) {
-                open = !open;
-                list.style.display = open ? 'block' : 'none';
-                tracksBtn.textContent = open ? 'Hide tracklist' : 'Show tracklist';
-                return;
-            }
-            loadTracklist(date, list, tracksBtn).then(() => { loaded = true; open = true; });
+            if (loaded) setOpen(!open); else load();
         });
 
         // Let the newest episode show its tracklist without a click — it's
         // the whole point of the page, and it's one extra request.
         card.dataset.date = date;
         card._expand = () => tracksBtn.click();
+        // For the genre filter: open (loading first if need be), never close.
+        card._ensureOpen = () => { if (loaded) { if (!open) setOpen(true); } else load(); };
 
         return card;
     }
@@ -555,23 +614,10 @@
 
             container.innerHTML = '';
             button.disabled = false;
-
-            if (items.length === 0) {
-                const none = document.createElement('div');
-                none.className = 'ep-status';
-                none.textContent = 'No tracklist logged for this date.';
-                container.appendChild(none);
-                button.textContent = 'Hide tracklist';
-                return;
-            }
-
-            const table = document.createElement('table');
-            table.className = 'tracks';
-            const tbody = document.createElement('tbody');
-            items.forEach(item => tbody.appendChild(buildTrackRow(item)));
-            table.appendChild(tbody);
-            container.appendChild(table);
-            button.textContent = `Hide tracklist (${items.length})`;
+            container._items = items;   // kept so the sort/genre controls can re-render this list
+            renderTracklist(container, items);
+            button.textContent = items.length ? `Hide tracklist (${items.length})` : 'Hide tracklist';
+            scheduleGenreRefresh();
         }).catch(() => {
             container.innerHTML = '';
             button.disabled = false;
@@ -582,6 +628,176 @@
         });
     }
 
+    // ---------------- sorting & filtering ----------------
+    // The two controls above the episodes apply to every open tracklist.
+    // Year and genre come from KMHD's log where it has them and from the
+    // iTunes match otherwise (see yearOf); a track with neither sorts last
+    // and never matches a genre filter.
+
+    let currentSort = 'time';    // 'time' | 'year' | 'genre'
+    let currentGenre = '';       // '' = all genres
+
+    // What is known about a track without touching the network: the day
+    // file loaded for its date, else this browser's localStorage. An entry,
+    // null for a confirmed no-match, or null when nothing is known yet.
+    function knownEnrichment(meta) {
+        const s = staticEnrichGet(meta);
+        if (s !== undefined) return s;
+        return cacheGet(meta) || null;
+    }
+
+    // A track's year: KMHD's own release date when the log has one, else the
+    // iTunes match's. KMHD leaves the date blank on more than half its
+    // entries, which used to dump most tracks under "Unknown year".
+    function yearOf(item) {
+        const kmhd = PlaylistUtils.trackYear(item);
+        if (kmhd) return kmhd;
+        const meta = PlaylistUtils.mapItemFields(item);
+        if (!meta.title || !meta.artist) return null;
+        const info = knownEnrichment(meta);
+        return info ? PlaylistUtils.trackYear(info) : null;
+    }
+
+    function describeTrack(item) {
+        const meta = PlaylistUtils.mapItemFields(item);
+        const info = (meta.title && meta.artist) ? knownEnrichment(meta) : null;
+        const start = PlaylistUtils.trackStartDate(item);
+        return {
+            item,
+            time: start ? start.getTime() : 0,
+            year: yearOf(item),
+            genre: (info && info.primaryGenreName) || null
+        };
+    }
+
+    // Air-time order within a year or genre, unknowns last.
+    function compareTracks(a, b) {
+        if (currentSort === 'year' && a.year !== b.year) {
+            if (a.year == null) return 1;
+            if (b.year == null) return -1;
+            return a.year - b.year;
+        }
+        if (currentSort === 'genre' && a.genre !== b.genre) {
+            if (a.genre == null) return 1;
+            if (b.genre == null) return -1;
+            return a.genre.localeCompare(b.genre);
+        }
+        return a.time - b.time;
+    }
+
+    function groupLabel(track) {
+        if (currentSort === 'year') return track.year ? String(track.year) : 'Unknown year';
+        if (currentSort === 'genre') return track.genre || 'Unknown genre';
+        return null;
+    }
+
+    function sameGenre(a, b) {
+        return !!a && !!b && a.toLowerCase() === b.toLowerCase();
+    }
+
+    // (Re)builds one episode's tracklist table for the current sort and
+    // genre filter. Returns how many tracks it showed.
+    function renderTracklist(container, items) {
+        container.innerHTML = '';
+        const tracks = items.map(describeTrack)
+            .filter(t => !currentGenre || sameGenre(t.genre, currentGenre))
+            .sort(compareTracks);
+
+        if (tracks.length === 0) {
+            const none = document.createElement('div');
+            none.className = 'ep-status';
+            none.textContent = items.length === 0
+                ? 'No tracklist logged for this date.'
+                : `No ${currentGenre} tracks in this episode.`;
+            container.appendChild(none);
+            return 0;
+        }
+
+        const table = document.createElement('table');
+        table.className = 'tracks';
+        const tbody = document.createElement('tbody');
+        let lastLabel;
+        tracks.forEach(track => {
+            const label = groupLabel(track);
+            if (label !== null && label !== lastLabel) {
+                const headerRow = document.createElement('tr');
+                headerRow.className = 'group-header';
+                const headerCell = document.createElement('td');
+                headerCell.colSpan = 3;
+                headerCell.textContent = label;
+                headerRow.appendChild(headerCell);
+                tbody.appendChild(headerRow);
+                lastLabel = label;
+            }
+            tbody.appendChild(buildTrackRow(track.item));
+        });
+        table.appendChild(tbody);
+        container.appendChild(table);
+        return tracks.length;
+    }
+
+    function rerenderTracklists() {
+        document.querySelectorAll('.ep-tracklist').forEach(container => {
+            if (container._items) renderTracklist(container, container._items);
+        });
+    }
+
+    // The genre dropdown lists every genre among the tracklists loaded so
+    // far, with counts. Refreshed (coalesced) whenever a tracklist loads or a
+    // late live lookup adds a genre.
+    let genreRefreshTimer = null;
+    function scheduleGenreRefresh() {
+        if (genreRefreshTimer) return;
+        genreRefreshTimer = setTimeout(() => { genreRefreshTimer = null; refreshGenreOptions(); }, 50);
+    }
+
+    function refreshGenreOptions() {
+        const select = document.getElementById('genreSelect');
+        if (!select) return;
+        const counts = new Map();
+        document.querySelectorAll('.ep-tracklist').forEach(container => {
+            (container._items || []).forEach(item => {
+                const genre = describeTrack(item).genre;
+                if (genre) counts.set(genre, (counts.get(genre) || 0) + 1);
+            });
+        });
+        const genres = Array.from(counts.keys()).sort((a, b) => a.localeCompare(b));
+        select.innerHTML = '';
+        const all = document.createElement('option');
+        all.value = '';
+        all.textContent = 'All genres';
+        select.appendChild(all);
+        genres.forEach(genre => {
+            const opt = document.createElement('option');
+            opt.value = genre;
+            opt.textContent = `${genre} (${counts.get(genre)})`;
+            select.appendChild(opt);
+        });
+        // Keep the chosen genre selected even if none of the loaded episodes
+        // has it (yet), rather than silently snapping back to "All".
+        if (currentGenre && !genres.some(g => sameGenre(g, currentGenre))) {
+            const opt = document.createElement('option');
+            opt.value = currentGenre;
+            opt.textContent = `${currentGenre} (0)`;
+            select.appendChild(opt);
+        }
+        select.value = currentGenre;
+    }
+
+    function setupTrackControls() {
+        document.getElementById('sortSelect').addEventListener('change', e => {
+            currentSort = e.target.value;
+            rerenderTracklists();
+        });
+        document.getElementById('genreSelect').addEventListener('change', e => {
+            currentGenre = e.target.value;
+            if (currentGenre) {
+                document.querySelectorAll('.episode').forEach(card => { if (card._ensureOpen) card._ensureOpen(); });
+            }
+            rerenderTracklists();
+        });
+    }
+
     // ---------------- track rows ----------------
     // Same row shape and enrichment hooks as index.html's buildTrackRow.
 
@@ -589,7 +805,7 @@
         const startTime = PlaylistUtils.trackStartDate(item);
         const options = { hour: 'numeric', minute: 'numeric', hour12: true };
         const localTime = startTime ? startTime.toLocaleTimeString([], options).replace(/^0/, '') : '';
-        const rowYear = PlaylistUtils.trackYear(item);
+        const rowYear = yearOf(item);
         const { title, artist, album } = PlaylistUtils.mapItemFields(item);
 
         const row = document.createElement('tr');
@@ -663,15 +879,18 @@
             const links = PlaylistUtils.searchLinks({ title, artist, album });
             const linksRow = document.createElement('div');
             linksRow.className = 'track-links';
-            const addLink = (url, label) => {
+            const addLink = (url, label, className, tooltip) => {
                 if (!url) return;
                 const a = document.createElement('a');
                 a.href = url;
                 a.target = '_blank';
                 a.rel = 'noopener';
                 a.textContent = label;
+                if (className) a.className = className;
+                if (tooltip) a.title = tooltip;
                 linksRow.appendChild(a);
             };
+            addLink(links.appleMusic, 'Apple Music', 'apple-music-link', 'Search Apple Music for this track');
             addLink(links.youtube, 'YouTube (live)');
             addLink(links.tidal, 'Tidal');
             addLink(links.ebayVinyl, 'eBay (vinyl)');
@@ -689,33 +908,85 @@
     }
 
     // ---------------- iTunes enrichment ----------------
-    // Mirrors index.html: static cache file, then localStorage, then the
-    // shared Worker cache, then a throttled live iTunes JSONP lookup.
+    // Album art, genre and the exact Apple Music links come from iTunes
+    // Search, in this order of preference:
+    //   1. enrich/YYYY-MM-DD.json: every track KMHD played that day, looked
+    //      up ahead of time by scripts/build-enrich.js (which
+    //      .github/workflows/enrich.yml runs every few hours) and deployed
+    //      as a plain static file. One small same-origin request per date,
+    //      fetched alongside the playlist itself, and every row renders with
+    //      its exact link already in place: no per-track lookups at all.
+    //   2. this browser's localStorage (results of earlier live lookups),
+    //   3. the shared Worker cache (results of other visitors' lookups),
+    //   4. a live iTunes Search lookup, throttled to iTunes' rate limit.
+    // 3 and 4 only run for tracks the day file doesn't have (played since
+    // the last build, or a day too old to have been built), for rows as
+    // they scroll into view. Until they land, the row's Apple Music link is
+    // the search page, so nothing ever waits on them.
 
     const ENRICH_PROXY_URL = 'https://kmhd-playlist-cache.teedlo.workers.dev/';
-    const ENRICH_STORE_KEY = '70ce6e7a581f43cee202a6439864b576';
+    const ENRICH_STORE_KEY = '70ce6e7a581f43cee202a6439864b576';   // matches the Worker's PURGE_KEY; see pushToSharedCache
     const ITUNES_INTERVAL_MS = 3500;         // ~17 req/min, under iTunes' ~20/min limit
-    const SHARED_CACHE_INTERVAL_MS = 250;
-    const STATIC_ENRICH_URL = 'itunes-cache.json';
-    const CACHE_PREFIX = 'itunes1:';         // shared with index.html on purpose
-    const CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+    const SHARED_CACHE_CONCURRENCY = 4;      // Worker lookups in flight at once; it's an edge cache, nothing rate-limited happens there
+    const CACHE_PREFIX = 'itunes1:';         // localStorage; shared between index.html and headnod.html on purpose
+    const CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000;  // 30 days
 
-    let staticEnrich = null;
-    let staticEnrichSettled = false;
-    const staticEnrichLoaded = fetch(STATIC_ENRICH_URL, { cache: 'no-cache' })
-        .then(r => r.ok ? r.json() : null)
-        .then(data => { if (data && data.tracks) staticEnrich = new Map(Object.entries(data.tracks)); })
-        .catch(() => {})
-        .finally(() => { staticEnrichSettled = true; });
+    // ---- 1. per-day static files ----
+    const ENRICH_DIR = 'enrich/';
+    const ENRICH_WAIT_MS = 1500;       // longest a render waits on a day file before going ahead without it
+    const staticEnrich = new Map();    // "artist|title" -> entry, or null for a confirmed no-match; merged from every day file loaded so far
+    const dayEnrichLoads = new Map();  // date -> { promise, settled }
+
+    function loadDayEnrich(date) {
+        if (!date) return Promise.resolve();
+        let state = dayEnrichLoads.get(date);
+        if (state) return state.promise;
+        state = { settled: false };
+        state.promise = fetch(`${ENRICH_DIR}${date}.json`)
+            .then(r => r.ok ? r.json() : null)     // 404: no file for that day (yet); live lookups take over
+            .then(data => {
+                if (!data || !data.tracks) return;
+                Object.keys(data.tracks).forEach(key => staticEnrich.set(key, data.tracks[key]));
+            })
+            .catch(() => {})
+            .finally(() => { state.settled = true; });
+        dayEnrichLoads.set(date, state);
+        return state.promise;
+    }
+
+    // Resolves once `date`'s file has loaded (or failed), but never later
+    // than ENRICH_WAIT_MS from now, so the playlist is never held up by a
+    // slow static file. Never rejects.
+    function dayEnrichReady(date) {
+        return Promise.race([
+            loadDayEnrich(date),
+            new Promise(resolve => setTimeout(resolve, ENRICH_WAIT_MS))
+        ]);
+    }
 
     function staticEnrichGet(meta) {
-        if (!staticEnrich) return undefined;
-        const key = `${meta.artist}|${meta.title}`.toLowerCase();
+        const key = PlaylistUtils.enrichKey(meta);
         return staticEnrich.has(key) ? staticEnrich.get(key) : undefined;
     }
 
-    const enrichQueue = [];
-    let queueTimer = null;
+    // Day files still downloading (after a render that stopped waiting at
+    // ENRICH_WAIT_MS, say). A row whose track isn't known yet waits for
+    // these before falling back to network lookups it probably doesn't need.
+    function pendingDayLoads() {
+        const pending = [];
+        dayEnrichLoads.forEach(state => { if (!state.settled) pending.push(state.promise); });
+        return pending;
+    }
+
+    // ---- 2-4. lookups for everything else ----
+    // Two queues, so one slow stage never blocks the other: shared-cache
+    // lookups run a few at a time; whatever the Worker doesn't have moves
+    // on to the iTunes queue, which is strictly one lookup per
+    // ITUNES_INTERVAL_MS.
+    const enrichQueue = [];      // rows waiting for a shared-cache lookup
+    const itunesQueue = [];      // rows the shared cache didn't have
+    let sharedInFlight = 0;
+    let itunesTimer = null;
     let jsonpCounter = 0;
 
     const intersectionObserver = ('IntersectionObserver' in window)
@@ -734,13 +1005,19 @@
     function observeForEnrichment(row, coverContainer, meta) {
         const job = { row, coverContainer, meta };
         if (tryKnownSources(job)) return;
-        if (!staticEnrichSettled) {
-            staticEnrichLoaded.then(() => { if (!tryKnownSources(job)) observeJob(job); });
+        const pending = pendingDayLoads();
+        if (pending.length) {
+            // Capped like dayEnrichReady: a hung day file must not stall live lookups.
+        Promise.race([Promise.all(pending), new Promise(resolve => setTimeout(resolve, ENRICH_WAIT_MS))])
+            .then(() => { if (!tryKnownSources(job)) observeJob(job); });
             return;
         }
         observeJob(job);
     }
 
+    // Instant, no-network sources: the day files loaded so far, then this
+    // browser's localStorage. Returns true if the job is fully handled
+    // (art/links applied, or a known no-match).
     function tryKnownSources(job) {
         const s = staticEnrichGet(job.meta);
         if (s !== undefined) {
@@ -766,31 +1043,43 @@
     }
 
     function pumpQueue() {
-        if (queueTimer || enrichQueue.length === 0) return;
-        processNext();
+        while (sharedInFlight < SHARED_CACHE_CONCURRENCY && enrichQueue.length > 0) {
+            const job = enrichQueue.shift();
+            sharedInFlight++;
+            enrichViaSharedCache(job.meta, result => {
+                sharedInFlight--;
+                if (result) {
+                    cacheSet(job.meta, result);
+                    applyEnrichment(job, result);
+                } else {
+                    // IMPORTANT: a null from the Worker means "not cached
+                    // yet" (or the Worker was unreachable), NOT "this track
+                    // has no Apple Music match": do the iTunes lookup
+                    // ourselves, then share what we find with everyone
+                    // else. (An earlier version cached that null as a
+                    // permanent no-match, which silently stopped ALL
+                    // art/links from loading; never repeat that.)
+                    itunesQueue.push(job);
+                    pumpItunes();
+                }
+                pumpQueue();
+            });
+        }
     }
 
-    function processNext() {
-        const job = enrichQueue.shift();
-        if (!job) { queueTimer = null; return; }
-        enrichViaSharedCache(job.meta, result => {
+    function pumpItunes() {
+        if (itunesTimer || itunesQueue.length === 0) return;
+        const job = itunesQueue.shift();
+        itunesTimer = setTimeout(() => { itunesTimer = null; pumpItunes(); }, ITUNES_INTERVAL_MS);
+        itunesLookup(job.meta, result => {
+            cacheSet(job.meta, result);
             if (result) {
-                cacheSet(job.meta, result);
                 applyEnrichment(job, result);
-                queueTimer = setTimeout(() => { queueTimer = null; processNext(); }, SHARED_CACHE_INTERVAL_MS);
-                return;
+                // Confirmed no-matches aren't pushed: a transient lookup
+                // hiccup shouldn't get permanently cached as "this track
+                // doesn't exist" for everyone.
+                pushToSharedCache(job.meta, result);
             }
-            // A null from the Worker means "not cached yet", NOT "no such
-            // track" — do the lookup ourselves rather than caching a
-            // permanent no-match (see the same warning in index.html).
-            queueTimer = setTimeout(() => { queueTimer = null; processNext(); }, ITUNES_INTERVAL_MS);
-            itunesLookup(job.meta, result2 => {
-                cacheSet(job.meta, result2);
-                if (result2) {
-                    applyEnrichment(job, result2);
-                    pushToSharedCache(job.meta, result2);
-                }
-            });
         });
     }
 
@@ -867,22 +1156,44 @@
         linkify(row.querySelector('.track-artist'), info.artistViewUrl);
         linkify(row.querySelector('.track-album'), info.collectionViewUrl);
 
+        // The row's "Apple Music" link was rendered straight away as a search
+        // page; now that the exact track is known, point that same link at it
+        // (no new element, so nothing shifts). The insert is only for a row
+        // that was somehow built without one.
         const linksRow = row.querySelector('.track-links');
         if (linksRow && info.trackViewUrl) {
-            const a = document.createElement('a');
+            let a = linksRow.querySelector('.apple-music-link');
+            if (!a) {
+                a = document.createElement('a');
+                a.className = 'apple-music-link';
+                a.target = '_blank';
+                a.rel = 'noopener';
+                a.textContent = 'Apple Music';
+                linksRow.insertBefore(a, linksRow.firstChild);
+            }
             a.href = info.trackViewUrl;
-            a.target = '_blank';
-            a.rel = 'noopener';
-            a.textContent = 'Apple Music';
-            linksRow.insertBefore(a, linksRow.firstChild);
+            a.title = 'Open this track in Apple Music';
+        }
+
+        // Year, when KMHD's log had none but iTunes does (see yearOf): fill
+        // the "Year - Genre" line in for a row built before this was known.
+        const yearGenreLine = row.querySelector('.track-yeargenre');
+        if (yearGenreLine && !yearGenreLine.querySelector('.track-year')) {
+            const year = PlaylistUtils.trackYear(info);
+            if (year) {
+                const yearEl = document.createElement('span');
+                yearEl.className = 'track-year';
+                yearEl.textContent = year;
+                yearGenreLine.insertBefore(yearEl, yearGenreLine.firstChild);
+            }
         }
 
         const genreBadge = row.querySelector('.track-genre');
         if (genreBadge && info.primaryGenreName) {
-            const yearGenreLine = genreBadge.closest('.track-yeargenre');
             const hasYear = !!(yearGenreLine && yearGenreLine.querySelector('.track-year'));
             genreBadge.textContent = (hasYear ? ' - ' : '') + info.primaryGenreName;
             genreBadge.style.display = 'inline';
+            scheduleGenreRefresh();   // a live lookup may have just added a genre the dropdown lacks
         }
     }
 
@@ -969,6 +1280,15 @@
     }
 
     function fetchDayPlaylist(date) {
+        // The day's precomputed Apple Music links (see loadDayEnrich) load in
+        // parallel, and the playlist isn't handed back until they're in (or
+        // ENRICH_WAIT_MS is up), so the rows render already linked instead
+        // of the links popping in a moment later.
+        const ready = dayEnrichReady(date);
+        return fetchDayPlaylistRaw(date).then(data => ready.then(() => data));
+    }
+
+    function fetchDayPlaylistRaw(date) {
         const cached = dayCacheGet(date);
         if (cached !== undefined) return Promise.resolve(cached);
 
@@ -1043,7 +1363,11 @@
     function renderFridays(count) {
         const container = document.getElementById('episodes');
         const dates = airedFridays(count, fridaysShown);
-        dates.forEach(date => container.appendChild(buildEpisodeCard(date, episodesByDate.get(date) || null)));
+        dates.forEach(date => {
+            const card = buildEpisodeCard(date, episodesByDate.get(date) || null);
+            container.appendChild(card);
+            if (currentGenre) card._ensureOpen();   // a genre filter is on: show what this episode has of it
+        });
         fridaysShown += dates.length;
         document.getElementById('loadMoreWrap').style.display = 'block';
         return dates;
@@ -1052,13 +1376,14 @@
     window.addEventListener('load', () => {
         setupThemeToggle();
 
-        if (typeof PlaylistUtils === 'undefined' || typeof PlaylistUtils.pastWeekdayDates !== 'function') {
+        if (typeof PlaylistUtils === 'undefined' || typeof PlaylistUtils.pastWeekdayDates !== 'function' || typeof PlaylistUtils.enrichKey !== 'function') {
             document.getElementById('loading').style.display = 'none';
             const err = document.getElementById('error');
             err.textContent = 'This page needs to reload to pick up a recent update. Please refresh (Ctrl/Cmd+Shift+R) and try again.';
             err.style.display = 'block';
             return;
         }
+        setupTrackControls();
 
         loadMixcloudEpisodes().then(map => {
             episodesByDate = map;

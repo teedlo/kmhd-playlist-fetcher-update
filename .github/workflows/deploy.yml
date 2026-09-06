@@ -1,7 +1,11 @@
 name: Deploy to DreamHost
 
-# Push to main -> run unit tests -> publish to teedlo.com/1/.
+# Push to main -> run unit tests -> publish to teedlo.com/kmhd/.
 # Tests gate the deploy: if `node --test` fails, nothing is uploaded.
+#
+# Also callable from another workflow (enrich.yml, which commits new
+# Apple Music link files with the Actions token; such pushes don't fire
+# "on: push", so it calls this directly and passes the commit to deploy).
 #
 # Repository secrets required:
 #   DEPLOY_KEY     private half of ~/.ssh/dreamhost_deploy
@@ -12,6 +16,12 @@ on:
   push:
     branches: [main]
   workflow_dispatch: {}
+  workflow_call:
+    inputs:
+      ref:
+        description: 'Commit or branch to deploy (defaults to the triggering commit)'
+        type: string
+        required: false
 
 concurrency:
   group: deploy-${{ github.ref }}
@@ -22,6 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref || github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -35,11 +47,15 @@ jobs:
       # Unlike the other teedlo.com repos, this one has no site/ directory --
       # the publishable files sit at the repo root alongside tests, package.json
       # and CLAUDE.md. So the deploy names its files explicitly rather than
-      # syncing a directory. Add new published files here.
-      FILES: .htaccess index.html headnod.html playlist-utils.js shows-schedule.js itunes-cache.json
+      # syncing a directory. Add new published files here. `enrich` is the
+      # directory of per-day Apple Music link files (see scripts/build-enrich.js);
+      # rsync copies it whole, as /kmhd/enrich/.
+      FILES: .htaccess index.html headnod.html playlist-utils.js shows-schedule.js enrich
       REMOTE_DIR: teedlo.com/kmhd/
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref || github.sha }}
 
       - name: Install deploy key
         run: |
