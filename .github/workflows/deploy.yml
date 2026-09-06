@@ -64,13 +64,3 @@ jobs:
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
             $FILES \
             "${{ secrets.SFTP_USERNAME }}@${{ secrets.SFTP_HOST }}:$REMOTE_DIR"
-
-      # Stops the old /1/ copies serving as a stale twin of the site (the
-      # deploy runs without --delete, so they are still there). Renamed on
-      # arrival: it is /1/'s .htaccess, not this repo's.
-      - name: Deploy /1/ redirect
-        run: |
-          rsync -az --itemize-changes \
-            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
-            legacy-1.htaccess \
-            "${{ secrets.SFTP_USERNAME }}@${{ secrets.SFTP_HOST }}:teedlo.com/1/.htaccess"

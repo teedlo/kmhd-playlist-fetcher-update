@@ -8,7 +8,7 @@ KMHD radio playlist fetcher + its public page. The session homed here is named "
 
 The teedlo-site repo (github.com/teedlo/teedlo-site, local clone ~/Documents/Projects/teedlo-site — pull before use) deploys the *rest* of teedlo.com by committing under `site/` and pushing to main (~25s). It does **not** publish /kmhd/; there is no `site/kmhd/` there. It *does* own the webroot `.htaccess`, which 301s www to the apex host.
 
-The old `/1/` path 301s to `/kmhd/` via a `legacy-1.htaccess` shipped by this repo's deploy; the stale copies still sitting in `/1/` are harmless behind it.
+The pages moved here from `/1/` on 2026-09-06; that directory was deleted from the server, so `/1/` is now a 404. Nothing referenced it.
 
 Never use the DreamHost panel. Commit author for both repos must be `teedlo <213245817+teedlo@users.noreply.github.com>` (the `213245817+` form is what attributes the commit to the GitHub account). Cloud sessions can deploy too — the repo is the pipeline.
 
