@@ -71,6 +71,7 @@ const FIELDS = ['artworkUrl100', 'trackViewUrl', 'artistViewUrl', 'collectionVie
     'collectionName', 'primaryGenreName', 'releaseDate'];
 
 const DEFAULTS = {
+    fetchTimeoutMs: 20000,   // no request may hang a run: a stalled socket is retried like any other failure
     intervalMs: 3500,
     maxLookups: Infinity,
     maxAttempts: 8,          // per lookup, with backoff 2s, 4s, ... 128s between (about 4 minutes in all)
@@ -237,7 +238,7 @@ function makeThrottledLookup(options) {
     const stats = { calls: 0, retries: 0, hits: 0, misses: 0 };
 
     async function attempt(meta) {
-        const res = await opts.fetch(itunesUrl(meta));
+        const res = await opts.fetch(itunesUrl(meta), { signal: AbortSignal.timeout(opts.fetchTimeoutMs) });
         if (res.status === 429 || res.status === 403 || res.status >= 500) {
             throw new Error(`iTunes responded ${res.status}`);
         }
@@ -286,8 +287,8 @@ function makeThrottledLookup(options) {
 
 // ---------------- playlist fetch ----------------
 
-async function fetchJson(fetchFn, url) {
-    const res = await fetchFn(url);
+async function fetchJson(fetchFn, url, timeoutMs) {
+    const res = await fetchFn(url, { signal: AbortSignal.timeout(timeoutMs || DEFAULTS.fetchTimeoutMs) });
     if (!res.ok) throw new Error(`${url} responded ${res.status}`);
     return res.json();
 }
@@ -304,7 +305,7 @@ async function fetchPlaylist(date, options) {
     for (const url of urls) {
         for (let attempt = 1; attempt <= 2; attempt++) {
             try {
-                const data = await fetchJson(opts.fetch, url);
+                const data = await fetchJson(opts.fetch, url, opts.fetchTimeoutMs);
                 if (Array.isArray(data)) return data;
                 throw new Error('response was not a playlist array');
             } catch (e) {
