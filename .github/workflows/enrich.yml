@@ -1,23 +1,28 @@
 name: Update Apple Music links
 
-# Every few hours: look up any track KMHD has played since the last run,
-# write the day's enrich/YYYY-MM-DD.json, commit it, and deploy. That is
-# what keeps the pages' Apple Music links instant: the browser never has
-# to look a track up itself unless it was played since the last run here.
+# Keeps the pages' Apple Music links instant: looks up any track KMHD has
+# played since the last run, writes the day's enrich/YYYY-MM-DD.json,
+# commits it, and deploys. The browser never has to look a track up itself
+# unless it was played since the last run here.
+#
+# Two schedules, told apart by github.event.schedule:
+#   - hourly, at :07: today and yesterday only (a minute or two), so a
+#     track gets its exact link within an hour of airing;
+#   - every 3 hours, at :23: the same plus a 3000-lookup budget spent on
+#     any day of the last two years whose file is missing or incomplete,
+#     newest first (up to ~2 hours at one lookup per 2.5 s). This is the
+#     repair crew behind backfill.yml, which does the bulk work in parallel.
+# The two run in separate concurrency groups so the hourly one is never
+# stuck behind the long one; each pushes with a rebase that keeps its own
+# version of any file both touched (both versions are valid; the hourly
+# run rebuilds today/yesterday again an hour later anyway).
 #
 # scripts/build-enrich.js only looks up tracks it has never seen, so a run
-# that finds nothing new changes nothing and commits nothing. The default
-# arguments rebuild today, yesterday and the day before (which also catches
-# KMHD's playlist log filling in late for a day that already had a file),
-# then spend the rest of a 900-lookup budget filling in any day of the
-# last 120 that has no file yet, newest first. At iTunes' rate limit that
-# is up to about an hour per run, so a few days of runs fill the whole
-# window on their own; after that each run is a couple of minutes.
-#
-# To run more or less often, change the cron line below. To build specific
-# dates by hand, use "Run workflow" with e.g. "--from 2026-01-01 --to
-# 2026-03-31" or "--weekday 5 --weeks 52" (a year of Fridays for the
-# Headnod page).
+# that finds nothing new changes nothing and commits nothing. To run more
+# or less often, change the cron lines below. To build specific dates by
+# hand, use "Run workflow" with e.g. "--from 2026-01-01 --to 2026-03-31" or
+# "--weekday 5 --weeks 20"; for anything bigger than a few weeks use
+# backfill.yml, which splits the range across parallel runners.
 #
 # The commit is made with the workflow's own token, which deliberately does
 # NOT trigger the "on: push" deploy (GitHub's loop protection), so this
@@ -25,25 +30,26 @@ name: Update Apple Music links
 
 on:
   schedule:
-    - cron: '23 */6 * * *'     # every 6 hours (UTC), at :23 past the hour
+    - cron: '7 * * * *'        # hourly (UTC): today + yesterday
+    - cron: '23 */3 * * *'     # every 3 hours: plus the two-year repair budget
   workflow_dispatch:
     inputs:
       args:
         description: 'Arguments for scripts/build-enrich.js'
-        default: '--days 3 --backfill 120 --max-lookups 900'
+        default: '--days 3 --backfill 730 --max-lookups 3000 --interval-ms 2500'
         required: false
 
 permissions:
   contents: write
 
 concurrency:
-  group: enrich
+  group: enrich-${{ github.event.schedule == '7 * * * *' && 'hourly' || 'main' }}
   cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 150
+    timeout-minutes: 170
     outputs:
       changed: ${{ steps.commit.outputs.changed }}
       sha: ${{ steps.commit.outputs.sha }}
@@ -57,7 +63,7 @@ jobs:
 
       - name: Look up new tracks
         env:
-          ARGS: ${{ inputs.args || '--days 3 --backfill 120 --max-lookups 900' }}
+          ARGS: ${{ inputs.args || (github.event.schedule == '7 * * * *' && '--days 2 --max-lookups 300 --interval-ms 2500') || '--days 3 --backfill 730 --max-lookups 3000 --interval-ms 2500' }}
         run: node scripts/build-enrich.js $ARGS
 
       - name: Commit any changes
@@ -71,15 +77,18 @@ jobs:
           fi
           git -c user.name=teedlo -c user.email=213245817+teedlo@users.noreply.github.com \
             commit -m "Update Apple Music links ($(date -u +'%Y-%m-%d %H:%M UTC'))"
-          # Someone may have pushed to main in the meantime: rebase and retry.
+          # Someone (the other schedule, backfill.yml, a person) may have
+          # pushed to main in the meantime: rebase and retry. "-X theirs"
+          # during a rebase means "keep the commit being replayed", i.e.
+          # this run's files, if both sides wrote the same day.
           pushed=false
-          for attempt in 1 2 3; do
+          for attempt in 1 2 3 4 5; do
             if git push origin HEAD:main; then pushed=true; break; fi
-            git pull --rebase origin main || exit 1
-            sleep 5
+            git pull --rebase -X theirs origin main || exit 1
+            sleep $((attempt * 7))
           done
           if [ "$pushed" != true ]; then
-            echo "::error::Could not push to main after 3 attempts"
+            echo "::error::Could not push to main after 5 attempts"
             exit 1
           fi
           echo "changed=true" >> "$GITHUB_OUTPUT"

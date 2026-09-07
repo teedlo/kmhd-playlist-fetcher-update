@@ -345,8 +345,8 @@
 <!-- Cache-busting query param: bump whenever these files change (see the
      same note in index.html — a stale cached copy silently breaks any
      function the old copy doesn't have yet). -->
-<script src="playlist-utils.js?v=20260906"></script>
-<script src="shows-schedule.js?v=20260906"></script>
+<script src="playlist-utils.js?v=20260907"></script>
+<script src="shows-schedule.js?v=20260907"></script>
 <script>
     // ------------------------------------------------------------------
     // The Headnod Show, on its own page.
@@ -946,7 +946,8 @@
             .then(r => r.ok ? r.json() : null)     // 404: no file for that day (yet); live lookups take over
             .then(data => {
                 if (!data || !data.tracks) return;
-                Object.keys(data.tracks).forEach(key => staticEnrich.set(key, data.tracks[key]));
+                // Entries are stored compact (ids, not URLs); see PlaylistUtils.expandEntry.
+                Object.keys(data.tracks).forEach(key => staticEnrich.set(key, PlaylistUtils.expandEntry(data.tracks[key])));
             })
             .catch(() => {})
             .finally(() => { state.settled = true; });
@@ -1376,7 +1377,7 @@
     window.addEventListener('load', () => {
         setupThemeToggle();
 
-        if (typeof PlaylistUtils === 'undefined' || typeof PlaylistUtils.pastWeekdayDates !== 'function' || typeof PlaylistUtils.enrichKey !== 'function') {
+        if (typeof PlaylistUtils === 'undefined' || typeof PlaylistUtils.pastWeekdayDates !== 'function' || typeof PlaylistUtils.expandEntry !== 'function') {
             document.getElementById('loading').style.display = 'none';
             const err = document.getElementById('error');
             err.textContent = 'This page needs to reload to pick up a recent update. Please refresh (Ctrl/Cmd+Shift+R) and try again.';

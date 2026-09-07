@@ -1,0 +1,162 @@
+name: Backfill Apple Music links
+
+# One-off bulk build of enrich/ files for a date range, split across
+# parallel runners. iTunes throttles per IP address (a 403 penalty after a
+# few hundred quick lookups), and every GitHub runner has its own address,
+# so N runners give N times the throughput: at 25 days per job and one
+# lookup per 2.5 s, a two-year range is ~25 jobs of ~4 hours, all at once
+# (GitHub runs 20 at a time for this account; the rest queue).
+#
+# Each job builds its slice and uploads just the files it wrote; a final
+# job merges every slice into one commit and deploys. A job that hits the
+# 6-hour limit or a persistent 403 leaves missing/incomplete days behind,
+# and enrich.yml's 3-hourly run finishes those on its own.
+#
+# Run it from the Actions tab ("Run workflow") with a from/to date.
+
+on:
+  workflow_dispatch:
+    inputs:
+      from:
+        description: 'First date to build (YYYY-MM-DD)'
+        required: true
+      to:
+        description: 'Last date to build (YYYY-MM-DD)'
+        required: true
+      slice_days:
+        description: 'Days per parallel job (25 fits the 6-hour job limit at 2.5 s per lookup)'
+        default: '25'
+        required: false
+      interval_ms:
+        description: 'Gap between iTunes lookups within each job'
+        default: '2500'
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: backfill
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      slices: ${{ steps.plan.outputs.slices }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - id: plan
+        env:
+          FROM: ${{ inputs.from }}
+          TO: ${{ inputs.to }}
+          STEP: ${{ inputs.slice_days }}
+        run: |
+          slices=$(node -e '
+            const B = require("./scripts/build-enrich.js");
+            const [from, to, step] = [process.env.FROM, process.env.TO, Math.max(1, Number(process.env.STEP) || 25)];
+            if (!B.isIsoDate(from) || !B.isIsoDate(to) || from > to) { console.error("bad date range"); process.exit(1); }
+            const out = [];
+            for (let start = from; start <= to; ) {
+              let end = B.addDays(start, step - 1);
+              if (end > to) end = to;
+              out.push({ from: start, to: end });
+              start = B.addDays(end, 1);
+            }
+            console.log(JSON.stringify(out));
+          ')
+          echo "slices=$slices" >> "$GITHUB_OUTPUT"
+          echo "$slices" | node -e 'const s = JSON.parse(require("fs").readFileSync(0, "utf8")); console.log(`${s.length} slice(s): ${s[0].from} .. ${s[s.length - 1].to}`)'
+
+  build:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 345
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        slice: ${{ fromJson(needs.plan.outputs.slices) }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build ${{ matrix.slice.from }} .. ${{ matrix.slice.to }}
+        env:
+          FROM: ${{ matrix.slice.from }}
+          TO: ${{ matrix.slice.to }}
+          INTERVAL: ${{ inputs.interval_ms }}
+        # The outer timeout leaves room for the upload below; a day cut off
+        # mid-way is simply not written and gets picked up later.
+        run: timeout 320m node scripts/build-enrich.js --from "$FROM" --to "$TO" --interval-ms "$INTERVAL" || true
+      - name: Collect this slice's files
+        if: always()
+        run: |
+          git add -N enrich
+          git diff --name-only -- enrich > changed.txt
+          echo "$(wc -l < changed.txt) file(s) written"
+          tar -cf slice.tar -T changed.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: enrich-${{ matrix.slice.from }}
+          path: slice.tar
+          retention-days: 3
+          if-no-files-found: ignore
+
+  commit:
+    needs: [plan, build]
+    if: always() && needs.plan.result == 'success'
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
+      sha: ${{ steps.commit.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: enrich-*
+          path: slices
+          merge-multiple: false
+      - name: Merge the slices
+        run: |
+          shopt -s nullglob
+          for t in slices/*/slice.tar; do tar -xf "$t"; done
+          git status --short enrich | wc -l
+      - name: Commit any changes
+        id: commit
+        run: |
+          git add enrich
+          if git diff --cached --quiet; then
+            echo "Nothing new."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git -c user.name=teedlo -c user.email=213245817+teedlo@users.noreply.github.com \
+            commit -m "Backfill Apple Music links ${{ inputs.from }} to ${{ inputs.to }}"
+          pushed=false
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then pushed=true; break; fi
+            git pull --rebase -X theirs origin main || exit 1
+            sleep $((attempt * 7))
+          done
+          if [ "$pushed" != true ]; then
+            echo "::error::Could not push to main after 5 attempts"
+            exit 1
+          fi
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    needs: commit
+    if: needs.commit.outputs.changed == 'true'
+    uses: ./.github/workflows/deploy.yml
+    with:
+      ref: ${{ needs.commit.outputs.sha }}
+    secrets: inherit
