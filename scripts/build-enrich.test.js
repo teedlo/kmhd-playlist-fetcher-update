@@ -79,6 +79,11 @@ test('resolveDates: merges every selector, dedupes, newest first', () => {
     assert.deepEqual(B.resolveDates(opts, '2026-09-06'), ['2026-09-06', '2026-09-04', '2026-09-01', '2026-08-28']);
 });
 
+test('resolveDates: --weekday with a range keeps only that weekday of the range', () => {
+    const opts = B.parseArgs(['--from', '2026-08-01', '--to', '2026-08-31', '--weekday', '5']);
+    assert.deepEqual(B.resolveDates(opts, '2026-09-06'), ['2026-08-28', '2026-08-21', '2026-08-14', '2026-08-07']);
+});
+
 test('parseArgs: rejects unknown flags and bad values instead of silently ignoring them', () => {
     assert.throws(() => B.parseArgs(['--nope']), /Unknown option/);
     assert.throws(() => B.parseArgs(['--days', 'many']), /needs a number/);
