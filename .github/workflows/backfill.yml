@@ -12,7 +12,9 @@ name: Backfill Apple Music links
 # 6-hour limit or a persistent 403 leaves missing/incomplete days behind,
 # and enrich.yml's 3-hourly run finishes those on its own.
 #
-# Run it from the Actions tab ("Run workflow") with a from/to date.
+# Run it from the Actions tab ("Run workflow") with a from/to date. For
+# one weekday only (the Headnod page's Fridays), set weekday and a larger
+# slice_days, since a slice then holds a seventh as many days to build.
 
 on:
   workflow_dispatch:
@@ -30,6 +32,10 @@ on:
       interval_ms:
         description: 'Gap between iTunes lookups within each job'
         default: '2500'
+        required: false
+      weekday:
+        description: 'Only build this weekday of the range (0=Sunday .. 6=Saturday; 5 = Headnod Fridays). Blank = every day. Use a bigger slice_days, e.g. 175 = 25 Fridays.'
+        default: ''
         required: false
 
 permissions:
@@ -90,9 +96,13 @@ jobs:
           FROM: ${{ matrix.slice.from }}
           TO: ${{ matrix.slice.to }}
           INTERVAL: ${{ inputs.interval_ms }}
+          WEEKDAY: ${{ inputs.weekday }}
         # The outer timeout leaves room for the upload below; a day cut off
         # mid-way is simply not written and gets picked up later.
-        run: timeout 320m node scripts/build-enrich.js --from "$FROM" --to "$TO" --interval-ms "$INTERVAL" || true
+        run: |
+          extra=""
+          if [ -n "$WEEKDAY" ]; then extra="--weekday $WEEKDAY"; fi
+          timeout 320m node scripts/build-enrich.js --from "$FROM" --to "$TO" --interval-ms "$INTERVAL" $extra || true
       - name: Collect this slice's files
         if: always()
         run: |
@@ -139,7 +149,7 @@ jobs:
             exit 0
           fi
           git -c user.name=teedlo -c user.email=213245817+teedlo@users.noreply.github.com \
-            commit -m "Backfill Apple Music links ${{ inputs.from }} to ${{ inputs.to }}"
+            commit -m "Backfill Apple Music links ${{ inputs.from }} to ${{ inputs.to }}${{ inputs.weekday && format(' (weekday {0})', inputs.weekday) || '' }}"
           pushed=false
           for attempt in 1 2 3 4 5; do
             if git push origin HEAD:main; then pushed=true; break; fi

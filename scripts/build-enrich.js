@@ -18,6 +18,7 @@
 //   node scripts/build-enrich.js --dates 2026-09-01,2026-09-02
 //   node scripts/build-enrich.js --from 2026-06-01 --to 2026-08-31
 //   node scripts/build-enrich.js --weekday 5 --weeks 52    # the last 52 Fridays (0=Sun .. 6=Sat)
+//   node scripts/build-enrich.js --from 2022-06-01 --to 2024-09-06 --weekday 5   # only the Fridays in a range
 //   node scripts/build-enrich.js --days 3 --backfill 120 --max-lookups 900
 //       # what the scheduled workflow runs: the last 3 days, then fill in
 //       # any day of the last 120 that has no file yet (or an incomplete
@@ -126,8 +127,15 @@ function isIsoDate(s) {
 function resolveDates(opts, todayIso) {
     let dates = [];
     if (opts.dates) dates = dates.concat(opts.dates);
-    if (opts.from || opts.to) dates = dates.concat(dateRange(opts.from, opts.to || todayIso));
-    if (opts.weekday != null) dates = dates.concat(PlaylistUtils.pastWeekdayDates(opts.weekday, opts.weeks || 1, todayIso));
+    if (opts.from || opts.to) {
+        let range = dateRange(opts.from, opts.to || todayIso);
+        // --weekday with a range keeps only that weekday of the range
+        // (e.g. every Friday of 2023 for the Headnod page).
+        if (opts.weekday != null) range = range.filter(d => new Date(d + 'T00:00:00').getDay() === opts.weekday);
+        dates = dates.concat(range);
+    } else if (opts.weekday != null) {
+        dates = dates.concat(PlaylistUtils.pastWeekdayDates(opts.weekday, opts.weeks || 1, todayIso));
+    }
     if (opts.days != null || dates.length === 0) dates = dates.concat(recentDates(opts.days == null ? 2 : opts.days, todayIso));
     const seen = new Set();
     return dates
