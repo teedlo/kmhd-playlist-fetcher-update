@@ -5,7 +5,8 @@ name: Backfill Apple Music links
 # few hundred quick lookups), and every GitHub runner has its own address,
 # so N runners give N times the throughput: at 25 days per job and one
 # lookup per 2.5 s, a two-year range is ~25 jobs of ~4 hours, all at once
-# (GitHub runs 20 at a time for this account; the rest queue).
+# (12 at a time, leaving GitHub's 20-job account limit some room for the
+# hourly update and the site deploy; the rest queue).
 #
 # Each job builds its slice and uploads just the files it wrote; a final
 # job merges every slice into one commit and deploys. A job that hits the
@@ -83,7 +84,7 @@ jobs:
     timeout-minutes: 345
     strategy:
       fail-fast: false
-      max-parallel: 20
+      max-parallel: 12
       matrix:
         slice: ${{ fromJson(needs.plan.outputs.slices) }}
     steps:
