@@ -61,12 +61,15 @@ const KMHD_API = 'https://www.kmhd.org/pf/api/v3/content/fetch/playlist';
 const KMHD_PROXY = 'https://kmhd-playlist-cache.teedlo.workers.dev/';
 const ITUNES_SEARCH = 'https://itunes.apple.com/search';
 
-const NOTE = 'Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed "artist|title" (lowercased). null means iTunes found no Apple Music match. Do not edit by hand; rerun the script instead.';
+const NOTE = 'Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed "artist|title" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.';
 
-// Fields kept per track. Same shape the pages' own live lookup produces,
-// minus previewUrl: the 30-second preview player is disabled in both
-// pages, and those URLs are the bulkiest, least compressible part of an
-// entry. If the player ever comes back, add 'previewUrl' here and rebuild.
+// Fields taken from an iTunes hit. Same shape the pages' own live lookup
+// produces, minus previewUrl: the 30-second preview player is disabled in
+// both pages, and those URLs are the bulkiest, least compressible part of
+// an entry. If the player ever comes back, add 'previewUrl' here, teach
+// PlaylistUtils.compactEntry about it, and rebuild. On disk each entry is
+// stored in PlaylistUtils.compactEntry's form (ids instead of URLs, about
+// a third of the size); the pages expand it back on load.
 const FIELDS = ['artworkUrl100', 'trackViewUrl', 'artistViewUrl', 'collectionViewUrl',
     'collectionName', 'primaryGenreName', 'releaseDate'];
 
@@ -382,7 +385,7 @@ async function buildDay(date, items, known, lookup, options) {
 // which is what --backfill uses to know the day still needs a run.
 function serializeDayFile(date, tracks, complete) {
     const keys = Object.keys(tracks).sort();
-    const lines = keys.map(k => `    ${JSON.stringify(k)}: ${JSON.stringify(tracks[k])}`);
+    const lines = keys.map(k => `    ${JSON.stringify(k)}: ${JSON.stringify(PlaylistUtils.compactEntry(tracks[k]))}`);
     return '{\n'
         + `  "note": ${JSON.stringify(NOTE)},\n`
         + `  "date": ${JSON.stringify(date)},\n`

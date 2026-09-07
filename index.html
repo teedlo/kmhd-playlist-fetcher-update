@@ -350,8 +350,8 @@
          breaks anything that calls a function the cached copy doesn't have
          yet (this has bitten us twice: "trackYear is not a function" after
          the dark-mode deploy, and a blank "By Show" page after this one). -->
-    <script src="playlist-utils.js?v=20260906"></script>
-    <script src="shows-schedule.js?v=20260906"></script>
+    <script src="playlist-utils.js?v=20260907"></script>
+    <script src="shows-schedule.js?v=20260907"></script>
     <script>
         // ------------------------------------------------------------------
         // KMHD changed their playlist API in 2026: it no longer returns
@@ -667,7 +667,8 @@
                 .then(r => r.ok ? r.json() : null)     // 404: no file for that day (yet); live lookups take over
                 .then(data => {
                     if (!data || !data.tracks) return;
-                    Object.keys(data.tracks).forEach(key => staticEnrich.set(key, data.tracks[key]));
+                    // Entries are stored compact (ids, not URLs); see PlaylistUtils.expandEntry.
+                    Object.keys(data.tracks).forEach(key => staticEnrich.set(key, PlaylistUtils.expandEntry(data.tracks[key])));
                 })
                 .catch(() => {})
                 .finally(() => { state.settled = true; });
@@ -1475,7 +1476,7 @@
             // (see the cache-busting note on the <script> tags) would
             // otherwise fail somewhere inside the first render with no
             // message at all.
-            if (typeof PlaylistUtils === 'undefined' || typeof PlaylistUtils.enrichKey !== 'function') {
+            if (typeof PlaylistUtils === 'undefined' || typeof PlaylistUtils.expandEntry !== 'function') {
                 document.getElementById('error').textContent = 'This page needs to reload to pick up a recent update. Please refresh (Ctrl/Cmd+Shift+R) and try again.';
                 document.getElementById('error').style.display = 'block';
                 return;

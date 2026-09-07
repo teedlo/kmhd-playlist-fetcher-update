@@ -124,6 +124,65 @@
         };
     }
 
+    // ---------------- per-day enrichment entries ----------------
+    // The enrich/ files store each track in a compact form, about a third
+    // the size of the raw iTunes fields (two years of days is tens of
+    // megabytes either way, so it matters in git and on the wire):
+    //   t: track id, c: collection (album) id, r: artist id,
+    //   a: artwork path, h: artwork host digit, g: genre, y: release year.
+    // Apple Music resolves ID-only URLs (music.apple.com/us/album/id<c>?i=<t>)
+    // with a redirect to the slugged canonical page, so the slugs need not
+    // be stored. Anything that doesn't fit a pattern is kept verbatim under
+    // its original field name, so nothing is ever lost, and expandEntry()
+    // accepts either form (older files, localStorage) unchanged.
+    const TRACK_URL = /^https:\/\/music\.apple\.com\/us\/album\/[^/?]+\/(\d+)\?i=(\d+)(?:&uo=4)?$/;
+    const ARTIST_URL = /^https:\/\/music\.apple\.com\/us\/artist\/[^/?]+\/(\d+)(?:\?uo=4)?$/;
+    const ARTWORK_URL = /^https:\/\/is(\d)-ssl\.mzstatic\.com\/image\/thumb\/(.+)\/100x100bb\.jpg$/;
+
+    function compactEntry(entry) {
+        if (!entry) return null;
+        const out = {};
+        const t = TRACK_URL.exec(entry.trackViewUrl || '');
+        if (t) { out.t = Number(t[2]); out.c = Number(t[1]); }
+        else if (entry.trackViewUrl) out.trackViewUrl = entry.trackViewUrl;
+        if (entry.t != null) { out.t = entry.t; out.c = entry.c; }   // already compact
+        const r = ARTIST_URL.exec(entry.artistViewUrl || '');
+        if (r) out.r = Number(r[1]);
+        else if (entry.artistViewUrl) out.artistViewUrl = entry.artistViewUrl;
+        if (entry.r != null) out.r = entry.r;
+        const a = ARTWORK_URL.exec(entry.artworkUrl100 || '');
+        if (a) { out.a = a[2]; out.h = Number(a[1]); }
+        else if (entry.artworkUrl100) out.artworkUrl100 = entry.artworkUrl100;
+        if (entry.a) { out.a = entry.a; out.h = entry.h || 1; }
+        // The album link is the track link on every entry seen so far; keep
+        // it only when it differs.
+        const trackUrl = entry.trackViewUrl || (out.t ? trackUrlFor(out) : null);
+        if (entry.collectionViewUrl && entry.collectionViewUrl !== trackUrl) out.collectionViewUrl = entry.collectionViewUrl;
+        const genre = entry.primaryGenreName || entry.g;
+        if (genre) out.g = genre;
+        const year = entry.y || trackYear(entry);
+        if (year) out.y = year;
+        return out;
+    }
+
+    function trackUrlFor(e) {
+        return `https://music.apple.com/us/album/id${e.c}?i=${e.t}`;
+    }
+
+    // Compact (or verbose) entry -> the verbose shape the pages render from.
+    function expandEntry(entry) {
+        if (!entry) return null;
+        const trackViewUrl = entry.trackViewUrl || (entry.t != null && entry.c != null ? trackUrlFor(entry) : null);
+        return {
+            artworkUrl100: entry.artworkUrl100 || (entry.a ? `https://is${entry.h || 1}-ssl.mzstatic.com/image/thumb/${entry.a}/100x100bb.jpg` : null),
+            trackViewUrl,
+            artistViewUrl: entry.artistViewUrl || (entry.r != null ? `https://music.apple.com/us/artist/id${entry.r}` : null),
+            collectionViewUrl: entry.collectionViewUrl || trackViewUrl,
+            primaryGenreName: entry.primaryGenreName || entry.g || null,
+            releaseDate: entry.releaseDate || (entry.y ? String(entry.y) : null)
+        };
+    }
+
     // ---------------- "By Show" helpers ----------------
     // These support browsing a show's history by cross-referencing its
     // recurring weekly time slot (from shows-schedule.js) against the
@@ -184,6 +243,6 @@
 
     return {
         trackStartDate, trackDate, mapItemFields, enrichKey, cacheKey, trackYear, searchLinks,
-        minutesOfDay, trackInSlot, pastWeekdayDates, toIsoDate
+        compactEntry, expandEntry, minutesOfDay, trackInSlot, pastWeekdayDates, toIsoDate
     };
 }));

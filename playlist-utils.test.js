@@ -224,3 +224,59 @@ test('searchLinks: builds an Apple Music search link, the instant stand-in for t
     assert.equal(links.appleMusic, 'https://music.apple.com/us/search?term=Allen%20Toussaint%20Sweet%20Dreams');
     assert.equal(searchLinks({}).appleMusic, null);
 });
+
+// ---------------- compact enrichment entries ----------------
+
+const VERBOSE = {
+    artworkUrl100: 'https://is1-ssl.mzstatic.com/image/thumb/Music22/v4/c8/c3/57/c8c357cd/mzm.rzssgvjk.jpg/100x100bb.jpg',
+    trackViewUrl: 'https://music.apple.com/us/album/big-blues/1056792206?i=1056792217&uo=4',
+    artistViewUrl: 'https://music.apple.com/us/artist/art-farmer/338447?uo=4',
+    collectionViewUrl: 'https://music.apple.com/us/album/big-blues/1056792206?i=1056792217&uo=4',
+    collectionName: 'Big Blues', primaryGenreName: 'Jazz', releaseDate: '1978-08-21T12:00:00Z'
+};
+
+test('compactEntry: reduces an iTunes entry to ids, artwork path, genre and year', () => {
+    const { compactEntry } = require('./playlist-utils.js');
+    assert.deepEqual(compactEntry(VERBOSE), {
+        t: 1056792217, c: 1056792206, r: 338447,
+        a: 'Music22/v4/c8/c3/57/c8c357cd/mzm.rzssgvjk.jpg', h: 1, g: 'Jazz', y: 1978
+    });
+    assert.ok(JSON.stringify(compactEntry(VERBOSE)).length < JSON.stringify(VERBOSE).length / 2, 'well under half the size');
+    assert.equal(compactEntry(null), null);
+});
+
+test('expandEntry: rebuilds working Apple Music URLs and the fields the pages read', () => {
+    const { compactEntry, expandEntry } = require('./playlist-utils.js');
+    const back = expandEntry(compactEntry(VERBOSE));
+    assert.equal(back.trackViewUrl, 'https://music.apple.com/us/album/id1056792206?i=1056792217');
+    assert.equal(back.collectionViewUrl, back.trackViewUrl);
+    assert.equal(back.artistViewUrl, 'https://music.apple.com/us/artist/id338447');
+    assert.equal(back.artworkUrl100, VERBOSE.artworkUrl100);
+    assert.equal(back.primaryGenreName, 'Jazz');
+    assert.equal(trackYear(back), 1978);
+    assert.equal(expandEntry(null), null);
+});
+
+test('compactEntry/expandEntry: anything off-pattern is kept verbatim, and both are idempotent', () => {
+    const { compactEntry, expandEntry } = require('./playlist-utils.js');
+    const odd = { ...VERBOSE, artistViewUrl: 'https://music.apple.com/gb/artist/someone/1?x=1', artworkUrl100: 'https://example.com/art.png', collectionViewUrl: 'https://music.apple.com/us/album/other/9' };
+    const c = compactEntry(odd);
+    assert.equal(c.artistViewUrl, odd.artistViewUrl);
+    assert.equal(c.artworkUrl100, odd.artworkUrl100);
+    assert.equal(c.collectionViewUrl, odd.collectionViewUrl);
+    assert.equal(c.r, undefined);
+    const e = expandEntry(c);
+    assert.equal(e.artistViewUrl, odd.artistViewUrl);
+    assert.equal(e.collectionViewUrl, odd.collectionViewUrl);
+    assert.deepEqual(compactEntry(c), c, 'compacting a compact entry changes nothing');
+    assert.deepEqual(expandEntry(expandEntry(VERBOSE)), expandEntry(VERBOSE), 'expanding a verbose entry changes nothing');
+    assert.deepEqual(expandEntry(e), e);
+});
+
+test('expandEntry: a verbose entry (older file, localStorage) passes through with its own URLs', () => {
+    const { expandEntry } = require('./playlist-utils.js');
+    const e = expandEntry(VERBOSE);
+    assert.equal(e.trackViewUrl, VERBOSE.trackViewUrl);
+    assert.equal(e.artistViewUrl, VERBOSE.artistViewUrl);
+    assert.equal(e.releaseDate, VERBOSE.releaseDate);
+});

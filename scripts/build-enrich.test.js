@@ -252,13 +252,17 @@ test('buildDay: skipped lookups are left out of the file', async () => {
 
 // ---------------- files ----------------
 
-test('serializeDayFile: sorted, one track per line, parses back to the same data', () => {
-    const tracks = { 'z|z': null, 'a|a': { trackViewUrl: 'u', primaryGenreName: 'Jazz' } };
+test('serializeDayFile: sorted, one track per line, compact on disk, parses back to the same data', () => {
+    const { compactEntry, expandEntry } = require('../playlist-utils.js');
+    const hit = B.normalizeItunesResult(ITUNES_HIT);
+    const tracks = { 'z|z': null, 'a|a': hit };
     const text = B.serializeDayFile('2026-09-05', tracks, true);
     const parsed = JSON.parse(text);
     assert.equal(parsed.date, '2026-09-05');
     assert.equal(parsed.complete, true);
-    assert.deepEqual(parsed.tracks, tracks);
+    assert.deepEqual(parsed.tracks, { 'z|z': null, 'a|a': compactEntry(hit) });
+    assert.equal(parsed.tracks['a|a'].t, 2, 'stored as ids, not URLs');
+    assert.equal(expandEntry(parsed.tracks['a|a']).primaryGenreName, 'Jazz');
     assert.deepEqual(Object.keys(parsed.tracks), ['a|a', 'z|z']);
     const lines = text.split('\n');
     assert.ok(lines.some(l => l.startsWith('    "a|a": {')), 'each track on its own line');
