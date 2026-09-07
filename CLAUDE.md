@@ -2,7 +2,7 @@
 
 KMHD radio playlist fetcher + its public page. The session homed here is named "KMHD Playlist history".
 
-**Deploying to teedlo.com (zero-effort rule):** the playlist pages live at https://teedlo.com/kmhd/ — `index.html` (daily playlist + "By Show"), `headnod.html` (The Headnod Show landing page), plus `playlist-utils.js`, `shows-schedule.js`, `itunes-cache.json` and `.htaccess`.
+**Deploying to teedlo.com (zero-effort rule):** the playlist pages live at https://teedlo.com/kmhd/ — `index.html` (daily playlist + "By Show"), `headnod.html` (The Headnod Show landing page), plus `playlist-utils.js`, `shows-schedule.js`, `.htaccess` and the `enrich/` directory of per-day Apple Music link files.
 
 **/kmhd/ deploys from THIS repo**, not teedlo-site: push to `main` in github.com/teedlo/kmhd-playlist-fetcher-update and `.github/workflows/deploy.yml` runs `node --test`, then rsyncs each file over SSH to `teedlo.com/kmhd/`. Live in well under a minute. To add a new file to the site, add it to the `FILES` list in that workflow — the deploy uploads a fixed list, not a directory.
 
@@ -12,8 +12,14 @@ The pages moved here from `/1/` on 2026-09-06; that directory was deleted from t
 
 Never use the DreamHost panel. Commit author for both repos must be `teedlo <213245817+teedlo@users.noreply.github.com>` (the `213245817+` form is what attributes the commit to the GitHub account). Cloud sessions can deploy too — the repo is the pipeline.
 
+**Apple Music links are precomputed, not looked up in the browser.** `scripts/build-enrich.js` asks KMHD for a day's playlist, looks each track up once on iTunes Search, and writes `enrich/YYYY-MM-DD.json` (exact Apple Music track/artist/album links, album art, genre, iTunes release date; `null` = no match; `"complete": false` = a run was cut short and `--backfill` will finish it). The pages fetch that one file alongside the day's playlist, so rows render with their exact links already in place. Every row also gets an instant Apple Music *search* link (`PlaylistUtils.searchLinks().appleMusic`), so a track with no file entry still has a working link while the old live path (shared Worker cache, then throttled iTunes JSONP) upgrades it in the background. KMHD plays ~250 tracks a day and ~90% of them are new each month, so a single global cache never covered anything; the per-day files are the whole point.
+
+`.github/workflows/enrich.yml` runs the script every 6 hours (`--days 3 --backfill 120 --max-lookups 900`: the last 3 days, then any day of the last 120 without a complete file, newest first), commits new files as `teedlo`, and calls `deploy.yml` itself (a push made with the Actions token does not fire `on: push`). To change how often, edit that workflow's `cron:` line. To build specific dates by hand, use "Run workflow" with e.g. `--from 2026-01-01 --to 2026-03-31` or `--weekday 5 --weeks 52` (a year of Headnod Fridays), or run the script locally and commit `enrich/`. Reruns are cheap: the script only looks up tracks it has never seen in any existing file. iTunes tolerates short bursts but answers 403 for a few minutes after a few hundred fast calls, so the default pace is one lookup per 3.5 s and the script backs off by itself; don't "speed it up". Unit tests: `scripts/build-enrich.test.js` (run by `node --test`, which gates the deploy). The old `itunes-cache.json` snapshot is gone.
+
+Server-side, `.htaccess` gives the day files `Cache-Control: max-age=300` (the host's default for JSON is 2 days, which would leave today's file stale) and turns on gzip for JSON (the host doesn't by default; a day file is ~120 KB raw, ~27 KB gzipped).
+
 **Two local gotchas that look like breakage but aren't:**
 - The Cloudflare Worker (`kmhd-playlist-cache.teedlo.workers.dev`) sends `Access-Control-Allow-Origin: https://teedlo.com` to *every* caller, so playlist fetches only work from that exact origin. Serving from localhost is CORS-blocked (the direct-KMHD fallback too), so verify playlist/tracklist behavior on the deployed URL. This is also why apex is canonical and www redirects to it — on www, every fetch was blocked and the pages rendered empty.
-- Bump the `?v=` cache-bust on the `<script>` tags in **both** index.html and headnod.html whenever playlist-utils.js or shows-schedule.js changes, or browsers serve a stale copy and the page breaks silently.
+- Bump the `?v=` cache-bust on the `<script>` tags in **both** index.html and headnod.html whenever playlist-utils.js or shows-schedule.js changes, or browsers serve a stale copy and the page breaks silently (both pages now at least show a "please refresh" message if `PlaylistUtils.enrichKey` is missing).
 
 Jonathan's preferences: dark mode, larger fonts, high-contrast (WCAG AAA) text; one-shot end-to-end handling.
