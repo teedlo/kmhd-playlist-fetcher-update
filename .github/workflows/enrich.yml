@@ -75,8 +75,12 @@ jobs:
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          git -c user.name=teedlo -c user.email=213245817+teedlo@users.noreply.github.com \
-            commit -m "Update Apple Music links ($(date -u +'%Y-%m-%d %H:%M UTC'))"
+          # Set the identity for the whole job, not just the commit: the
+          # rebase below also needs it (a run once died there with
+          # "Committer identity unknown" after main moved under it).
+          git config user.name teedlo
+          git config user.email 213245817+teedlo@users.noreply.github.com
+          git commit -m "Update Apple Music links ($(date -u +'%Y-%m-%d %H:%M UTC'))"
           # Someone (the other schedule, backfill.yml, a person) may have
           # pushed to main in the meantime: rebase and retry. "-X theirs"
           # during a rebase means "keep the commit being replayed", i.e.

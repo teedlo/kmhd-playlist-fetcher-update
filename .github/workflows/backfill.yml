@@ -148,8 +148,12 @@ jobs:
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          git -c user.name=teedlo -c user.email=213245817+teedlo@users.noreply.github.com \
-            commit -m "Backfill Apple Music links ${{ inputs.from }} to ${{ inputs.to }}${{ inputs.weekday && format(' (weekday {0})', inputs.weekday) || '' }}"
+          # Set the identity for the whole job, not just the commit: the
+          # rebase below also needs it (a run once died there with
+          # "Committer identity unknown" after main moved under it).
+          git config user.name teedlo
+          git config user.email 213245817+teedlo@users.noreply.github.com
+          git commit -m "Backfill Apple Music links ${{ inputs.from }} to ${{ inputs.to }}${{ inputs.weekday && format(' (weekday {0})', inputs.weekday) || '' }}"
           pushed=false
           for attempt in 1 2 3 4 5; do
             if git push origin HEAD:main; then pushed=true; break; fi
