@@ -1,0 +1,10 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-09-09",
+  "complete": true,
+  "tracks": {
+    "archie whitewater|cross country": {"t":1500472138,"c":1500471699,"r":499376995,"a":"Music124/v4/60/de/14/60de1474-99e9-eb69-10ff-e1d132991d2f/20UMGIM13032.rgb.jpg","h":1,"g":"Soul","y":1970},
+    "bernard wright|music is the key": {"t":541611430,"c":541611326,"r":23880575,"a":"Music125/v4/44/cc/d8/44ccd824-1975-a9a3-5a1c-49da1df2c330/886443513129.jpg","h":1,"g":"Pop","y":1981},
+    "freddie hubbard|uncle albert / admiral halsey": {"t":430088010,"c":430088007,"r":30703,"a":"Music/03/6b/00/mzi.spowjiij.jpg","h":1,"g":"Jazz","y":1971}
+  }
+}
