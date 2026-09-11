@@ -100,11 +100,12 @@ test('trackYear: rejects out-of-range years as bad data', () => {
     assert.equal(trackYear({ releaseDate: '3099-01-01' }), null);
 });
 
-test('searchLinks: builds search URLs for youtube, tidal, ebay and wikipedia', () => {
+test('searchLinks: builds search URLs for youtube, tidal, ebay (vinyl and CD) and wikipedia', () => {
     const links = searchLinks({ artist: 'Allen Toussaint', title: 'Sweet Dreams', album: 'Connected' });
     assert.equal(links.youtube, 'https://www.youtube.com/results?search_query=Allen%20Toussaint%20Sweet%20Dreams%20live');
     assert.equal(links.tidal, 'https://listen.tidal.com/search?q=Allen%20Toussaint%20Sweet%20Dreams');
     assert.equal(links.ebayVinyl, 'https://www.ebay.com/sch/i.html?_nkw=Allen%20Toussaint%20Connected%20vinyl');
+    assert.equal(links.ebayCd, 'https://www.ebay.com/sch/i.html?_nkw=Allen%20Toussaint%20Connected%20cd');
     assert.equal(links.wiki, 'https://en.wikipedia.org/wiki/Special:Search?search=Allen%20Toussaint');
 });
 
@@ -113,7 +114,20 @@ test('searchLinks: returns null links when there is no artist/title/album to sea
     assert.equal(links.youtube, null);
     assert.equal(links.tidal, null);
     assert.equal(links.ebayVinyl, null);
+    assert.equal(links.ebayCd, null);
     assert.equal(links.wiki, null);
+});
+
+test('searchLinks: eBay links use artist alone (no double space) when there is no album', () => {
+    const links = searchLinks({ artist: 'Allen Toussaint', title: 'Sweet Dreams' });
+    assert.equal(links.ebayVinyl, 'https://www.ebay.com/sch/i.html?_nkw=Allen%20Toussaint%20vinyl');
+    assert.equal(links.ebayCd, 'https://www.ebay.com/sch/i.html?_nkw=Allen%20Toussaint%20cd');
+});
+
+test('searchLinks: eBay links still work from album alone when there is no artist', () => {
+    const links = searchLinks({ album: 'Connected' });
+    assert.equal(links.ebayVinyl, 'https://www.ebay.com/sch/i.html?_nkw=Connected%20vinyl');
+    assert.equal(links.ebayCd, 'https://www.ebay.com/sch/i.html?_nkw=Connected%20cd');
 });
 
 // ---------------- "By Show" helpers ----------------
