@@ -105,6 +105,14 @@
         const title = (meta && meta.title) || '';
         const album = (meta && meta.album) || '';
         const artistTitle = `${artist} ${title}`.trim();
+        // "Artist Album" with a missing piece dropped, rather than left as a
+        // stray double space (an empty `album` used to leave one in the
+        // encoded query — harmless to eBay's own search, but sloppy to look
+        // at in a raw URL).
+        const artistAlbum = [artist, album].filter(Boolean).join(' ');
+        const ebaySearch = format => artistAlbum
+            ? `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(`${artistAlbum} ${format}`)}`
+            : null;
         return {
             appleMusic: artistTitle
                 ? `https://music.apple.com/us/search?term=${encodeURIComponent(artistTitle)}`
@@ -115,9 +123,14 @@
             tidal: artistTitle
                 ? `https://listen.tidal.com/search?q=${encodeURIComponent(artistTitle)}`
                 : null,
-            ebayVinyl: (artist || album)
-                ? `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(`${artist} ${album} vinyl`.trim())}`
-                : null,
+            // Both are plain keyword searches biased by the word "vinyl"/
+            // "cd" — NOT a real eBay category filter (no `_sacat` param).
+            // Verifying and wiring in eBay's actual Records/CDs category
+            // IDs would tighten these, but this sandbox can't reach
+            // ebay.com to confirm the current ones are still valid, so
+            // that stays a possible follow-up rather than a guess baked in.
+            ebayVinyl: ebaySearch('vinyl'),
+            ebayCd: ebaySearch('cd'),
             wiki: artist
                 ? `https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(artist)}`
                 : null

@@ -350,8 +350,8 @@
          breaks anything that calls a function the cached copy doesn't have
          yet (this has bitten us twice: "trackYear is not a function" after
          the dark-mode deploy, and a blank "By Show" page after this one). -->
-    <script src="playlist-utils.js?v=20260907"></script>
-    <script src="shows-schedule.js?v=20260907"></script>
+    <script src="playlist-utils.js?v=20260912"></script>
+    <script src="shows-schedule.js?v=20260912"></script>
     <script>
         // ------------------------------------------------------------------
         // KMHD changed their playlist API in 2026: it no longer returns
@@ -520,6 +520,7 @@
                 addLink(links.youtube, 'YouTube (live)');
                 addLink(links.tidal, 'Tidal');
                 addLink(links.ebayVinyl, 'eBay (vinyl)');
+                addLink(links.ebayCd, 'eBay (CD)');
                 addLink(links.wiki, 'Wiki');
                 detailsCell.appendChild(linksRow);
             }
