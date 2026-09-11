@@ -583,12 +583,20 @@
             if (loaded) setOpen(!open); else load();
         });
 
-        // Let the newest episode show its tracklist without a click — it's
-        // the whole point of the page, and it's one extra request.
         card.dataset.date = date;
         card._expand = () => tracksBtn.click();
         // For the genre filter: open (loading first if need be), never close.
         card._ensureOpen = () => { if (loaded) { if (!open) setOpen(true); } else load(); };
+
+        // Let the newest episode show its tracklist without a click — it's
+        // the whole point of the page, and it's one extra request. Same for
+        // any Friday with no archived audio: there's no player to draw
+        // attention to instead, so skip straight to the tracklist rather
+        // than making someone click through to a page that's otherwise
+        // just a "🎧 audio not archived" placeholder. (Mixcloud only keeps
+        // its ~10 most recent uploads, so this is a moving window, not a
+        // fixed cutoff date — whichever Fridays currently lack audio.)
+        if (!cloudcast) card._expand();
 
         return card;
     }
