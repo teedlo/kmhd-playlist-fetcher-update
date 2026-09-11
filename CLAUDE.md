@@ -2,7 +2,7 @@
 
 KMHD radio playlist fetcher + its public page. The session homed here is named "KMHD Playlist history".
 
-**Deploying to teedlo.com (zero-effort rule):** the playlist pages live at https://teedlo.com/kmhd/ — `index.html` (daily playlist + "By Show"), `headnod.html` (The Headnod Show landing page), plus `playlist-utils.js`, `shows-schedule.js`, `.htaccess` and the `enrich/` directory of per-day Apple Music link files.
+**Deploying to teedlo.com (zero-effort rule):** the playlist pages live at https://teedlo.com/kmhd/ — `index.html` (daily playlist + "By Show"), `headnod.html` (The Headnod Show landing page), `headnod-tracklist.html` (every known Headnod track in one sortable list, linked from headnod.html's "All tracks" button), plus `playlist-utils.js`, `shows-schedule.js`, `.htaccess` and the `enrich/` directory of per-day Apple Music link files.
 
 **/kmhd/ deploys from THIS repo**, not teedlo-site: push to `main` in github.com/teedlo/kmhd-playlist-fetcher-update and `.github/workflows/deploy.yml` runs `node --test`, then rsyncs each file over SSH to `teedlo.com/kmhd/`. Live in well under a minute. To add a new file to the site, add it to the `FILES` list in that workflow — the deploy uploads a fixed list, not a directory.
 
@@ -20,6 +20,7 @@ Server-side, `.htaccess` gives the day files `Cache-Control: max-age=300` (the h
 
 **Two local gotchas that look like breakage but aren't:**
 - The Cloudflare Worker (`kmhd-playlist-cache.teedlo.workers.dev`) sends `Access-Control-Allow-Origin: https://teedlo.com` to *every* caller, so playlist fetches only work from that exact origin. Serving from localhost is CORS-blocked (the direct-KMHD fallback too), so verify playlist/tracklist behavior on the deployed URL. This is also why apex is canonical and www redirects to it — on www, every fetch was blocked and the pages rendered empty.
-- Bump the `?v=` cache-bust on the `<script>` tags in **both** index.html and headnod.html whenever playlist-utils.js or shows-schedule.js changes, or browsers serve a stale copy and the page breaks silently (both pages now at least show a "please refresh" message if `PlaylistUtils.expandEntry` is missing).
+- Bump the `?v=` cache-bust on the `<script>` tags in **all three** of index.html, headnod.html and headnod-tracklist.html whenever playlist-utils.js or shows-schedule.js changes, or browsers serve a stale copy and the page breaks silently (all three pages now at least show a "please refresh" message if `PlaylistUtils.expandEntry` is missing).
+- `headnod-tracklist.html` fetches every known Friday's playlist up front (currently ~223 requests, throttled 8 at a time) to build its merged list — this is normal and by design, not a bug or a leak; it's why the page shows a loading progress count instead of rendering instantly like the other two pages.
 
 Jonathan's preferences: dark mode, larger fonts, high-contrast (WCAG AAA) text; one-shot end-to-end handling.

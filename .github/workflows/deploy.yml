@@ -50,7 +50,7 @@ jobs:
       # syncing a directory. Add new published files here. `enrich` is the
       # directory of per-day Apple Music link files (see scripts/build-enrich.js);
       # rsync copies it whole, as /kmhd/enrich/.
-      FILES: .htaccess index.html headnod.html playlist-utils.js shows-schedule.js enrich
+      FILES: .htaccess index.html headnod.html headnod-tracklist.html playlist-utils.js shows-schedule.js enrich
       REMOTE_DIR: teedlo.com/kmhd/
     steps:
       - uses: actions/checkout@v5
