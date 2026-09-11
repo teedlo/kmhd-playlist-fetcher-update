@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Every Headnod Track — The Headnod Show</title>
+    <script>
+        // Applied before first paint so there's no flash of the wrong theme.
+        // Shares the 'theme' localStorage key with the other pages, so
+        // toggling dark mode anywhere carries over here too.
+        (function () {
+            try {
+                const saved = localStorage.getItem('theme');
+                if (saved === 'dark' || saved === 'light') {
+                    document.documentElement.setAttribute('data-theme', saved);
+                }
+            } catch (e) { /* localStorage unavailable; fall back to OS preference via CSS */ }
+        })();
+    </script>
+    <style>
+        /* Same palette as headnod.html (WCAG AAA contrast, larger base font). */
+        :root {
+            --bg: #fff;
+            --fg: #333;
+            --header-bg: #eee;
+            --border: #ddd;
+            --placeholder-bg: #eee;
+            --link: #0a4fbf;
+            --muted: #545861;
+            --error: #a00;
+            --badge-bg: #eef3fb;
+            --badge-fg: #345;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --bg: #16181c;
+                --fg: #e2e2e2;
+                --header-bg: #23262b;
+                --border: #33363c;
+                --placeholder-bg: #23262b;
+                --link: #6cb2ff;
+                --muted: #b9bcc2;
+                --error: #ff8080;
+                --badge-bg: #1f2a38;
+                --badge-fg: #9cc0e8;
+            }
+        }
+        :root[data-theme="dark"] {
+            --bg: #16181c;
+            --fg: #e2e2e2;
+            --header-bg: #23262b;
+            --border: #33363c;
+            --placeholder-bg: #23262b;
+            --link: #6cb2ff;
+            --muted: #b9bcc2;
+            --error: #ff8080;
+            --badge-bg: #1f2a38;
+            --badge-fg: #9cc0e8;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px 16px 40px;
+            color: var(--fg);
+            background: var(--bg);
+        }
+        .wrap { max-width: 60em; margin: 0 auto; }
+        header.page { text-align: center; margin-bottom: 20px; }
+        h1 { font-size: 2.1em; margin: 0 0 6px; }
+        .tagline { margin: 0 0 4px; font-size: 1.05em; }
+        .subline { margin: 0 0 16px; font-size: 0.95em; color: var(--muted); }
+        nav.page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        a { color: var(--link); }
+        button {
+            font-family: inherit;
+            font-size: 1em;
+            padding: 10px 16px;
+            cursor: pointer;
+            background: var(--header-bg);
+            color: var(--fg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+        button:disabled { opacity: 0.6; cursor: default; }
+        .back-link {
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--header-bg);
+            text-decoration: none;
+        }
+
+        /* ---------------- track rows (same shape as headnod.html) ------- */
+        table.tracks { width: 100%; border-collapse: collapse; }
+        table.tracks td {
+            border-top: 1px solid var(--border);
+            padding: 12px 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .album-cover-container { position: relative; display: block; width: 60px; height: 60px; }
+        .album-cover, .album-placeholder { width: 100%; height: 100%; border-radius: 4px; }
+        .album-placeholder { background-color: var(--placeholder-bg); }
+        .start-time {
+            white-space: nowrap;
+            width: 1%;
+            text-align: right;
+            color: var(--muted);
+            font-size: 0.95em;
+        }
+        .column-details { width: 99%; word-wrap: break-word; }
+        .bold { font-weight: bold; }
+        .track-title { font-size: 1.05em; }
+        .track-artist { font-size: 1em; }
+        .small { font-size: 0.9em; font-style: italic; color: var(--muted); }
+        .track-line { margin-top: 3px; }
+        .track-links {
+            margin-top: 9px;
+            font-size: 0.85em;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 16px;
+        }
+        .track-links a { white-space: nowrap; padding: 4px 0; }
+
+        /* ---------------- sort control + group headers ---------------- */
+        .track-controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px 20px;
+            margin: 0 0 18px;
+        }
+        .track-controls label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95em;
+            color: var(--muted);
+        }
+        .track-controls select {
+            font-family: inherit;
+            font-size: 1em;
+            padding: 9px 12px;
+            max-width: 18em;
+            background: var(--header-bg);
+            color: var(--fg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+        table.tracks tr.group-header td {
+            background: var(--header-bg);
+            font-weight: bold;
+            text-align: center;
+            padding: 8px;
+        }
+        #summary {
+            text-align: center;
+            font-size: 0.9em;
+            color: var(--muted);
+            margin: 0 0 16px;
+        }
+
+        #loading, #error { text-align: center; padding: 12px; }
+        #error { color: var(--error); display: none; }
+        #loadingProgress { font-size: 0.9em; color: var(--muted); }
+        footer { margin-top: 32px; text-align: center; font-size: 0.85em; color: var(--muted); }
+        footer a { color: var(--muted); }
+
+        @media (max-width: 600px) {
+            body { padding: 14px 10px 30px; }
+            table.tracks td { padding: 10px 4px; }
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+
+    <header class="page">
+        <h1>Every Headnod Track</h1>
+        <p class="tagline">Every track logged across every Friday we have data for &mdash; one list, not one episode at a time.</p>
+        <p class="subline" id="rangeLine">Loading&hellip;</p>
+        <nav class="page">
+            <a class="back-link" href="headnod.html">&larr; The Headnod Show</a>
+            <a class="back-link" href="./">All KMHD playlists</a>
+            <button type="button" id="themeToggle" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
+        </nav>
+    </header>
+
+    <div id="loading">Loading tracks&hellip; <span id="loadingProgress"></span></div>
+    <div id="error"></div>
+
+    <div class="track-controls">
+        <label>Sort
+            <select id="sortSelect" aria-label="Sort all tracks">
+                <option value="date" selected>by date played (newest first)</option>
+                <option value="year">by year released (oldest first)</option>
+            </select>
+        </label>
+    </div>
+
+    <div id="summary" style="display:none"></div>
+
+    <main id="allTracksWrap"></main>
+
+    <footer>
+        Tracklists from <a href="https://www.kmhd.org/playlist/" target="_blank" rel="noopener">KMHD</a>.
+        Album art &amp; links from <a href="https://performance-partners.apple.com/search-api" target="_blank" rel="noopener">iTunes Search</a>.
+    </footer>
+
+</div>
+
+<!-- Cache-busting query param: bump whenever these files change (see the
+     same note in index.html and headnod.html — a stale cached copy
+     silently breaks any function the old copy doesn't have yet). -->
+<script src="playlist-utils.js?v=20260907"></script>
+<script src="shows-schedule.js?v=20260907"></script>
+<script>
+    // ------------------------------------------------------------------
+    // Every track logged on The Headnod Show, across every Friday we have
+    // data for — one continuous, sortable list rather than one episode's
+    // tracklist at a time.
+    //
+    // This has no Mixcloud/audio angle at all (unlike headnod.html): it
+    // pulls straight from KMHD's per-day playlist API for every known
+    // Friday, filters each day down to the show's 6-8pm slot, and merges
+    // the results into one array of {date, item} entries.
+    //
+    // The fetch/day-cache and iTunes-enrichment machinery below is a
+    // deliberate copy of headnod.html's (see the comment there on why —
+    // now that a third page needs it, extracting it into a shared module
+    // is worth doing whenever this next needs touching, but not today).
+    // ------------------------------------------------------------------
+
+    // The earliest Friday this site has built Apple Music link data for
+    // (see .github/workflows/backfill.yml's first run) and the practical
+    // edge of "every track we know about": KMHD's own log goes back to
+    // 2014, but that slot was a different program before this date, so
+    // going further back would mix in someone else's show.
+    const HEADNOD_KNOWN_START = '2022-06-03';
+
+    // Fallback if shows-schedule.js is missing or ever drops the show.
+    const HEADNOD_SLOT = { weekday: 5, start: '18:00', end: '20:00' };
+
+    // How many days' playlists to fetch at once. KMHD/the Worker cache
+    // aren't rate-limited like iTunes is — this is just politeness, and
+    // keeps a slow connection from opening hundreds of requests at once.
+    const FETCH_CONCURRENCY = 8;
+
+    let currentSort = 'date';   // 'date' | 'year'
+    let allEntries = [];        // [{ date, item }], every known track play
+
+    function headnodSlot() {
+        if (typeof KmhdShows === 'undefined') return HEADNOD_SLOT;
+        const show = KmhdShows.uniqueShows().find(s => s.name === 'The Headnod Show');
+        return (show && show.slots && show.slots[0]) || HEADNOD_SLOT;
+    }
+
+    function friendlyDate(isoDate) {
+        const d = new Date(isoDate + 'T00:00:00');
+        return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    }
+
+    // ---------------- which Fridays are "known" ----------------
+    // Same "has this Friday's show actually finished airing yet" logic as
+    // headnod.html's airedFridays, but resolving to a single anchor date
+    // (the newest Friday whose 8pm end time has passed) rather than a
+    // paginated window, since this page wants the whole range at once.
+
+    function newestFinishedFriday() {
+        const parts = {};
+        new Intl.DateTimeFormat('en-CA', {
+            timeZone: 'America/Los_Angeles',
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            weekday: 'short', hour: '2-digit', hourCycle: 'h23'
+        }).formatToParts(new Date()).forEach(p => { parts[p.type] = p.value; });
+        const pacificToday = `${parts.year}-${parts.month}-${parts.day}`;
+        const stillAiring = parts.weekday === 'Fri' && parseInt(parts.hour, 10) < 20;
+        const recent = PlaylistUtils.pastWeekdayDates(5, 2, pacificToday);
+        return stillAiring ? recent[1] : recent[0];
+    }
+
+    // All Fridays from HEADNOD_KNOWN_START through the newest finished
+    // one, most recent first — every date this page will fetch.
+    function allKnownFridays() {
+        const newest = newestFinishedFriday();
+        const oldest = new Date(HEADNOD_KNOWN_START + 'T00:00:00');
+        const newestDate = new Date(newest + 'T00:00:00');
+        const weeks = Math.round((newestDate - oldest) / (7 * 24 * 60 * 60 * 1000)) + 1;
+        if (weeks <= 0) return [newest];
+        return PlaylistUtils.pastWeekdayDates(5, weeks, newest);
+    }
+
+    // ---------------- fetching every known Friday ----------------
+
+    // Runs `dates` through fetchDayPlaylist with at most FETCH_CONCURRENCY
+    // in flight at once, reporting progress as each one settles. Always
+    // resolves (fetchDayPlaylist never rejects — a bad day just comes
+    // back empty).
+    function fetchAllFridays(dates, onProgress) {
+        const results = new Array(dates.length);
+        let nextIndex = 0;
+        let done = 0;
+        function worker() {
+            if (nextIndex >= dates.length) return Promise.resolve();
+            const i = nextIndex++;
+            return fetchDayPlaylist(dates[i]).then(items => {
+                results[i] = { date: dates[i], items };
+                done++;
+                onProgress(done, dates.length);
+                return worker();
+            });
+        }
+        const workers = [];
+        for (let i = 0; i < Math.min(FETCH_CONCURRENCY, dates.length); i++) workers.push(worker());
+        return Promise.all(workers).then(() => results);
+    }
+
+    // Filters every day's playlist down to the show's slot and flattens
+    // into one array of {date, item}.
+    function collectAllTracks(perDayResults) {
+        const slot = headnodSlot();
+        const all = [];
+        perDayResults.forEach(({ date, items }) => {
+            (items || []).filter(item => PlaylistUtils.trackInSlot(item, slot))
+                .forEach(item => all.push({ date, item }));
+        });
+        return all;
+    }
+
+    // ---------------- sorting the merged list ----------------
+    // Mirrors the per-episode sort in headnod.html: year sort is oldest
+    // first with unknowns last; the default keeps newest-Friday-first
+    // (matching every other list on this site), with each Friday's own
+    // tracks in the order they aired.
+
+    function entryTime(entry) {
+        const d = PlaylistUtils.trackStartDate(entry.item);
+        return d ? d.getTime() : 0;
+    }
+
+    function entryYear(entry) {
+        return yearOf(entry.item);
+    }
+
+    function compareEntries(a, b) {
+        if (currentSort === 'year') {
+            const ya = entryYear(a), yb = entryYear(b);
+            if (ya !== yb) {
+                if (ya == null) return 1;
+                if (yb == null) return -1;
+                return ya - yb;
+            }
+            return entryTime(a) - entryTime(b);
+        }
+        if (a.date !== b.date) return a.date < b.date ? 1 : -1;   // newest date first
+        return entryTime(a) - entryTime(b);                        // that date's own air order
+    }
+
+    function groupLabel(entry) {
+        if (currentSort === 'year') {
+            const y = entryYear(entry);
+            return y ? String(y) : 'Unknown year';
+        }
+        return friendlyDate(entry.date);
+    }
+
+    function renderAllTracks() {
+        const container = document.getElementById('allTracksWrap');
+        container.innerHTML = '';
+
+        if (allEntries.length === 0) {
+            const none = document.createElement('div');
+            none.className = 'small';
+            none.style.textAlign = 'center';
+            none.textContent = 'No tracks logged for any known Friday yet.';
+            container.appendChild(none);
+            return;
+        }
+
+        const sorted = allEntries.slice().sort(compareEntries);
+        const table = document.createElement('table');
+        table.className = 'tracks';
+        const tbody = document.createElement('tbody');
+        const frag = document.createDocumentFragment();
+        let lastLabel;
+        sorted.forEach(entry => {
+            const label = groupLabel(entry);
+            if (label !== lastLabel) {
+                const headerRow = document.createElement('tr');
+                headerRow.className = 'group-header';
+                const headerCell = document.createElement('td');
+                headerCell.colSpan = 3;
+                headerCell.textContent = label;
+                headerRow.appendChild(headerCell);
+                frag.appendChild(headerRow);
+                lastLabel = label;
+            }
+            frag.appendChild(buildTrackRow(entry.item));
+        });
+        tbody.appendChild(frag);
+        table.appendChild(tbody);
+        container.appendChild(table);
+    }
+
+    function setupSort() {
+        document.getElementById('sortSelect').addEventListener('change', e => {
+            currentSort = e.target.value;
+            renderAllTracks();
+        });
+    }
+
+    // ---------------- track rows ----------------
+    // Byte-for-byte the same row shape and enrichment hooks as
+    // headnod.html's buildTrackRow (see the comment at the top of this
+    // script for why this is a copy, not a shared function).
+
+    function buildTrackRow(item) {
+        const startTime = PlaylistUtils.trackStartDate(item);
+        const options = { hour: 'numeric', minute: 'numeric', hour12: true };
+        const localTime = startTime ? startTime.toLocaleTimeString([], options).replace(/^0/, '') : '';
+        const rowYear = yearOf(item);
+        const { title, artist, album } = PlaylistUtils.mapItemFields(item);
+
+        const row = document.createElement('tr');
+        row.className = 'track-row';
+
+        const timeCell = document.createElement('td');
+        timeCell.className = 'start-time';
+        timeCell.textContent = localTime;
+        row.appendChild(timeCell);
+
+        const artCell = document.createElement('td');
+        const albumCoverContainer = document.createElement('div');
+        albumCoverContainer.className = 'album-cover-container';
+        if (item.artworkUrl) {
+            const img = document.createElement('img');
+            img.src = item.artworkUrl;
+            img.alt = 'Album Cover';
+            img.className = 'album-cover';
+            albumCoverContainer.appendChild(img);
+        } else {
+            const ph = document.createElement('div');
+            ph.className = 'album-placeholder';
+            albumCoverContainer.appendChild(ph);
+        }
+        artCell.appendChild(albumCoverContainer);
+        row.appendChild(artCell);
+
+        const detailsCell = document.createElement('td');
+        detailsCell.className = 'column-details';
+
+        const titleEl = document.createElement('span');
+        titleEl.className = 'bold track-title';
+        titleEl.textContent = title;
+        detailsCell.appendChild(titleEl);
+
+        const artistLine = document.createElement('div');
+        artistLine.className = 'track-line';
+        const artistEl = document.createElement('span');
+        artistEl.className = 'bold track-artist';
+        artistEl.textContent = artist;
+        artistLine.appendChild(document.createTextNode('by '));
+        artistLine.appendChild(artistEl);
+        detailsCell.appendChild(artistLine);
+
+        if (album) {
+            const albumLine = document.createElement('div');
+            albumLine.className = 'small track-line';
+            albumLine.appendChild(document.createTextNode('from '));
+            const albumEl = document.createElement('span');
+            albumEl.className = 'bold track-album';
+            albumEl.textContent = album;
+            albumLine.appendChild(albumEl);
+            detailsCell.appendChild(albumLine);
+        }
+
+        const yearGenreLine = document.createElement('div');
+        yearGenreLine.className = 'small track-yeargenre track-line';
+        if (rowYear) {
+            const yearEl = document.createElement('span');
+            yearEl.className = 'track-year';
+            yearEl.textContent = rowYear;
+            yearGenreLine.appendChild(yearEl);
+        }
+        const genreBadge = document.createElement('span');
+        genreBadge.className = 'track-genre';
+        genreBadge.style.display = 'none';
+        yearGenreLine.appendChild(genreBadge);
+        detailsCell.appendChild(yearGenreLine);
+
+        if (title && artist) {
+            const links = PlaylistUtils.searchLinks({ title, artist, album });
+            const linksRow = document.createElement('div');
+            linksRow.className = 'track-links';
+            const addLink = (url, label, className, tooltip) => {
+                if (!url) return;
+                const a = document.createElement('a');
+                a.href = url;
+                a.target = '_blank';
+                a.rel = 'noopener';
+                a.textContent = label;
+                if (className) a.className = className;
+                if (tooltip) a.title = tooltip;
+                linksRow.appendChild(a);
+            };
+            addLink(links.appleMusic, 'Apple Music', 'apple-music-link', 'Search Apple Music for this track');
+            addLink(links.youtube, 'YouTube (live)');
+            addLink(links.tidal, 'Tidal');
+            addLink(links.ebayVinyl, 'eBay (vinyl)');
+            addLink(links.wiki, 'Wiki');
+            detailsCell.appendChild(linksRow);
+        }
+
+        row.appendChild(detailsCell);
+
+        if (title && artist) {
+            observeForEnrichment(row, albumCoverContainer, { title, artist, album });
+        }
+
+        return row;
+    }
+
+    // ---------------- iTunes enrichment ----------------
+    // Same design as headnod.html: per-day enrich/ file -> localStorage ->
+    // shared Worker cache -> throttled iTunes JSONP.
+
+    const ENRICH_PROXY_URL = 'https://kmhd-playlist-cache.teedlo.workers.dev/';
+    const ENRICH_STORE_KEY = '70ce6e7a581f43cee202a6439864b576';   // matches the Worker's PURGE_KEY; see pushToSharedCache
+    const ITUNES_INTERVAL_MS = 3500;         // ~17 req/min, under iTunes' ~20/min limit
+    const SHARED_CACHE_CONCURRENCY = 4;      // Worker lookups in flight at once; it's an edge cache, nothing rate-limited happens there
+    const CACHE_PREFIX = 'itunes1:';         // localStorage; shared across every page on purpose
+    const CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000;  // 30 days
+
+    // ---- 1. per-day static files ----
+    const ENRICH_DIR = 'enrich/';
+    const ENRICH_WAIT_MS = 1500;
+    const staticEnrich = new Map();
+    const dayEnrichLoads = new Map();
+
+    function loadDayEnrich(date) {
+        if (!date) return Promise.resolve();
+        let state = dayEnrichLoads.get(date);
+        if (state) return state.promise;
+        state = { settled: false };
+        state.promise = fetch(`${ENRICH_DIR}${date}.json`)
+            .then(r => r.ok ? r.json() : null)
+            .then(data => {
+                if (!data || !data.tracks) return;
+                Object.keys(data.tracks).forEach(key => staticEnrich.set(key, PlaylistUtils.expandEntry(data.tracks[key])));
+            })
+            .catch(() => {})
+            .finally(() => { state.settled = true; });
+        dayEnrichLoads.set(date, state);
+        return state.promise;
+    }
+
+    function dayEnrichReady(date) {
+        return Promise.race([
+            loadDayEnrich(date),
+            new Promise(resolve => setTimeout(resolve, ENRICH_WAIT_MS))
+        ]);
+    }
+
+    function staticEnrichGet(meta) {
+        const key = PlaylistUtils.enrichKey(meta);
+        return staticEnrich.has(key) ? staticEnrich.get(key) : undefined;
+    }
+
+    function pendingDayLoads() {
+        const pending = [];
+        dayEnrichLoads.forEach(state => { if (!state.settled) pending.push(state.promise); });
+        return pending;
+    }
+
+    function knownEnrichment(meta) {
+        const s = staticEnrichGet(meta);
+        if (s !== undefined) return s;
+        return cacheGet(meta) || null;
+    }
+
+    function yearOf(item) {
+        const kmhd = PlaylistUtils.trackYear(item);
+        if (kmhd) return kmhd;
+        const meta = PlaylistUtils.mapItemFields(item);
+        if (!meta.title || !meta.artist) return null;
+        const info = knownEnrichment(meta);
+        return info ? PlaylistUtils.trackYear(info) : null;
+    }
+
+    // ---- 2-4. lookups for everything else ----
+    const enrichQueue = [];
+    const itunesQueue = [];
+    let sharedInFlight = 0;
+    let itunesTimer = null;
+    let jsonpCounter = 0;
+
+    const intersectionObserver = ('IntersectionObserver' in window)
+        ? new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && entry.target._enrichJob) {
+                    enrichQueue.push(entry.target._enrichJob);
+                    delete entry.target._enrichJob;
+                    intersectionObserver.unobserve(entry.target);
+                    pumpQueue();
+                }
+            });
+        }, { rootMargin: '200px' })
+        : null;
+
+    function observeForEnrichment(row, coverContainer, meta) {
+        const job = { row, coverContainer, meta };
+        if (tryKnownSources(job)) return;
+        const pending = pendingDayLoads();
+        if (pending.length) {
+            Promise.race([Promise.all(pending), new Promise(resolve => setTimeout(resolve, ENRICH_WAIT_MS))])
+                .then(() => { if (!tryKnownSources(job)) observeJob(job); });
+            return;
+        }
+        observeJob(job);
+    }
+
+    function tryKnownSources(job) {
+        const s = staticEnrichGet(job.meta);
+        if (s !== undefined) {
+            if (s) applyEnrichment(job, s);
+            return true;
+        }
+        const cached = cacheGet(job.meta);
+        if (cached !== undefined) {
+            if (cached) applyEnrichment(job, cached);
+            return true;
+        }
+        return false;
+    }
+
+    function observeJob(job) {
+        if (intersectionObserver) {
+            job.row._enrichJob = job;
+            intersectionObserver.observe(job.row);
+        } else {
+            enrichQueue.push(job);
+            pumpQueue();
+        }
+    }
+
+    function pumpQueue() {
+        while (sharedInFlight < SHARED_CACHE_CONCURRENCY && enrichQueue.length > 0) {
+            const job = enrichQueue.shift();
+            sharedInFlight++;
+            enrichViaSharedCache(job.meta, result => {
+                sharedInFlight--;
+                if (result) {
+                    cacheSet(job.meta, result);
+                    applyEnrichment(job, result);
+                } else {
+                    itunesQueue.push(job);
+                    pumpItunes();
+                }
+                pumpQueue();
+            });
+        }
+    }
+
+    function pumpItunes() {
+        if (itunesTimer || itunesQueue.length === 0) return;
+        const job = itunesQueue.shift();
+        itunesTimer = setTimeout(() => { itunesTimer = null; pumpItunes(); }, ITUNES_INTERVAL_MS);
+        itunesLookup(job.meta, result => {
+            cacheSet(job.meta, result);
+            if (result) {
+                applyEnrichment(job, result);
+                pushToSharedCache(job.meta, result);
+            }
+        });
+    }
+
+    function enrichViaSharedCache(meta, done) {
+        const url = `${ENRICH_PROXY_URL}?type=enrich&title=${encodeURIComponent(meta.title)}&artist=${encodeURIComponent(meta.artist)}`;
+        fetch(url)
+            .then(r => { if (!r.ok) throw new Error('enrich proxy responded ' + r.status); return r.json(); })
+            .then(data => done(data || null))
+            .catch(() => done(undefined));
+    }
+
+    function pushToSharedCache(meta, result) {
+        fetch(`${ENRICH_PROXY_URL}?type=enrich`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title: meta.title, artist: meta.artist, key: ENRICH_STORE_KEY, data: result })
+        }).catch(() => {});
+    }
+
+    function itunesLookup(meta, done) {
+        const term = `${meta.artist} ${meta.title}`;
+        const cbName = `itunesCb${++jsonpCounter}`;
+        const script = document.createElement('script');
+        let finished = false;
+        const finish = result => {
+            if (finished) return;
+            finished = true;
+            delete window[cbName];
+            script.remove();
+            done(result);
+        };
+        window[cbName] = data => {
+            const r = (data && data.results && data.results[0]) || null;
+            finish(r ? {
+                artworkUrl100: r.artworkUrl100 || null,
+                previewUrl: r.previewUrl || null,
+                trackViewUrl: r.trackViewUrl || null,
+                artistViewUrl: r.artistViewUrl || null,
+                collectionViewUrl: r.collectionViewUrl || null,
+                collectionName: r.collectionName || null,
+                primaryGenreName: r.primaryGenreName || null,
+                releaseDate: r.releaseDate || null
+            } : null);
+        };
+        script.onerror = () => finish(null);
+        setTimeout(() => finish(null), 15000);
+        script.src = `https://itunes.apple.com/search?media=music&entity=song&limit=1&term=${encodeURIComponent(term)}&callback=${cbName}`;
+        document.head.appendChild(script);
+    }
+
+    function applyEnrichment(job, info) {
+        const { row, coverContainer } = job;
+
+        if (info.artworkUrl100) {
+            coverContainer.innerHTML = '';
+            const img = document.createElement('img');
+            img.src = info.artworkUrl100;
+            img.alt = 'Album Cover';
+            img.className = 'album-cover';
+            coverContainer.appendChild(img);
+        }
+
+        const linkify = (el, url) => {
+            if (!el || !url) return;
+            const a = document.createElement('a');
+            a.href = url;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.className = el.className;
+            a.textContent = el.textContent;
+            el.replaceWith(a);
+        };
+        linkify(row.querySelector('.track-title'), info.trackViewUrl);
+        linkify(row.querySelector('.track-artist'), info.artistViewUrl);
+        linkify(row.querySelector('.track-album'), info.collectionViewUrl);
+
+        const linksRow = row.querySelector('.track-links');
+        if (linksRow && info.trackViewUrl) {
+            let a = linksRow.querySelector('.apple-music-link');
+            if (!a) {
+                a = document.createElement('a');
+                a.className = 'apple-music-link';
+                a.target = '_blank';
+                a.rel = 'noopener';
+                a.textContent = 'Apple Music';
+                linksRow.insertBefore(a, linksRow.firstChild);
+            }
+            a.href = info.trackViewUrl;
+            a.title = 'Open this track in Apple Music';
+        }
+
+        const yearGenreLine = row.querySelector('.track-yeargenre');
+        if (yearGenreLine && !yearGenreLine.querySelector('.track-year')) {
+            const year = PlaylistUtils.trackYear(info);
+            if (year) {
+                const yearEl = document.createElement('span');
+                yearEl.className = 'track-year';
+                yearEl.textContent = year;
+                yearGenreLine.insertBefore(yearEl, yearGenreLine.firstChild);
+            }
+        }
+
+        const genreBadge = row.querySelector('.track-genre');
+        if (genreBadge && info.primaryGenreName) {
+            const hasYear = !!(yearGenreLine && yearGenreLine.querySelector('.track-year'));
+            genreBadge.textContent = (hasYear ? ' - ' : '') + info.primaryGenreName;
+            genreBadge.style.display = 'inline';
+        }
+    }
+
+    // ---------------- caches ----------------
+
+    function cacheGet(meta) {
+        try {
+            const key = PlaylistUtils.cacheKey(CACHE_PREFIX, meta);
+            const raw = localStorage.getItem(key);
+            if (!raw) return undefined;
+            const entry = JSON.parse(raw);
+            if (!entry || (Date.now() - entry.t) > CACHE_TTL_MS) {
+                localStorage.removeItem(key);
+                return undefined;
+            }
+            if (entry.d === null) {
+                localStorage.removeItem(key);
+                return undefined;
+            }
+            return entry.d;
+        } catch (e) {
+            return undefined;
+        }
+    }
+
+    function cacheSet(meta, data) {
+        const key = PlaylistUtils.cacheKey(CACHE_PREFIX, meta);
+        try {
+            localStorage.setItem(key, JSON.stringify({ t: Date.now(), d: data }));
+        } catch (e) {
+            try {
+                const keys = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const k = localStorage.key(i);
+                    if (k && k.indexOf(CACHE_PREFIX) === 0) keys.push(k);
+                }
+                keys.slice(0, Math.ceil(keys.length / 2)).forEach(k => localStorage.removeItem(k));
+                localStorage.setItem(key, JSON.stringify({ t: Date.now(), d: data }));
+            } catch (e2) { /* give up quietly */ }
+        }
+    }
+
+    const DAY_CACHE_PREFIX = 'kmhdDay1:';   // same prefix as index.html/headnod.html, so a day already fetched anywhere loads instantly here
+    const DAY_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
+    const KMHD_PROXY_URL = 'https://kmhd-playlist-cache.teedlo.workers.dev/';
+
+    function dayCacheGet(date) {
+        try {
+            const raw = localStorage.getItem(DAY_CACHE_PREFIX + date);
+            if (!raw) return undefined;
+            const entry = JSON.parse(raw);
+            if (!entry || (Date.now() - entry.t) > DAY_CACHE_TTL_MS) {
+                localStorage.removeItem(DAY_CACHE_PREFIX + date);
+                return undefined;
+            }
+            return entry.d;
+        } catch (e) {
+            return undefined;
+        }
+    }
+
+    function dayCacheSet(date, data) {
+        try {
+            localStorage.setItem(DAY_CACHE_PREFIX + date, JSON.stringify({ t: Date.now(), d: data }));
+        } catch (e) {
+            try {
+                const keys = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const k = localStorage.key(i);
+                    if (k && k.indexOf(DAY_CACHE_PREFIX) === 0) keys.push(k);
+                }
+                keys.slice(0, Math.ceil(keys.length / 2)).forEach(k => localStorage.removeItem(k));
+                localStorage.setItem(DAY_CACHE_PREFIX + date, JSON.stringify({ t: Date.now(), d: data }));
+            } catch (e2) { /* give up quietly */ }
+        }
+    }
+
+    function directKmhdUrl(date) {
+        return `https://www.kmhd.org/pf/api/v3/content/fetch/playlist?query=${encodeURIComponent(JSON.stringify({ day: date }))}`;
+    }
+
+    function fetchDayPlaylist(date) {
+        const ready = dayEnrichReady(date);
+        return fetchDayPlaylistRaw(date).then(data => ready.then(() => data));
+    }
+
+    function fetchDayPlaylistRaw(date) {
+        const cached = dayCacheGet(date);
+        if (cached !== undefined) return Promise.resolve(cached);
+
+        return fetch(`${KMHD_PROXY_URL}?day=${encodeURIComponent(date)}`)
+            .then(r => { if (!r.ok) throw new Error('proxy responded ' + r.status); return r.json(); })
+            .catch(() => fetch(directKmhdUrl(date)).then(r => r.json()))
+            .then(data => {
+                const arr = Array.isArray(data) ? data : [];
+                if (arr.length) dayCacheSet(date, arr);
+                return arr;
+            })
+            .catch(() => []);
+    }
+
+    // ---------------- theme toggle ----------------
+
+    function systemPrefersDark() {
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+
+    function currentTheme() {
+        const saved = (() => { try { return localStorage.getItem('theme'); } catch (e) { return null; } })();
+        if (saved === 'dark' || saved === 'light') return saved;
+        return systemPrefersDark() ? 'dark' : 'light';
+    }
+
+    function applyThemeButtonLabel() {
+        document.getElementById('themeToggle').textContent = currentTheme() === 'dark' ? '☀️' : '🌙';
+    }
+
+    function setupThemeToggle() {
+        applyThemeButtonLabel();
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            const next = currentTheme() === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            try { localStorage.setItem('theme', next); } catch (e) { /* ignore */ }
+            applyThemeButtonLabel();
+        });
+    }
+
+    // ---------------- page ----------------
+
+    function showSummary(dates) {
+        const knownDates = new Set(allEntries.map(e => e.date));
+        const rangeLine = document.getElementById('rangeLine');
+        rangeLine.textContent = `Every Friday from ${friendlyDate(dates[dates.length - 1])} through ${friendlyDate(dates[0])}.`;
+        const summary = document.getElementById('summary');
+        summary.textContent = `${allEntries.length.toLocaleString()} track${allEntries.length === 1 ? '' : 's'} across ${knownDates.size.toLocaleString()} known Friday${knownDates.size === 1 ? '' : 's'}.`;
+        summary.style.display = 'block';
+    }
+
+    window.addEventListener('load', () => {
+        setupThemeToggle();
+
+        if (typeof PlaylistUtils === 'undefined' || typeof PlaylistUtils.pastWeekdayDates !== 'function' || typeof PlaylistUtils.expandEntry !== 'function') {
+            document.getElementById('loading').style.display = 'none';
+            const err = document.getElementById('error');
+            err.textContent = 'This page needs to reload to pick up a recent update. Please refresh (Ctrl/Cmd+Shift+R) and try again.';
+            err.style.display = 'block';
+            return;
+        }
+        setupSort();
+
+        const dates = allKnownFridays();
+        const progressEl = document.getElementById('loadingProgress');
+        progressEl.textContent = `(0 / ${dates.length} Fridays)`;
+
+        fetchAllFridays(dates, (done, total) => {
+            progressEl.textContent = `(${done} / ${total} Fridays)`;
+        }).then(perDayResults => {
+            allEntries = collectAllTracks(perDayResults);
+            document.getElementById('loading').style.display = 'none';
+            if (allEntries.length === 0) {
+                const err = document.getElementById('error');
+                err.textContent = 'Couldn’t load any tracks. Check your connection and refresh.';
+                err.style.display = 'block';
+                document.getElementById('rangeLine').textContent = '';
+                return;
+            }
+            showSummary(dates);
+            renderAllTracks();
+        });
+    });
+</script>
+
+</body>
+</html>
