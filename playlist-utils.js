@@ -110,8 +110,11 @@
         // encoded query — harmless to eBay's own search, but sloppy to look
         // at in a raw URL).
         const artistAlbum = [artist, album].filter(Boolean).join(' ');
-        const ebaySearch = format => artistAlbum
-            ? `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(`${artistAlbum} ${format}`)}`
+        // eBay category IDs: 176985 = Vinyl Records, 176984 = CDs. _sacat
+        // scopes the results server-side, so the query itself stays plain
+        // "Artist Album" rather than needing a "vinyl"/"cd" keyword to bias it.
+        const ebaySearch = category => artistAlbum
+            ? `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(artistAlbum)}&_sacat=${category}`
             : null;
         return {
             appleMusic: artistTitle
@@ -123,14 +126,8 @@
             tidal: artistTitle
                 ? `https://listen.tidal.com/search?q=${encodeURIComponent(artistTitle)}`
                 : null,
-            // Both are plain keyword searches biased by the word "vinyl"/
-            // "cd" — NOT a real eBay category filter (no `_sacat` param).
-            // Verifying and wiring in eBay's actual Records/CDs category
-            // IDs would tighten these, but this sandbox can't reach
-            // ebay.com to confirm the current ones are still valid, so
-            // that stays a possible follow-up rather than a guess baked in.
-            ebayVinyl: ebaySearch('vinyl'),
-            ebayCd: ebaySearch('cd'),
+            ebayVinyl: ebaySearch(176985),
+            ebayCd: ebaySearch(176984),
             wiki: artist
                 ? `https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(artist)}`
                 : null
