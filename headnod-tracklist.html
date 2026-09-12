@@ -117,6 +117,10 @@
             color: var(--muted);
             font-size: 0.95em;
         }
+        .played-date {
+            font-size: 0.85em;
+            font-style: italic;
+        }
         .column-details { width: 99%; word-wrap: break-word; }
         .bold { font-weight: bold; }
         .track-title { font-size: 1.05em; }
@@ -271,6 +275,14 @@
         return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
     }
 
+    // Short form for the per-row date next to the air time: the same track
+    // can air on more than one Friday, and with only a time shown two plays
+    // of one song look like a duplicate rather than two separate airings.
+    function shortDate(isoDate) {
+        const d = new Date(isoDate + 'T00:00:00');
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
     // ---------------- which Fridays are "known" ----------------
     // Same "has this Friday's show actually finished airing yet" logic as
     // headnod.html's airedFridays, but resolving to a single anchor date
@@ -406,7 +418,7 @@
                 frag.appendChild(headerRow);
                 lastLabel = label;
             }
-            frag.appendChild(buildTrackRow(entry.item));
+            frag.appendChild(buildTrackRow(entry.item, entry.date));
         });
         tbody.appendChild(frag);
         table.appendChild(tbody);
@@ -421,11 +433,14 @@
     }
 
     // ---------------- track rows ----------------
-    // Byte-for-byte the same row shape and enrichment hooks as
-    // headnod.html's buildTrackRow (see the comment at the top of this
-    // script for why this is a copy, not a shared function).
+    // Same row shape and enrichment hooks as headnod.html's buildTrackRow
+    // (see the comment at the top of this script for why this is a copy,
+    // not a shared function), plus one addition: this page merges every
+    // known Friday into one list, so each row also gets the date it aired
+    // on next to its time — without it, a track that aired on two
+    // different Fridays looks like an unexplained duplicate.
 
-    function buildTrackRow(item) {
+    function buildTrackRow(item, playedDate) {
         const startTime = PlaylistUtils.trackStartDate(item);
         const options = { hour: 'numeric', minute: 'numeric', hour12: true };
         const localTime = startTime ? startTime.toLocaleTimeString([], options).replace(/^0/, '') : '';
@@ -438,6 +453,12 @@
         const timeCell = document.createElement('td');
         timeCell.className = 'start-time';
         timeCell.textContent = localTime;
+        if (playedDate) {
+            const dateEl = document.createElement('div');
+            dateEl.className = 'played-date';
+            dateEl.textContent = shortDate(playedDate);
+            timeCell.appendChild(dateEl);
+        }
         row.appendChild(timeCell);
 
         const artCell = document.createElement('td');
@@ -516,9 +537,9 @@
             };
             addLink(links.appleMusic, 'Apple Music', 'apple-music-link', 'Search Apple Music for this track');
             addLink(links.youtube, 'YouTube (live)');
-            addLink(links.tidal, 'Tidal');
             addLink(links.ebayVinyl, 'eBay (vinyl)');
             addLink(links.ebayCd, 'eBay (CD)');
+            addLink(links.tidal, 'Tidal');
             addLink(links.wiki, 'Wiki');
             detailsCell.appendChild(linksRow);
         }
