@@ -568,17 +568,19 @@
         let loaded = false;
         let loading = false;
         let open = false;
+        let loadPromise = null;
         const setOpen = value => {
             open = value;
             list.style.display = open ? 'block' : 'none';
             tracksBtn.textContent = open ? 'Hide tracklist' : 'Show tracklist';
         };
         const load = () => {
-            if (loading) return;
+            if (loading) return loadPromise;
             loading = true;
-            loadTracklist(date, list, tracksBtn)
+            loadPromise = loadTracklist(date, list, tracksBtn)
                 .then(() => { loaded = true; open = true; })
                 .finally(() => { loading = false; });
+            return loadPromise;
         };
         tracksBtn.addEventListener('click', () => {
             if (loaded) setOpen(!open); else load();
@@ -586,8 +588,14 @@
 
         card.dataset.date = date;
         card._expand = () => tracksBtn.click();
-        // For the genre filter: open (loading first if need be), never close.
-        card._ensureOpen = () => { if (loaded) { if (!open) setOpen(true); } else load(); };
+        // For the genre filter and the date-link deep link: open (loading
+        // first if need be) and resolve once the tracklist is ready, but
+        // never close an already-open card the way _expand's click-toggle
+        // would if called twice.
+        card._ensureOpen = () => {
+            if (loaded) { if (!open) setOpen(true); return Promise.resolve(); }
+            return load();
+        };
 
         // Let the newest episode show its tracklist without a click — it's
         // the whole point of the page, and it's one extra request. Same for
@@ -1384,6 +1392,22 @@
         return dates;
     }
 
+    // Deep link support: headnod-tracklist.html's artist/year sort views
+    // link a track's play date straight to that Friday's card here, via
+    // ?date=YYYY-MM-DD. Fridays are weekly, so a date's position in the
+    // aired-Fridays list is exact calendar math — no need to page through
+    // "Load earlier Fridays" looking for it.
+    function fridayLinkTarget() {
+        const date = new URLSearchParams(location.search).get('date');
+        if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
+        if (date < '2022-06-03') return null;   // before headnod-tracklist.html's HEADNOD_KNOWN_START; not a link we'd ever generate
+        const newest = airedFridays(1, 0)[0];
+        if (!newest) return null;
+        const days = (new Date(newest + 'T00:00:00') - new Date(date + 'T00:00:00')) / 86400000;
+        if (days < 0 || days % 7 !== 0) return null;   // not a Friday relative to the newest one
+        return { date, position: days / 7 };
+    }
+
     window.addEventListener('load', () => {
         setupThemeToggle();
 
@@ -1399,10 +1423,23 @@
         loadMixcloudEpisodes().then(map => {
             episodesByDate = map;
             document.getElementById('loading').style.display = 'none';
-            const dates = renderFridays(FIRST_PAGE_FRIDAYS);
-            // Open the newest Friday's tracklist automatically.
-            const first = document.querySelector('.episode');
-            if (first && first._expand) first._expand();
+            const target = fridayLinkTarget();
+            const dates = renderFridays(target ? Math.max(FIRST_PAGE_FRIDAYS, target.position + 1) : FIRST_PAGE_FRIDAYS);
+            const targetCard = target && document.querySelector(`.episode[data-date="${target.date}"]`);
+            if (targetCard) {
+                // _ensureOpen (not _expand) because a Friday with no
+                // archived audio already auto-opened itself above — calling
+                // the click-toggling _expand a second time here would close
+                // it right back up. Scroll only once its tracklist (which
+                // may still be loading) is actually in the DOM, or the
+                // scroll lands short of a card that's about to grow taller.
+                const ready = targetCard._ensureOpen ? targetCard._ensureOpen() : Promise.resolve();
+                Promise.resolve(ready).then(() => targetCard.scrollIntoView({ block: 'start' }));
+            } else {
+                // Open the newest Friday's tracklist automatically.
+                const first = document.querySelector('.episode');
+                if (first && first._expand) first._expand();
+            }
             if (dates.length === 0) {
                 const err = document.getElementById('error');
                 err.textContent = 'Couldn’t work out which Fridays to show.';
