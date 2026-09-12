@@ -167,6 +167,24 @@
             font-weight: bold;
             text-align: center;
             padding: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+        table.tracks tr.group-header td::before {
+            content: '\25bc';
+            display: inline-block;
+            font-size: 0.75em;
+            margin-right: 8px;
+        }
+        table.tracks tbody.track-group.collapsed tr.group-header td::before {
+            content: '\25b6';
+        }
+        table.tracks tbody.track-group.collapsed tr.track-row {
+            display: none;
+        }
+        table.tracks tr.group-header:focus-visible td {
+            outline: 2px solid var(--link);
+            outline-offset: -2px;
         }
         #summary {
             text-align: center;
@@ -212,6 +230,12 @@
                 <option value="artist">by artist (A&ndash;Z)</option>
             </select>
         </label>
+        <label>Year played
+            <select id="yearFilterSelect" aria-label="Filter by year played">
+                <option value="" selected>All years</option>
+            </select>
+        </label>
+        <button type="button" id="collapseToggle" disabled>Collapse all</button>
     </div>
 
     <div id="summary" style="display:none"></div>
@@ -263,6 +287,7 @@
     const FETCH_CONCURRENCY = 8;
 
     let currentSort = 'date';   // 'date' | 'year' | 'artist'
+    let yearFilter = '';        // '' = all years, else a 4-digit year the track was PLAYED (not released)
     let allEntries = [];        // [{ date, item }], every known track play
 
     function headnodSlot() {
@@ -415,48 +440,132 @@
         return currentSort === 'artist' ? groupLabel(entry).toLowerCase() : groupLabel(entry);
     }
 
+    // Grouped by artist or year, a single group can run to hundreds of rows
+    // (every Friday one artist ever played on) with dozens of groups in the
+    // page — expanding all of them by default is what made the page take
+    // forever to scroll. Collapse those two modes' groups by default (one
+    // click each to open); date mode's groups are just one Friday's ~6-10
+    // tracks, so it stays fully expanded as before.
+    function collapseGroupsByDefault() {
+        return currentSort !== 'date';
+    }
+
+    function toggleGroup(group) {
+        const collapsed = group.classList.toggle('collapsed');
+        group.querySelector('.group-header').setAttribute('aria-expanded', String(!collapsed));
+        updateCollapseToggleLabel();
+    }
+
     function renderAllTracks() {
         const container = document.getElementById('allTracksWrap');
         container.innerHTML = '';
 
-        if (allEntries.length === 0) {
+        const filtered = yearFilter ? allEntries.filter(e => e.date.slice(0, 4) === yearFilter) : allEntries;
+
+        if (filtered.length === 0) {
             const none = document.createElement('div');
             none.className = 'small';
             none.style.textAlign = 'center';
-            none.textContent = 'No tracks logged for any known Friday yet.';
+            none.textContent = allEntries.length === 0
+                ? 'No tracks logged for any known Friday yet.'
+                : `No tracks played in ${yearFilter}.`;
             container.appendChild(none);
+            updateCollapseToggleLabel();
             return;
         }
 
-        const sorted = allEntries.slice().sort(compareEntries);
+        // Grouped by artist or year, the date is the only way back to that
+        // Friday's full show — grouped by date, the Friday is already the
+        // group header, so a link on every row would just repeat it.
+        const linkDates = currentSort !== 'date';
+        const collapseByDefault = collapseGroupsByDefault();
+
+        const sorted = filtered.slice().sort(compareEntries);
+        const counts = new Map();
+        sorted.forEach(entry => {
+            const key = groupKey(entry);
+            counts.set(key, (counts.get(key) || 0) + 1);
+        });
+
         const table = document.createElement('table');
         table.className = 'tracks';
-        const tbody = document.createElement('tbody');
         const frag = document.createDocumentFragment();
+        let group = null;
         let lastKey;
         sorted.forEach(entry => {
             const key = groupKey(entry);
             if (key !== lastKey) {
+                group = document.createElement('tbody');
+                group.className = 'track-group';
+                if (collapseByDefault) group.classList.add('collapsed');
                 const headerRow = document.createElement('tr');
                 headerRow.className = 'group-header';
+                headerRow.tabIndex = 0;
+                headerRow.setAttribute('role', 'button');
+                headerRow.setAttribute('aria-expanded', String(!collapseByDefault));
                 const headerCell = document.createElement('td');
                 headerCell.colSpan = 3;
-                headerCell.textContent = groupLabel(entry);
+                headerCell.textContent = `${groupLabel(entry)} (${counts.get(key)})`;
                 headerRow.appendChild(headerCell);
-                frag.appendChild(headerRow);
+                // `group` is reassigned on every new group below, so the
+                // click handler needs its own stable binding rather than
+                // reading the shared outer variable — otherwise every
+                // header ends up toggling whichever group was created last.
+                const thisGroup = group;
+                headerRow.addEventListener('click', () => toggleGroup(thisGroup));
+                headerRow.addEventListener('keydown', e => {
+                    if (e.key !== 'Enter' && e.key !== ' ') return;
+                    e.preventDefault();
+                    toggleGroup(thisGroup);
+                });
+                group.appendChild(headerRow);
+                frag.appendChild(group);
                 lastKey = key;
             }
-            frag.appendChild(buildTrackRow(entry.item, entry.date));
+            group.appendChild(buildTrackRow(entry.item, entry.date, linkDates));
         });
-        tbody.appendChild(frag);
-        table.appendChild(tbody);
+        table.appendChild(frag);
         container.appendChild(table);
+        updateCollapseToggleLabel();
     }
 
-    function setupSort() {
+    function updateCollapseToggleLabel() {
+        const btn = document.getElementById('collapseToggle');
+        const groups = document.querySelectorAll('#allTracksWrap tbody.track-group');
+        if (groups.length === 0) { btn.disabled = true; btn.textContent = 'Collapse all'; return; }
+        btn.disabled = false;
+        const anyExpanded = Array.from(groups).some(g => !g.classList.contains('collapsed'));
+        btn.textContent = anyExpanded ? 'Collapse all' : 'Expand all';
+    }
+
+    function populateYearFilter() {
+        const select = document.getElementById('yearFilterSelect');
+        const years = Array.from(new Set(allEntries.map(e => e.date.slice(0, 4)))).sort((a, b) => b.localeCompare(a));
+        years.forEach(y => {
+            const opt = document.createElement('option');
+            opt.value = y;
+            opt.textContent = y;
+            select.appendChild(opt);
+        });
+    }
+
+    function setupControls() {
         document.getElementById('sortSelect').addEventListener('change', e => {
             currentSort = e.target.value;
             renderAllTracks();
+        });
+        document.getElementById('yearFilterSelect').addEventListener('change', e => {
+            yearFilter = e.target.value;
+            renderAllTracks();
+        });
+        document.getElementById('collapseToggle').addEventListener('click', () => {
+            const groups = document.querySelectorAll('#allTracksWrap tbody.track-group');
+            const anyExpanded = Array.from(groups).some(g => !g.classList.contains('collapsed'));
+            groups.forEach(g => {
+                g.classList.toggle('collapsed', anyExpanded);
+                g.querySelector('.group-header').setAttribute('aria-expanded', String(!anyExpanded));
+            });
+            updateCollapseToggleLabel();
         });
     }
 
@@ -468,7 +577,7 @@
     // on next to its time — without it, a track that aired on two
     // different Fridays looks like an unexplained duplicate.
 
-    function buildTrackRow(item, playedDate) {
+    function buildTrackRow(item, playedDate, linkPlayedDate) {
         const startTime = PlaylistUtils.trackStartDate(item);
         const options = { hour: 'numeric', minute: 'numeric', hour12: true };
         const localTime = startTime ? startTime.toLocaleTimeString([], options).replace(/^0/, '') : '';
@@ -482,9 +591,16 @@
         timeCell.className = 'start-time';
         timeCell.textContent = localTime;
         if (playedDate) {
-            const dateEl = document.createElement('div');
+            // Grouped by date, the Friday is already the group header; a
+            // link there would just repeat it. Grouped by artist or year,
+            // it's the only way back to that Friday's full show.
+            const dateEl = document.createElement(linkPlayedDate ? 'a' : 'div');
             dateEl.className = 'played-date';
             dateEl.textContent = shortDate(playedDate);
+            if (linkPlayedDate) {
+                dateEl.href = `headnod.html?date=${encodeURIComponent(playedDate)}`;
+                dateEl.title = 'See this Friday’s full Headnod tracklist';
+            }
             timeCell.appendChild(dateEl);
         }
         row.appendChild(timeCell);
@@ -987,7 +1103,7 @@
             err.style.display = 'block';
             return;
         }
-        setupSort();
+        setupControls();
 
         const dates = allKnownFridays();
         const progressEl = document.getElementById('loadingProgress');
@@ -1006,6 +1122,7 @@
                 return;
             }
             showSummary(dates);
+            populateYearFilter();
             renderAllTracks();
         });
     });
