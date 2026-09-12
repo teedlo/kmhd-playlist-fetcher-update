@@ -1,0 +1,28 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-09-12",
+  "complete": true,
+  "tracks": {
+    "\"seckou keita, catrin finch\"|listen to the grass grow": {"t":1365663406,"c":1365662822,"r":285046261,"a":"Music128/v4/ed/81/65/ed816553-e051-1eea-0288-39ae2fe31838/5065002172013.jpg","h":1,"g":"Worldwide","y":2018},
+    "bud powell trio|i should care": {"t":1234295371,"c":1234295357,"r":1462065978,"a":"Music124/v4/d5/84/a9/d584a9f6-429a-00db-bf5b-a63b692901f1/190295861506.jpg","h":1,"g":"Pop","y":1951},
+    "david axelrod|the warning ii": {"t":725823880,"c":725823660,"r":1211603,"a":"Music/v4/fc/44/35/fc443559-89f8-1ae3-7ce6-06ccb3cfec9a/00724352160952.jpg","h":1,"g":"Jazz","y":1970},
+    "david t. walker|brother, brother": {"t":362333106,"c":362333044,"r":5278529,"a":"Music3/v4/97/6c/c6/976cc64b-c6b7-e62c-b894-af731c96d46d/dj.pdniwghe.jpg","h":1,"g":"R&B/Soul","y":1974},
+    "freddie robinson|before six": {"t":1443648646,"c":1443647750,"r":192700651,"a":"Music118/v4/7b/a9/cc/7ba9cc3a-16bd-8d78-d8ae-3425dcdbd447/00025218852821.rgb.jpg","h":1,"g":"Jazz","y":2013},
+    "grover washington, jr.|not yet": {"t":1442448813,"c":1442448802,"r":485819,"a":"Music211/v4/e1/df/ad/e1dfadff-be1d-0a7e-b17f-0c3d5f39d478/09UMGIM08699.rgb.jpg","h":1,"g":"Jazz","y":1976},
+    "idris muhammad|i'm a believer": {"t":1652097433,"c":1652097069,"r":1395300,"a":"Music122/v4/4a/45/15/4a451561-224d-6ca3-5c84-99bfa5c23d07/22CRGIM33389.rgb.jpg","h":1,"g":"Jazz","y":1971},
+    "john carroll kirby|repettos for you my lord": {"t":1594250479,"c":1594250368,"r":1213407268,"a":"Music116/v4/2b/b2/e3/2bb2e3c8-6a44-dafa-d0f1-3061a98d2846/1552.jpg","h":1,"g":"Electronic","y":2022},
+    "john coltrane & paul quinichette|cattin'": {"t":1443098455,"c":1443098166,"r":120199,"a":"Music128/v4/61/44/a1/6144a11f-5fc8-7724-30eb-126dd6b46735/00888072001046.rgb.jpg","h":1,"g":"Jazz","y":1957},
+    "kenny barron|dolores street s.f.": {"t":1679195514,"c":1679195243,"r":51443,"a":"Music116/v4/9a/19/41/9a194151-2c93-fe9e-dcb0-7b23ad4fc12d/747985011521_cover.jpg","h":1,"g":"Jazz","y":1990},
+    "lucho neves y su orquesta|mambo de machaguay": null,
+    "mark isham|all blues": {"t":205725523,"c":205723698,"r":110953164,"a":"Features/1c/12/6f/dj.fssnukhd.jpg","h":1,"g":"Jazz","y":2006},
+    "orchester roland kovac|blue dance": {"t":933183589,"c":933183544,"r":256001794,"a":"Music122/v4/7a/3d/bc/7a3dbc7e-66bd-6b9f-f81b-cdbdc14d724d/cover.jpg","h":1,"g":"Jazz","y":1964},
+    "pat martino|lean years": {"t":1438077537,"c":1438077529,"r":468526191,"a":"Music128/v4/c9/f7/77/c9f77771-9e3a-63c3-5e37-63e2511c04c4/632375723125_cover.jpg","h":1,"g":"Jazz","y":2011},
+    "quartette trés bien|say april": {"t":1443217479,"c":1443217470,"r":14758636,"a":"Music114/v4/12/33/3b/12333b49-2d68-2afa-d51e-339c9cca742e/00602498623992.rgb.jpg","h":1,"g":"Electronic","y":2004},
+    "roy ayers|for real": {"t":1440922401,"c":1440922274,"r":1373769335,"a":"Music211/v4/4f/ce/76/4fce7607-e059-45d9-9e79-5300603135b5/06UMGIM07765.rgb.jpg","h":1,"g":"Jazz","y":1995},
+    "sonny stitt|mendocino": null,
+    "the ernie watts encounter|ain't no lovin'": {"t":345112041,"c":345111960,"r":345111970,"a":"Music/2b/fc/30/mzi.aqqsrixx.jpg","h":1,"g":"Jazz","y":1972},
+    "tony williams|tony": {"t":312623473,"c":312623435,"r":893348,"a":"Music/2c/b5/0d/mzi.wdjysjlp.jpg","h":1,"g":"Jazz","y":1997},
+    "wes montgomery|four on six (remastered 2025)": {"t":1794908481,"c":1794908400,"r":119646,"a":"Music211/v4/ff/03/f1/ff03f1a0-c279-cd70-f314-392500552068/24CRGIM45642.rgb.jpg","h":1,"g":"Jazz","y":2025},
+    "yusef lateef|sea breeze": {"t":1442973122,"c":1442972950,"r":55640,"a":"Music128/v4/9e/99/9d/9e999d6d-2757-5c93-5b82-d38f696aaad8/00025218648226.rgb.jpg","h":1,"g":"Jazz","y":1957}
+  }
+}
