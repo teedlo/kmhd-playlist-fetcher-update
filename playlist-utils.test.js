@@ -98,6 +98,10 @@ test('trackYear: returns null when there is no usable release date', () => {
 
 test('trackYear: rejects out-of-range years as bad data', () => {
     assert.equal(trackYear({ releaseDate: '3099-01-01' }), null);
+    // KMHD's own feed has sent this exact placeholder-looking date for a
+    // track whose real release year is 1977 (per its own iTunes collection
+    // ID) — nothing KMHD plays predates the 1920s.
+    assert.equal(trackYear({ releaseDate: '1905-01-01' }), null);
 });
 
 test('searchLinks: builds search URLs for youtube, tidal, ebay (vinyl and CD categories) and wikipedia', () => {

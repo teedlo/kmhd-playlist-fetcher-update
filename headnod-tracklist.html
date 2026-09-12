@@ -209,6 +209,7 @@
             <select id="sortSelect" aria-label="Sort all tracks">
                 <option value="date" selected>by date played (newest first)</option>
                 <option value="year">by year released (oldest first)</option>
+                <option value="artist">by artist (A&ndash;Z)</option>
             </select>
         </label>
     </div>
@@ -227,8 +228,8 @@
 <!-- Cache-busting query param: bump whenever these files change (see the
      same note in index.html and headnod.html — a stale cached copy
      silently breaks any function the old copy doesn't have yet). -->
-<script src="playlist-utils.js?v=20260913"></script>
-<script src="shows-schedule.js?v=20260913"></script>
+<script src="playlist-utils.js?v=20260914"></script>
+<script src="shows-schedule.js?v=20260914"></script>
 <script>
     // ------------------------------------------------------------------
     // Every track logged on The Headnod Show, across every Friday we have
@@ -261,7 +262,7 @@
     // keeps a slow connection from opening hundreds of requests at once.
     const FETCH_CONCURRENCY = 8;
 
-    let currentSort = 'date';   // 'date' | 'year'
+    let currentSort = 'date';   // 'date' | 'year' | 'artist'
     let allEntries = [];        // [{ date, item }], every known track play
 
     function headnodSlot() {
@@ -365,6 +366,10 @@
         return yearOf(entry.item);
     }
 
+    function entryArtist(entry) {
+        return PlaylistUtils.mapItemFields(entry.item).artist || '';
+    }
+
     function compareEntries(a, b) {
         if (currentSort === 'year') {
             const ya = entryYear(a), yb = entryYear(b);
@@ -373,6 +378,17 @@
                 if (yb == null) return -1;
                 return ya - yb;
             }
+            return entryTime(a) - entryTime(b);
+        }
+        if (currentSort === 'artist') {
+            const aa = entryArtist(a), ab = entryArtist(b);
+            if (!aa || !ab) {
+                if (aa === ab) return entryTime(a) - entryTime(b);
+                return aa ? -1 : 1;                            // unknown artist sorts last
+            }
+            const cmp = aa.localeCompare(ab, undefined, { sensitivity: 'base' });
+            if (cmp !== 0) return cmp;
+            if (a.date !== b.date) return a.date < b.date ? 1 : -1;   // newest date first within an artist
             return entryTime(a) - entryTime(b);
         }
         if (a.date !== b.date) return a.date < b.date ? 1 : -1;   // newest date first
@@ -384,7 +400,19 @@
             const y = entryYear(entry);
             return y ? String(y) : 'Unknown year';
         }
+        if (currentSort === 'artist') {
+            return entryArtist(entry) || 'Unknown artist';
+        }
         return friendlyDate(entry.date);
+    }
+
+    // Same grouping as groupLabel, but case-normalized for artist sort so
+    // KMHD's own occasional case inconsistency for one artist (e.g.
+    // "Weather Report" vs. "weather report") doesn't split them into two
+    // alternating groups — the whole point of this sort is one group per
+    // artist.
+    function groupKey(entry) {
+        return currentSort === 'artist' ? groupLabel(entry).toLowerCase() : groupLabel(entry);
     }
 
     function renderAllTracks() {
@@ -405,18 +433,18 @@
         table.className = 'tracks';
         const tbody = document.createElement('tbody');
         const frag = document.createDocumentFragment();
-        let lastLabel;
+        let lastKey;
         sorted.forEach(entry => {
-            const label = groupLabel(entry);
-            if (label !== lastLabel) {
+            const key = groupKey(entry);
+            if (key !== lastKey) {
                 const headerRow = document.createElement('tr');
                 headerRow.className = 'group-header';
                 const headerCell = document.createElement('td');
                 headerCell.colSpan = 3;
-                headerCell.textContent = label;
+                headerCell.textContent = groupLabel(entry);
                 headerRow.appendChild(headerCell);
                 frag.appendChild(headerRow);
-                lastLabel = label;
+                lastKey = key;
             }
             frag.appendChild(buildTrackRow(entry.item, entry.date));
         });

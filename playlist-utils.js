@@ -87,7 +87,14 @@
         const match = String(raw).match(/(\d{4})/);
         if (!match) return null;
         const year = parseInt(match[1], 10);
-        if (year < 1900 || year > 2100) return null;
+        // KMHD's own feed occasionally sends an implausible placeholder
+        // release date instead of the real one — confirmed live for one
+        // Cortex track, whose KMHD-supplied `releaseDate` read
+        // "1905-01-01" while its own KMHD-supplied iTunes collection ID
+        // is the real 1977 "Cortex, Vol. 2". Nothing KMHD plays predates
+        // the 1920s, so treat anything earlier as bad data rather than a
+        // genuine year.
+        if (year < 1920 || year > 2100) return null;
         return year;
     }
 
