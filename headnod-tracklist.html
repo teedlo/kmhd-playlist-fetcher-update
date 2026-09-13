@@ -186,6 +186,16 @@
             outline: 2px solid var(--link);
             outline-offset: -2px;
         }
+        table.tracks tr.bucket-header td {
+            background: var(--badge-bg);
+            color: var(--badge-fg);
+            font-weight: bold;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 10px 8px;
+            border-top: 2px solid var(--border);
+        }
         #summary {
             text-align: center;
             font-size: 0.9em;
@@ -289,6 +299,18 @@
     let currentSort = 'date';   // 'date' | 'year' | 'artist'
     let yearFilter = '';        // '' = all years, else a 4-digit year the track was PLAYED (not released)
     let allEntries = [];        // [{ date, item }], every known track play
+
+    // Alphabet-bucket dividers for the artist sort: fixed-width letter
+    // ranges (A-F, G-M, ...) would leave some buckets nearly empty and
+    // others with hundreds of artists, since real artist names cluster
+    // unevenly across the alphabet. Splitting evenly by artist COUNT
+    // instead, then labeling each bucket by its actual first/last letter,
+    // gives ranges like "A-C" then "D-R" that reflect where the artists
+    // really are.
+    const ARTIST_BUCKET_MIN_TOTAL = 15;    // fewer artists than this: buckets aren't worth it
+    const ARTIST_BUCKET_TARGET_SIZE = 30;  // aim for roughly this many artists per bucket
+    const ARTIST_BUCKET_MIN_COUNT = 3;
+    const ARTIST_BUCKET_MAX_COUNT = 12;
 
     function headnodSlot() {
         if (typeof KmhdShows === 'undefined') return HEADNOD_SLOT;
@@ -450,6 +472,52 @@
         return currentSort !== 'date';
     }
 
+    // First alphanumeric character in a group label, uppercased — used as
+    // a bucket's boundary letter. Falls back to '#' for a label that's
+    // all punctuation (shouldn't happen for an artist name, but cheap to
+    // guard against).
+    function bucketLetter(label) {
+        const m = label.match(/[A-Za-z0-9]/);
+        return m ? m[0].toUpperCase() : '#';
+    }
+
+    // Splits `labels` (group labels in their already-sorted order) into a
+    // handful of semi-even buckets by count, not by letter. Returns
+    // { bucketOfIndex, labels } where bucketOfIndex[i] is the bucket index
+    // for labels[i], or null if there aren't enough groups to bother.
+    function computeArtistBuckets(labels) {
+        const total = labels.length;
+        if (total < ARTIST_BUCKET_MIN_TOTAL) return null;
+        const numBuckets = Math.max(ARTIST_BUCKET_MIN_COUNT,
+            Math.min(ARTIST_BUCKET_MAX_COUNT, Math.round(total / ARTIST_BUCKET_TARGET_SIZE)));
+        const bucketOfIndex = new Array(total);
+        const bucketLabels = [];
+        let start = 0;
+        for (let b = 0; b < numBuckets; b++) {
+            const end = Math.round((b + 1) * total / numBuckets);
+            if (end <= start) continue;
+            for (let i = start; i < end; i++) bucketOfIndex[i] = bucketLabels.length;
+            const first = bucketLetter(labels[start]);
+            const last = bucketLetter(labels[end - 1]);
+            bucketLabels.push(first === last ? first : `${first}–${last}`);
+            start = end;
+        }
+        return { bucketOfIndex, labels: bucketLabels };
+    }
+
+    function buildBucketHeader(label) {
+        const tbody = document.createElement('tbody');
+        tbody.className = 'bucket-divider';
+        const tr = document.createElement('tr');
+        tr.className = 'bucket-header';
+        const td = document.createElement('td');
+        td.colSpan = 3;
+        td.textContent = label;
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+        return tbody;
+    }
+
     function toggleGroup(group) {
         const collapsed = group.classList.toggle('collapsed');
         group.querySelector('.group-header').setAttribute('aria-expanded', String(!collapsed));
@@ -482,19 +550,35 @@
 
         const sorted = filtered.slice().sort(compareEntries);
         const counts = new Map();
+        const groupLabels = new Map();   // key -> label, first occurrence only (preserves group order)
         sorted.forEach(entry => {
             const key = groupKey(entry);
             counts.set(key, (counts.get(key) || 0) + 1);
+            if (!groupLabels.has(key)) groupLabels.set(key, groupLabel(entry));
         });
+
+        const bucketPlan = currentSort === 'artist'
+            ? computeArtistBuckets(Array.from(groupLabels.values()))
+            : null;
 
         const table = document.createElement('table');
         table.className = 'tracks';
         const frag = document.createDocumentFragment();
         let group = null;
         let lastKey;
+        let groupIndex = -1;
+        let lastBucketIdx = -1;
         sorted.forEach(entry => {
             const key = groupKey(entry);
             if (key !== lastKey) {
+                groupIndex++;
+                if (bucketPlan) {
+                    const bIdx = bucketPlan.bucketOfIndex[groupIndex];
+                    if (bIdx !== lastBucketIdx) {
+                        frag.appendChild(buildBucketHeader(bucketPlan.labels[bIdx]));
+                        lastBucketIdx = bIdx;
+                    }
+                }
                 group = document.createElement('tbody');
                 group.className = 'track-group';
                 if (collapseByDefault) group.classList.add('collapsed');
