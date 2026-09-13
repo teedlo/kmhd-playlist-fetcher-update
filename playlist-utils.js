@@ -62,6 +62,18 @@
         return prefix + enrichKey(meta);
     }
 
+    // The one place "are these two artist strings the same artist" is
+    // decided for grouping/counting purposes (headnod-tracklist.html's
+    // artist sort, the Headnod stats page). NFC-normalizes first — the
+    // same artist has shown up stored in two different Unicode
+    // normalization forms across different enrich/ files (visually
+    // identical, but `!==` as plain strings and NOT collapsed by a bare
+    // .toLowerCase()) — then lowercases, for KMHD's own occasional casing
+    // inconsistency (e.g. "Weather Report" vs. "weather report").
+    function normalizeArtistKey(name) {
+        return (name || '').normalize('NFC').toLowerCase();
+    }
+
     // The KMHD playlist "day" a track belongs to, as YYYY-MM-DD. KMHD
     // buckets its per-day API by Portland-local date, and every item
     // carries that date at the front of start.local (old schema:
@@ -283,7 +295,7 @@
     const HEADNOD_KNOWN_START = '2022-06-03';
 
     return {
-        trackStartDate, trackDate, mapItemFields, enrichKey, cacheKey, trackYear, searchLinks,
+        trackStartDate, trackDate, mapItemFields, enrichKey, cacheKey, normalizeArtistKey, trackYear, searchLinks,
         compactEntry, expandEntry, minutesOfDay, trackInSlot, pastWeekdayDates, toIsoDate,
         HEADNOD_KNOWN_START
     };

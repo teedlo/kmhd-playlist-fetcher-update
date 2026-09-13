@@ -5,7 +5,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const {
-    trackStartDate, mapItemFields, cacheKey, trackYear, searchLinks,
+    trackStartDate, mapItemFields, cacheKey, normalizeArtistKey, trackYear, searchLinks,
     minutesOfDay, trackInSlot, pastWeekdayDates, toIsoDate
 } = require('./playlist-utils.js');
 
@@ -83,6 +83,28 @@ test('cacheKey: is case-insensitive so differently-cased duplicates share a cach
     const a = cacheKey('itunes1:', { artist: 'The Beatles', title: 'Help!' });
     const b = cacheKey('itunes1:', { artist: 'the beatles', title: 'HELP!' });
     assert.equal(a, b);
+});
+
+test('normalizeArtistKey: case-insensitive', () => {
+    assert.equal(normalizeArtistKey('Weather Report'), normalizeArtistKey('weather report'));
+});
+
+test('normalizeArtistKey: NFC and NFD forms of the same name collapse to one key', () => {
+    // "Özer" as a precomposed ö (U+00F6, NFC) vs. a plain o + combining
+    // diaeresis (U+006F U+0308, NFD) — visually identical, but !== as plain
+    // strings, and a bare .toLowerCase() does not collapse them either.
+    // This is not a hypothetical: the live enrich/ data has "Zerrin Özer"
+    // stored in both forms across two different day files.
+    const nfc = 'Zerrin Özer';
+    const nfd = 'Zerrin Özer';
+    assert.notEqual(nfc, nfd, 'sanity check: the two raw strings really do differ');
+    assert.equal(normalizeArtistKey(nfc), normalizeArtistKey(nfd));
+});
+
+test('normalizeArtistKey: empty/missing input is safe', () => {
+    assert.equal(normalizeArtistKey(''), '');
+    assert.equal(normalizeArtistKey(null), '');
+    assert.equal(normalizeArtistKey(undefined), '');
 });
 
 test('trackYear: reads a 4-digit year out of releaseDate', () => {

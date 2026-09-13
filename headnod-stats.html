@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Headnod Stats — The Headnod Show</title>
+    <script>
+        // Applied before first paint so there's no flash of the wrong theme.
+        // Shares the 'theme' localStorage key with the other pages, so
+        // toggling dark mode anywhere carries over here too.
+        (function () {
+            try {
+                const saved = localStorage.getItem('theme');
+                if (saved === 'dark' || saved === 'light') {
+                    document.documentElement.setAttribute('data-theme', saved);
+                }
+            } catch (e) { /* localStorage unavailable; fall back to OS preference via CSS */ }
+        })();
+    </script>
+    <style>
+        /* Same palette as the other pages (WCAG AAA contrast, larger base font). */
+        :root {
+            --bg: #fff;
+            --fg: #333;
+            --header-bg: #eee;
+            --border: #ddd;
+            --link: #0a4fbf;
+            --muted: #545861;
+            --error: #a00;
+            --badge-bg: #eef3fb;
+            --badge-fg: #345;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --bg: #16181c;
+                --fg: #e2e2e2;
+                --header-bg: #23262b;
+                --border: #33363c;
+                --link: #6cb2ff;
+                --muted: #b9bcc2;
+                --error: #ff8080;
+                --badge-bg: #1f2a38;
+                --badge-fg: #9cc0e8;
+            }
+        }
+        :root[data-theme="dark"] {
+            --bg: #16181c;
+            --fg: #e2e2e2;
+            --header-bg: #23262b;
+            --border: #33363c;
+            --link: #6cb2ff;
+            --muted: #b9bcc2;
+            --error: #ff8080;
+            --badge-bg: #1f2a38;
+            --badge-fg: #9cc0e8;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px 16px 40px;
+            color: var(--fg);
+            background: var(--bg);
+        }
+        .wrap { max-width: 44em; margin: 0 auto; }
+        header.page { text-align: center; margin-bottom: 20px; }
+        h1 { font-size: 2.1em; margin: 0 0 6px; }
+        .tagline { margin: 0 0 4px; font-size: 1.05em; }
+        .subline { margin: 0 0 16px; font-size: 0.95em; color: var(--muted); }
+        nav.page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        a { color: var(--link); }
+        button {
+            font-family: inherit;
+            font-size: 1em;
+            padding: 10px 16px;
+            cursor: pointer;
+            background: var(--header-bg);
+            color: var(--fg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+        .back-link {
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--header-bg);
+            text-decoration: none;
+        }
+
+        #loading, #error { text-align: center; padding: 12px; }
+        #error { color: var(--error); display: none; }
+
+        section.stat-section { margin: 0 0 36px; }
+        h2 { font-size: 1.3em; margin: 0 0 4px; }
+        .section-note { margin: 0 0 14px; font-size: 0.85em; color: var(--muted); }
+
+        /* ---------------- leaderboards ---------------- */
+        ol.leaderboard { list-style: none; margin: 0; padding: 0; }
+        ol.leaderboard li {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            padding: 9px 4px;
+            border-top: 1px solid var(--border);
+        }
+        ol.leaderboard li:first-child { border-top: none; }
+        .rank {
+            font-weight: bold;
+            color: var(--muted);
+            width: 2em;
+            flex-shrink: 0;
+            text-align: right;
+        }
+        .entry-name { flex: 1; min-width: 0; }
+        .entry-name .primary { font-weight: bold; }
+        .entry-name .secondary { color: var(--muted); font-size: 0.9em; }
+        .entry-count {
+            color: var(--muted);
+            font-size: 0.9em;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .show-more { margin-top: 10px; }
+
+        /* ---------------- bar breakdowns ---------------- */
+        .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+        .bar-label { width: 7.5em; flex-shrink: 0; font-size: 0.9em; text-align: right; }
+        .bar-track {
+            flex: 1;
+            background: var(--header-bg);
+            border-radius: 4px;
+            height: 20px;
+            overflow: hidden;
+        }
+        .bar-fill { background: var(--link); height: 100%; border-radius: 4px; }
+        .bar-count { width: 4.5em; flex-shrink: 0; font-size: 0.85em; color: var(--muted); }
+
+        footer { margin-top: 32px; text-align: center; font-size: 0.85em; color: var(--muted); }
+        footer a { color: var(--muted); }
+
+        @media (max-width: 600px) {
+            body { padding: 14px 10px 30px; }
+            .bar-label { width: 5.5em; }
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+
+    <header class="page">
+        <h1>Headnod Stats</h1>
+        <p class="tagline">Leaderboards and breakdowns from every Headnod track we have data for.</p>
+        <p class="subline" id="rangeLine">Loading&hellip;</p>
+        <nav class="page">
+            <a class="back-link" href="headnod-tracklist.html">&larr; Every Headnod Track</a>
+            <a class="back-link" href="headnod.html">The Headnod Show</a>
+            <button type="button" id="themeToggle" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
+        </nav>
+    </header>
+
+    <div id="loading">Loading tracks&hellip;</div>
+    <div id="error"></div>
+
+    <main id="statsWrap" hidden>
+        <section class="stat-section">
+            <h2>Most-played artists</h2>
+            <p class="section-note">By total number of plays across every known Friday. "Unknown artist" (station IDs, gaps in KMHD's log) is excluded.</p>
+            <ol class="leaderboard" id="topArtists"></ol>
+            <button type="button" class="show-more" data-target="topArtists" hidden>Show 20 more</button>
+        </section>
+
+        <section class="stat-section">
+            <h2>Most-played tracks</h2>
+            <p class="section-note">The same song, by the same artist, played more than once.</p>
+            <ol class="leaderboard" id="topTracks"></ol>
+            <button type="button" class="show-more" data-target="topTracks" hidden>Show 20 more</button>
+        </section>
+
+        <section class="stat-section">
+            <h2>Most-played albums</h2>
+            <p class="section-note">Tracks with no album logged by KMHD are left out of this one.</p>
+            <ol class="leaderboard" id="topAlbums"></ol>
+            <button type="button" class="show-more" data-target="topAlbums" hidden>Show 20 more</button>
+        </section>
+
+        <section class="stat-section">
+            <h2>Genres played</h2>
+            <p class="section-note" id="genreNote"></p>
+            <div id="genreBars"></div>
+        </section>
+
+        <section class="stat-section">
+            <h2>Decade of release</h2>
+            <p class="section-note" id="decadeNote"></p>
+            <div id="decadeBars"></div>
+        </section>
+    </main>
+
+    <footer>
+        Tracklists from <a href="https://www.kmhd.org/playlist/" target="_blank" rel="noopener">KMHD</a>.
+        Album art &amp; links from <a href="https://performance-partners.apple.com/search-api" target="_blank" rel="noopener">iTunes Search</a>.
+    </footer>
+
+</div>
+
+<!-- Cache-busting query param: bump whenever playlist-utils.js changes (see
+     the same note in index.html, headnod.html and headnod-tracklist.html —
+     a stale cached copy silently breaks any function the old copy doesn't
+     have yet). -->
+<script src="playlist-utils.js?v=20260916"></script>
+<script>
+    // ------------------------------------------------------------------
+    // Leaderboards and breakdowns computed from headnod-tracks.json — the
+    // same precomputed file headnod-tracklist.html loads (see that page's
+    // own comment for why the data lives there: scripts/build-headnod-tracklist.js
+    // merges every known Friday's playlist with the existing Apple Music
+    // enrich/ data once a day, so this page never talks to KMHD or iTunes
+    // itself). Everything here is a single client-side pass over the
+    // ~7,000 records — cheap enough that there's no reason to precompute
+    // it server-side too.
+    // ------------------------------------------------------------------
+
+    const SHOW_MORE_STEP = 20;
+
+    function friendlyDate(isoDate) {
+        const d = new Date(isoDate + 'T00:00:00');
+        return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    }
+
+    // ---------------- computing the stats ----------------
+    // Artist grouping goes through PlaylistUtils.normalizeArtistKey (NFC +
+    // lowercase), not a bare .toLowerCase() — this exact dataset has
+    // already shown up with one artist stored in two different Unicode
+    // normalization forms across different enrich/ files ("Zerrin Özer"),
+    // which a bare .toLowerCase() does not collapse. headnod-tracklist.html
+    // was retrofitted to use the same shared helper for the same reason.
+
+    function computeStats(allEntries) {
+        const artistCounts = new Map();   // normKey -> { label, count }
+        const trackCounts = new Map();    // normKey -> { artist, title, count }
+        const albumCounts = new Map();     // normKey -> { artist, album, count }
+        const genreCounts = new Map();    // genre string -> count
+        const decadeCounts = new Map();   // decade (number) -> count
+        let genreKnown = 0, genreUnknown = 0;
+        let yearKnown = 0, yearUnknown = 0;
+
+        allEntries.forEach(item => {
+            const { title, artist, album } = PlaylistUtils.mapItemFields(item);
+            const normArtist = PlaylistUtils.normalizeArtistKey(artist);
+
+            if (normArtist) {
+                const rec = artistCounts.get(normArtist) || { label: artist, count: 0 };
+                rec.count++;
+                artistCounts.set(normArtist, rec);
+
+                if (title) {
+                    const key = normArtist + '|' + title.trim().toLowerCase();
+                    const trec = trackCounts.get(key) || { artist, title, count: 0 };
+                    trec.count++;
+                    trackCounts.set(key, trec);
+                }
+                if (album) {
+                    const key = normArtist + '|' + album.trim().toLowerCase();
+                    const arec = albumCounts.get(key) || { artist, album, count: 0 };
+                    arec.count++;
+                    albumCounts.set(key, arec);
+                }
+            }
+
+            const info = PlaylistUtils.expandEntry(item);
+            const genre = info && info.primaryGenreName;
+            if (genre) { genreCounts.set(genre, (genreCounts.get(genre) || 0) + 1); genreKnown++; }
+            else genreUnknown++;
+
+            // Same priority order as headnod-tracklist.html's yearOf: KMHD's
+            // own releaseDate first, the enrich-derived one second.
+            const year = PlaylistUtils.trackYear(item) || (info && PlaylistUtils.trackYear(info));
+            if (year) {
+                const decade = Math.floor(year / 10) * 10;
+                decadeCounts.set(decade, (decadeCounts.get(decade) || 0) + 1);
+                yearKnown++;
+            } else {
+                yearUnknown++;
+            }
+        });
+
+        const topOf = map => Array.from(map.values()).sort((a, b) => b.count - a.count);
+        return {
+            total: allEntries.length,
+            artists: topOf(artistCounts),
+            tracks: topOf(trackCounts),
+            albums: topOf(albumCounts),
+            genres: topOf(new Map(Array.from(genreCounts, ([label, count]) => [label, { label, count }]))),
+            genreKnown, genreUnknown,
+            decades: Array.from(decadeCounts.entries()).map(([decade, count]) => ({ decade, count })).sort((a, b) => a.decade - b.decade),
+            yearKnown, yearUnknown
+        };
+    }
+
+    // ---------------- rendering ----------------
+
+    function renderLeaderboard(listEl, buttonEl, entries, renderItem) {
+        let shown = 0;
+        function renderNext() {
+            const slice = entries.slice(shown, shown + SHOW_MORE_STEP);
+            slice.forEach((entry, i) => {
+                const li = document.createElement('li');
+                const rank = document.createElement('span');
+                rank.className = 'rank';
+                rank.textContent = `${shown + i + 1}.`;
+                li.appendChild(rank);
+                li.appendChild(renderItem(entry));
+                const count = document.createElement('span');
+                count.className = 'entry-count';
+                count.textContent = `${entry.count.toLocaleString()} play${entry.count === 1 ? '' : 's'}`;
+                li.appendChild(count);
+                listEl.appendChild(li);
+            });
+            shown += slice.length;
+            buttonEl.hidden = shown >= entries.length;
+        }
+        buttonEl.addEventListener('click', renderNext);
+        renderNext();
+    }
+
+    function nameCell(primary, secondary) {
+        const span = document.createElement('span');
+        span.className = 'entry-name';
+        const p = document.createElement('span');
+        p.className = 'primary';
+        p.textContent = primary;
+        span.appendChild(p);
+        if (secondary) {
+            span.appendChild(document.createTextNode(' '));
+            const s = document.createElement('span');
+            s.className = 'secondary';
+            s.textContent = secondary;
+            span.appendChild(s);
+        }
+        return span;
+    }
+
+    function renderBars(container, rows, options) {
+        const opts = { sortByCount: true, labelFor: r => r.label, ...options };
+        const sorted = opts.sortByCount ? rows.slice().sort((a, b) => b.count - a.count) : rows.slice();
+        const max = sorted.reduce((m, r) => Math.max(m, r.count), 0) || 1;
+        container.innerHTML = '';
+        sorted.forEach(row => {
+            const rowEl = document.createElement('div');
+            rowEl.className = 'bar-row';
+            const label = document.createElement('div');
+            label.className = 'bar-label';
+            label.textContent = opts.labelFor(row);
+            rowEl.appendChild(label);
+            const track = document.createElement('div');
+            track.className = 'bar-track';
+            const fill = document.createElement('div');
+            fill.className = 'bar-fill';
+            fill.style.width = `${Math.max(2, Math.round((row.count / max) * 100))}%`;
+            track.appendChild(fill);
+            rowEl.appendChild(track);
+            const count = document.createElement('div');
+            count.className = 'bar-count';
+            count.textContent = row.count.toLocaleString();
+            rowEl.appendChild(count);
+            container.appendChild(rowEl);
+        });
+    }
+
+    function renderStats(stats) {
+        renderLeaderboard(
+            document.getElementById('topArtists'),
+            document.querySelector('.show-more[data-target="topArtists"]'),
+            stats.artists,
+            a => nameCell(a.label)
+        );
+        renderLeaderboard(
+            document.getElementById('topTracks'),
+            document.querySelector('.show-more[data-target="topTracks"]'),
+            stats.tracks,
+            t => nameCell(t.title, `by ${t.artist}`)
+        );
+        renderLeaderboard(
+            document.getElementById('topAlbums'),
+            document.querySelector('.show-more[data-target="topAlbums"]'),
+            stats.albums,
+            a => nameCell(a.album, `by ${a.artist}`)
+        );
+
+        document.getElementById('genreNote').textContent =
+            `${stats.genreKnown.toLocaleString()} of ${stats.total.toLocaleString()} plays have a known genre `
+            + `(${stats.genreUnknown.toLocaleString()} don't — no Apple Music match yet).`;
+        renderBars(document.getElementById('genreBars'), stats.genres, { labelFor: r => r.label });
+
+        document.getElementById('decadeNote').textContent =
+            `${stats.yearKnown.toLocaleString()} of ${stats.total.toLocaleString()} plays have a known release year `
+            + `(${stats.yearUnknown.toLocaleString()} don't).`;
+        renderBars(document.getElementById('decadeBars'), stats.decades, { sortByCount: false, labelFor: r => `${r.decade}s` });
+    }
+
+    // ---------------- theme toggle ----------------
+
+    function systemPrefersDark() {
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+
+    function currentTheme() {
+        const saved = (() => { try { return localStorage.getItem('theme'); } catch (e) { return null; } })();
+        if (saved === 'dark' || saved === 'light') return saved;
+        return systemPrefersDark() ? 'dark' : 'light';
+    }
+
+    function applyThemeButtonLabel() {
+        document.getElementById('themeToggle').textContent = currentTheme() === 'dark' ? '☀️' : '🌙';
+    }
+
+    function setupThemeToggle() {
+        applyThemeButtonLabel();
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            const next = currentTheme() === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            try { localStorage.setItem('theme', next); } catch (e) { /* ignore */ }
+            applyThemeButtonLabel();
+        });
+    }
+
+    // ---------------- page ----------------
+
+    window.addEventListener('load', () => {
+        setupThemeToggle();
+
+        if (typeof PlaylistUtils === 'undefined' || typeof PlaylistUtils.normalizeArtistKey !== 'function') {
+            document.getElementById('loading').style.display = 'none';
+            const err = document.getElementById('error');
+            err.textContent = 'This page needs to reload to pick up a recent update. Please refresh (Ctrl/Cmd+Shift+R) and try again.';
+            err.style.display = 'block';
+            return;
+        }
+
+        fetch('headnod-tracks.json')
+            .then(r => {
+                if (!r.ok) throw new Error(`headnod-tracks.json responded ${r.status}`);
+                return r.json();
+            })
+            .then(data => {
+                const allEntries = data.tracks || [];
+                document.getElementById('loading').style.display = 'none';
+                if (allEntries.length === 0) {
+                    const err = document.getElementById('error');
+                    err.textContent = 'Couldn’t load any tracks. Check your connection and refresh.';
+                    err.style.display = 'block';
+                    document.getElementById('rangeLine').textContent = '';
+                    return;
+                }
+                const dates = Array.from(new Set(allEntries.map(t => t.date))).sort();
+                document.getElementById('rangeLine').textContent =
+                    `${allEntries.length.toLocaleString()} tracks across ${dates.length.toLocaleString()} known Fridays, `
+                    + `${friendlyDate(dates[0])} through ${friendlyDate(dates[dates.length - 1])}.`;
+                document.getElementById('statsWrap').hidden = false;
+                renderStats(computeStats(allEntries));
+            })
+            .catch(() => {
+                document.getElementById('loading').style.display = 'none';
+                const err = document.getElementById('error');
+                err.textContent = 'Couldn’t load the tracklist. Check your connection and refresh.';
+                err.style.display = 'block';
+                document.getElementById('rangeLine').textContent = '';
+            });
+    });
+</script>
+
+</body>
+</html>

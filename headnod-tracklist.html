@@ -239,6 +239,7 @@
         <p class="subline" id="rangeLine">Loading&hellip;</p>
         <nav class="page">
             <a class="back-link" href="headnod.html">&larr; The Headnod Show</a>
+            <a class="back-link" href="headnod-stats.html">Stats</a>
             <a class="back-link" href="./">All KMHD playlists</a>
             <button type="button" id="themeToggle" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
         </nav>
@@ -281,7 +282,7 @@
      silently breaks any function the old copy doesn't have yet). This page
      doesn't need shows-schedule.js: slot filtering already happened when
      headnod-tracks.json was built. -->
-<script src="playlist-utils.js?v=20260915"></script>
+<script src="playlist-utils.js?v=20260916"></script>
 <script>
     // ------------------------------------------------------------------
     // Every track logged on The Headnod Show, across every Friday we have
@@ -397,13 +398,15 @@
         return friendlyDate(entry.date);
     }
 
-    // Same grouping as groupLabel, but case-normalized for artist sort so
-    // KMHD's own occasional case inconsistency for one artist (e.g.
-    // "Weather Report" vs. "weather report") doesn't split them into two
-    // alternating groups — the whole point of this sort is one group per
-    // artist.
+    // Same grouping as groupLabel, but normalized for artist sort — via the
+    // shared PlaylistUtils.normalizeArtistKey, not a bare .toLowerCase() —
+    // so KMHD's own occasional case inconsistency for one artist (e.g.
+    // "Weather Report" vs. "weather report") AND the same artist stored in
+    // two different Unicode normalization forms across different enrich/
+    // files (verified live: "Zerrin Özer") both collapse into one group
+    // instead of two.
     function groupKey(entry) {
-        return currentSort === 'artist' ? groupLabel(entry).toLowerCase() : groupLabel(entry);
+        return currentSort === 'artist' ? PlaylistUtils.normalizeArtistKey(groupLabel(entry)) : groupLabel(entry);
     }
 
     // Grouped by artist or year, a single group can run to hundreds of rows
@@ -472,7 +475,7 @@
         allEntries.forEach(entry => {
             const artist = entryArtist(entry);
             if (!artist) return;
-            const key = artist.toLowerCase();
+            const key = PlaylistUtils.normalizeArtistKey(artist);
             if (!byKey.has(key)) byKey.set(key, artist);
         });
         return Array.from(byKey.entries()).sort((a, b) => compareArtists(a[1], b[1]));
@@ -510,7 +513,7 @@
         if (!plan) return -1;
         const artist = entryArtist(entry);
         if (!artist) return plan.labels.length - 1;
-        const idx = plan.keyToIndex.get(artist.toLowerCase());
+        const idx = plan.keyToIndex.get(PlaylistUtils.normalizeArtistKey(artist));
         return idx === undefined ? -1 : idx;
     }
 
@@ -1020,10 +1023,10 @@
         const plural = (c, word) => `${c.toLocaleString()} ${word}${c === 1 ? '' : 's'}`;
         let text;
         if (bucketFilter && bucketFilter.label && yearFilter) {
-            const artists = new Set(entries.map(e => (entryArtist(e) || 'Unknown artist').toLowerCase())).size;
+            const artists = new Set(entries.map(e => PlaylistUtils.normalizeArtistKey(entryArtist(e) || 'Unknown artist'))).size;
             text = `Artists ${bucketFilter.label}, played in ${yearFilter}: ${plural(entries.length, 'track')} by ${plural(artists, 'artist')} across ${plural(days, 'Friday')}.`;
         } else if (bucketFilter && bucketFilter.label) {
-            const artists = new Set(entries.map(e => (entryArtist(e) || 'Unknown artist').toLowerCase())).size;
+            const artists = new Set(entries.map(e => PlaylistUtils.normalizeArtistKey(entryArtist(e) || 'Unknown artist'))).size;
             text = `Artists ${bucketFilter.label}: ${plural(entries.length, 'track')} by ${plural(artists, 'artist')} across ${plural(days, 'Friday')}.`;
         } else if (bucketFilter) {
             text = 'This artist range is no longer available.';
