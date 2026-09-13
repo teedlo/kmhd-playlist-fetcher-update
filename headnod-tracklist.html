@@ -186,15 +186,27 @@
             outline: 2px solid var(--link);
             outline-offset: -2px;
         }
-        table.tracks tr.bucket-header td {
+        .bucket-nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin: 0 0 18px;
+        }
+        .bucket-nav a {
+            display: inline-block;
+            padding: 6px 12px;
             background: var(--badge-bg);
             color: var(--badge-fg);
+            border-radius: 6px;
+            text-decoration: none;
             font-weight: bold;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            padding: 10px 8px;
-            border-top: 2px solid var(--border);
+            font-size: 0.9em;
+        }
+        .bucket-nav a:hover,
+        .bucket-nav a:focus-visible {
+            outline: 2px solid var(--link);
+            outline-offset: 1px;
         }
         #summary {
             text-align: center;
@@ -247,6 +259,8 @@
         </label>
         <button type="button" id="collapseToggle" disabled>Collapse all</button>
     </div>
+
+    <nav class="bucket-nav" id="bucketNav" aria-label="Jump to artist section" hidden></nav>
 
     <div id="summary" style="display:none"></div>
 
@@ -516,17 +530,23 @@
         return { bucketOfIndex, labels: bucketLabels };
     }
 
-    function buildBucketHeader(label) {
-        const tbody = document.createElement('tbody');
-        tbody.className = 'bucket-divider';
-        const tr = document.createElement('tr');
-        tr.className = 'bucket-header';
-        const td = document.createElement('td');
-        td.colSpan = 3;
-        td.textContent = label;
-        tr.appendChild(td);
-        tbody.appendChild(tr);
-        return tbody;
+    // A divider row buried in a 3,000-row list only tells you where a
+    // section starts once you've already scrolled past everything before
+    // it — no help finding it in the first place. So the buckets show up
+    // instead as one jump-nav bar under the sort controls, all visible at
+    // once; each link is a plain anchor to that bucket's first artist
+    // group (see the `group.id` assignment in renderAllTracks below).
+    function renderBucketNav(bucketPlan) {
+        const nav = document.getElementById('bucketNav');
+        nav.innerHTML = '';
+        if (!bucketPlan) { nav.hidden = true; return; }
+        bucketPlan.labels.forEach((label, i) => {
+            const a = document.createElement('a');
+            a.href = `#bucket-anchor-${i}`;
+            a.textContent = label;
+            nav.appendChild(a);
+        });
+        nav.hidden = false;
     }
 
     function toggleGroup(group) {
@@ -549,6 +569,7 @@
                 ? 'No tracks logged for any known Friday yet.'
                 : `No tracks played in ${yearFilter}.`;
             container.appendChild(none);
+            renderBucketNav(null);
             updateCollapseToggleLabel();
             return;
         }
@@ -571,6 +592,7 @@
         const bucketPlan = currentSort === 'artist'
             ? computeArtistBuckets(Array.from(groupLabels.values()))
             : null;
+        renderBucketNav(bucketPlan);
 
         const table = document.createElement('table');
         table.className = 'tracks';
@@ -583,16 +605,16 @@
             const key = groupKey(entry);
             if (key !== lastKey) {
                 groupIndex++;
-                if (bucketPlan) {
-                    const bIdx = bucketPlan.bucketOfIndex[groupIndex];
-                    if (bIdx !== lastBucketIdx) {
-                        frag.appendChild(buildBucketHeader(bucketPlan.labels[bIdx]));
-                        lastBucketIdx = bIdx;
-                    }
-                }
                 group = document.createElement('tbody');
                 group.className = 'track-group';
                 if (collapseByDefault) group.classList.add('collapsed');
+                if (bucketPlan) {
+                    const bIdx = bucketPlan.bucketOfIndex[groupIndex];
+                    if (bIdx !== lastBucketIdx) {
+                        group.id = `bucket-anchor-${bIdx}`;
+                        lastBucketIdx = bIdx;
+                    }
+                }
                 const headerRow = document.createElement('tr');
                 headerRow.className = 'group-header';
                 headerRow.tabIndex = 0;
