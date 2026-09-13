@@ -552,15 +552,15 @@
     }
 
     // Fills in the bucket's display label once the real plan exists, and
-    // updates the tab title. A bucket index with no matching label (a
+    // updates the tab title. A bucket index with no matching label — a
     // stale link after the artist list has shifted enough to change the
-    // bucket count) keeps a generic label — the empty-result message in
-    // renderAllTracks covers that case, this just keeps it from saying
-    // "undefined".
+    // bucket count — leaves `label` null rather than a placeholder string:
+    // every place that shows the label branches on it being set, so there
+    // is no risk of a sentence reading "the range this range".
     function resolveBucketFilterLabel() {
         if (!bucketFilter) return;
-        bucketFilter.label = (artistBucketPlan && artistBucketPlan.labels[bucketFilter.index]) || 'this range';
-        document.title = `Artists ${bucketFilter.label} · Every Headnod Track`;
+        bucketFilter.label = (artistBucketPlan && artistBucketPlan.labels[bucketFilter.index]) || null;
+        document.title = bucketFilter.label ? `Artists ${bucketFilter.label} · Every Headnod Track` : document.title;
     }
 
     function toggleGroup(group) {
@@ -582,6 +582,7 @@
             none.className = 'small';
             none.style.textAlign = 'center';
             none.textContent = allEntries.length === 0 ? 'No tracks logged for any known Friday yet.'
+                : bucketFilter && !bucketFilter.label ? 'This artist range is no longer available — the artist list may have shifted since this link was made. Try "All artists" below.'
                 : bucketFilter && yearFilter ? `No tracks by artists ${bucketFilter.label} played in ${yearFilter}.`
                 : bucketFilter ? `No artists in the range ${bucketFilter.label} — the artist list may have shifted since this link was made. Try "All artists" below.`
                 : `No tracks played in ${yearFilter}.`;
@@ -943,12 +944,14 @@
         const days = new Set(entries.map(e => e.date)).size;
         const plural = (c, word) => `${c.toLocaleString()} ${word}${c === 1 ? '' : 's'}`;
         let text;
-        if (bucketFilter && yearFilter) {
+        if (bucketFilter && bucketFilter.label && yearFilter) {
             const artists = new Set(entries.map(e => (entryArtist(e) || 'Unknown artist').toLowerCase())).size;
             text = `Artists ${bucketFilter.label}, played in ${yearFilter}: ${plural(entries.length, 'track')} by ${plural(artists, 'artist')} across ${plural(days, 'Friday')}.`;
-        } else if (bucketFilter) {
+        } else if (bucketFilter && bucketFilter.label) {
             const artists = new Set(entries.map(e => (entryArtist(e) || 'Unknown artist').toLowerCase())).size;
             text = `Artists ${bucketFilter.label}: ${plural(entries.length, 'track')} by ${plural(artists, 'artist')} across ${plural(days, 'Friday')}.`;
+        } else if (bucketFilter) {
+            text = 'This artist range is no longer available.';
         } else if (yearFilter) {
             text = `Played in ${yearFilter}: ${plural(entries.length, 'track')} across ${plural(days, 'Friday')}.`;
         } else {
