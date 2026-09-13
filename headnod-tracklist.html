@@ -208,6 +208,10 @@
             outline: 2px solid var(--link);
             outline-offset: 1px;
         }
+        .bucket-nav a[aria-current="page"] {
+            background: var(--link);
+            color: var(--bg);
+        }
         #summary {
             text-align: center;
             font-size: 0.9em;
@@ -217,7 +221,6 @@
 
         #loading, #error { text-align: center; padding: 12px; }
         #error { color: var(--error); display: none; }
-        #loadingProgress { font-size: 0.9em; color: var(--muted); }
         footer { margin-top: 32px; text-align: center; font-size: 0.85em; color: var(--muted); }
         footer a { color: var(--muted); }
 
@@ -241,7 +244,7 @@
         </nav>
     </header>
 
-    <div id="loading">Loading tracks&hellip; <span id="loadingProgress"></span></div>
+    <div id="loading">Loading tracks&hellip;</div>
     <div id="error"></div>
 
     <div class="track-controls">
@@ -260,7 +263,7 @@
         <button type="button" id="collapseToggle" disabled>Collapse all</button>
     </div>
 
-    <nav class="bucket-nav" id="bucketNav" aria-label="Jump to artist section" hidden></nav>
+    <nav class="bucket-nav" id="bucketNav" aria-label="Browse artists by letter" hidden></nav>
 
     <div id="summary" style="display:none"></div>
 
@@ -273,61 +276,45 @@
 
 </div>
 
-<!-- Cache-busting query param: bump whenever these files change (see the
-     same note in index.html and headnod.html — a stale cached copy
-     silently breaks any function the old copy doesn't have yet). -->
+<!-- Cache-busting query param: bump whenever playlist-utils.js changes (see
+     the same note in index.html and headnod.html — a stale cached copy
+     silently breaks any function the old copy doesn't have yet). This page
+     doesn't need shows-schedule.js: slot filtering already happened when
+     headnod-tracks.json was built. -->
 <script src="playlist-utils.js?v=20260915"></script>
-<script src="shows-schedule.js?v=20260914"></script>
 <script>
     // ------------------------------------------------------------------
     // Every track logged on The Headnod Show, across every Friday we have
     // data for — one continuous, sortable list rather than one episode's
     // tracklist at a time.
     //
-    // This has no Mixcloud/audio angle at all (unlike headnod.html): it
-    // pulls straight from KMHD's per-day playlist API for every known
-    // Friday, filters each day down to the show's 6-8pm slot, and merges
-    // the results into one array of {date, item} entries.
-    //
-    // The fetch/day-cache and iTunes-enrichment machinery below is a
-    // deliberate copy of headnod.html's (see the comment there on why —
-    // now that a third page needs it, extracting it into a shared module
-    // is worth doing whenever this next needs touching, but not today).
+    // Unlike headnod.html and index.html, this page does not talk to KMHD
+    // or iTunes at all: it fetches one precomputed file, headnod-tracks.json
+    // (built daily by scripts/build-headnod-tracklist.js, which merges every
+    // known Friday's playlist with whatever enrich/YYYY-MM-DD.json already
+    // knows about each track). That file already carries each track's
+    // Apple Music link/art/genre data, so there is no live lookup queue
+    // here — just PlaylistUtils.expandEntry() turning the compact fields
+    // back into URLs, same as every other page's enrich/ data.
     // ------------------------------------------------------------------
-
-    // Shared with headnod.html and scripts/build-headnod-tracklist.js —
-    // see the constant's own comment in playlist-utils.js.
-    const HEADNOD_KNOWN_START = PlaylistUtils.HEADNOD_KNOWN_START;
-
-    // Fallback if shows-schedule.js is missing or ever drops the show.
-    const HEADNOD_SLOT = { weekday: 5, start: '18:00', end: '20:00' };
-
-    // How many days' playlists to fetch at once. KMHD/the Worker cache
-    // aren't rate-limited like iTunes is — this is just politeness, and
-    // keeps a slow connection from opening hundreds of requests at once.
-    const FETCH_CONCURRENCY = 8;
 
     let currentSort = 'date';   // 'date' | 'year' | 'artist'
     let yearFilter = '';        // '' = all years, else a 4-digit year the track was PLAYED (not released)
     let allEntries = [];        // [{ date, item }], every known track play
 
-    // Alphabet-bucket dividers for the artist sort: fixed-width letter
-    // ranges (A-F, G-M, ...) would leave some buckets nearly empty and
-    // others with hundreds of artists, since real artist names cluster
-    // unevenly across the alphabet. Splitting evenly by artist COUNT
-    // instead, then labeling each bucket by its actual first/last letter,
-    // gives ranges like "A-C" then "D-R" that reflect where the artists
-    // really are.
+    let bucketFilter = null;        // null, or { index, label } from ?bucket= — see applyUrlParams
+    let artistBucketPlan = null;    // computed once after load from the FULL dataset — see computeArtistBucketPlan
+
+    // Alphabet-bucket links for the artist sort: fixed-width letter ranges
+    // (A-F, G-M, ...) would leave some buckets nearly empty and others with
+    // hundreds of artists, since real artist names cluster unevenly across
+    // the alphabet. Splitting evenly by artist COUNT instead, then labeling
+    // each bucket by its actual first/last letter, gives ranges like "A-C"
+    // then "D-R" that reflect where the artists really are.
     const ARTIST_BUCKET_MIN_TOTAL = 15;    // fewer artists than this: buckets aren't worth it
     const ARTIST_BUCKET_TARGET_SIZE = 30;  // aim for roughly this many artists per bucket
     const ARTIST_BUCKET_MIN_COUNT = 3;
     const ARTIST_BUCKET_MAX_COUNT = 12;
-
-    function headnodSlot() {
-        if (typeof KmhdShows === 'undefined') return HEADNOD_SLOT;
-        const show = KmhdShows.uniqueShows().find(s => s.name === 'The Headnod Show');
-        return (show && show.slots && show.slots[0]) || HEADNOD_SLOT;
-    }
 
     function friendlyDate(isoDate) {
         const d = new Date(isoDate + 'T00:00:00');
@@ -340,73 +327,6 @@
     function shortDate(isoDate) {
         const d = new Date(isoDate + 'T00:00:00');
         return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    }
-
-    // ---------------- which Fridays are "known" ----------------
-    // Same "has this Friday's show actually finished airing yet" logic as
-    // headnod.html's airedFridays, but resolving to a single anchor date
-    // (the newest Friday whose 8pm end time has passed) rather than a
-    // paginated window, since this page wants the whole range at once.
-
-    function newestFinishedFriday() {
-        const parts = {};
-        new Intl.DateTimeFormat('en-CA', {
-            timeZone: 'America/Los_Angeles',
-            year: 'numeric', month: '2-digit', day: '2-digit',
-            weekday: 'short', hour: '2-digit', hourCycle: 'h23'
-        }).formatToParts(new Date()).forEach(p => { parts[p.type] = p.value; });
-        const pacificToday = `${parts.year}-${parts.month}-${parts.day}`;
-        const stillAiring = parts.weekday === 'Fri' && parseInt(parts.hour, 10) < 20;
-        const recent = PlaylistUtils.pastWeekdayDates(5, 2, pacificToday);
-        return stillAiring ? recent[1] : recent[0];
-    }
-
-    // All Fridays from HEADNOD_KNOWN_START through the newest finished
-    // one, most recent first — every date this page will fetch.
-    function allKnownFridays() {
-        const newest = newestFinishedFriday();
-        const oldest = new Date(HEADNOD_KNOWN_START + 'T00:00:00');
-        const newestDate = new Date(newest + 'T00:00:00');
-        const weeks = Math.round((newestDate - oldest) / (7 * 24 * 60 * 60 * 1000)) + 1;
-        if (weeks <= 0) return [newest];
-        return PlaylistUtils.pastWeekdayDates(5, weeks, newest);
-    }
-
-    // ---------------- fetching every known Friday ----------------
-
-    // Runs `dates` through fetchDayPlaylist with at most FETCH_CONCURRENCY
-    // in flight at once, reporting progress as each one settles. Always
-    // resolves (fetchDayPlaylist never rejects — a bad day just comes
-    // back empty).
-    function fetchAllFridays(dates, onProgress) {
-        const results = new Array(dates.length);
-        let nextIndex = 0;
-        let done = 0;
-        function worker() {
-            if (nextIndex >= dates.length) return Promise.resolve();
-            const i = nextIndex++;
-            return fetchDayPlaylist(dates[i]).then(items => {
-                results[i] = { date: dates[i], items };
-                done++;
-                onProgress(done, dates.length);
-                return worker();
-            });
-        }
-        const workers = [];
-        for (let i = 0; i < Math.min(FETCH_CONCURRENCY, dates.length); i++) workers.push(worker());
-        return Promise.all(workers).then(() => results);
-    }
-
-    // Filters every day's playlist down to the show's slot and flattens
-    // into one array of {date, item}.
-    function collectAllTracks(perDayResults) {
-        const slot = headnodSlot();
-        const all = [];
-        perDayResults.forEach(({ date, items }) => {
-            (items || []).filter(item => PlaylistUtils.trackInSlot(item, slot))
-                .forEach(item => all.push({ date, item }));
-        });
-        return all;
     }
 
     // ---------------- sorting the merged list ----------------
@@ -428,6 +348,24 @@
         return PlaylistUtils.mapItemFields(entry.item).artist || '';
     }
 
+    // Two artist name strings, empty ("unknown") sorting last. Shared by
+    // compareEntries' artist branch and computeArtistBucketPlan below, so
+    // both agree exactly on ordering — a real bug during this feature's
+    // development came from those two computations disagreeing at the
+    // edges (a string-range check handled non-Latin-script names and the
+    // empty-artist case differently than the sort itself did).
+    function compareArtists(aa, ab) {
+        if (!aa || !ab) return aa === ab ? 0 : (aa ? -1 : 1);
+        // 'accent' (case-insensitive, diacritic-sensitive), not 'base'
+        // (which also folds diacritics): groupKey below only lowercases
+        // the label, so two artists differing solely by an accent (e.g.
+        // "Gábor Szabó" vs. "Gabor Szabo") are still distinct groups —
+        // treating them as equal here would interleave the two spellings
+        // by date instead of keeping each artist's tracks contiguous,
+        // splitting it into two separate, non-adjacent group headers.
+        return aa.localeCompare(ab, undefined, { sensitivity: 'accent' });
+    }
+
     function compareEntries(a, b) {
         if (currentSort === 'year') {
             const ya = entryYear(a), yb = entryYear(b);
@@ -439,19 +377,7 @@
             return entryTime(a) - entryTime(b);
         }
         if (currentSort === 'artist') {
-            const aa = entryArtist(a), ab = entryArtist(b);
-            if (!aa || !ab) {
-                if (aa === ab) return entryTime(a) - entryTime(b);
-                return aa ? -1 : 1;                            // unknown artist sorts last
-            }
-            // 'accent' (case-insensitive, diacritic-sensitive), not 'base'
-            // (which also folds diacritics): groupKey below only lowercases
-            // the label, so two artists differing solely by an accent (e.g.
-            // "Gábor Szabó" vs. "Gabor Szabo") are still distinct groups —
-            // sorting them as equal here would interleave the two spellings
-            // by date instead of keeping each artist's tracks contiguous,
-            // splitting it into two separate, non-adjacent group headers.
-            const cmp = aa.localeCompare(ab, undefined, { sensitivity: 'accent' });
+            const cmp = compareArtists(entryArtist(a), entryArtist(b));
             if (cmp !== 0) return cmp;
             if (a.date !== b.date) return a.date < b.date ? 1 : -1;   // newest date first within an artist
             return entryTime(a) - entryTime(b);
@@ -490,60 +416,137 @@
         return currentSort !== 'date';
     }
 
-    // A group label's own leading character, uppercased — used as a
-    // bucket's boundary letter. This has to be the label's actual first
-    // character, not its first *letter*: a handful of KMHD artist names
-    // start with a quote or "@" (e.g. a guest DJ handle), and those sort
-    // before every plain letter, so skipping ahead to the first letter
-    // would mislabel where the bucket really falls (producing a
-    // backwards-looking range like "L-B"). '#' covers that leading-symbol
-    // case, plus any label made entirely of non-Latin script.
+    // ---------------- artist buckets ----------------
+    // A divider row buried in a 3,000-artist list only tells you where a
+    // section starts once you've already scrolled past everything before
+    // it, and an in-page anchor jump still leaves every one of those 3,000
+    // rows in the DOM. So each bucket is a real page: a plain link with
+    // ?sort=artist&bucket=N, matching the ?date= deep-link pattern this
+    // site already uses (see headnod.html's fridayLinkTarget and this
+    // page's own headnod.html?date= links below).
+    //
+    // Buckets are matched by POSITION, not by comparing artist-name
+    // strings: "Unknown artist" sorts last via a rule separate from string
+    // comparison (and this dataset has real artists literally named
+    // "unknown artist"/"unknown", so a label-text special case would
+    // collide with real content), and non-Latin-script artist names sort
+    // after "Z" under this locale's collation — a string-range filter
+    // mishandles both. A plain "which slot did this already-correctly-
+    // sorted group land in" map sidesteps every edge case at once.
+
+    // A group label's own leading character, uppercased — used only for
+    // the short chip text ("M–P"), never for matching. This has to be the
+    // label's actual first character, not its first *letter*: a handful of
+    // KMHD artist names start with a quote or "@" (e.g. a guest DJ
+    // handle), and those sort before every plain letter, so skipping ahead
+    // to the first letter would mislabel where the bucket really falls.
+    // '#' covers that leading-symbol case, plus any label made entirely of
+    // non-Latin script.
     function bucketLetter(label) {
         const ch = (label || '').trim().charAt(0);
         return /[A-Za-z0-9]/.test(ch) ? ch.toUpperCase() : '#';
     }
 
-    // Splits `labels` (group labels in their already-sorted order) into a
-    // handful of semi-even buckets by count, not by letter. Returns
-    // { bucketOfIndex, labels } where bucketOfIndex[i] is the bucket index
-    // for labels[i], or null if there aren't enough groups to bother.
-    function computeArtistBuckets(labels) {
-        const total = labels.length;
+    // Every distinct artist in the FULL dataset (not affected by the year
+    // filter, so bucket boundaries mean the same thing on every page),
+    // paired [lowercased key, original-case label] and sorted with the
+    // exact comparator the artist sort itself uses. "Unknown artist"
+    // (empty artist string) is excluded here — it always lands in the
+    // final, open-ended bucket instead, handled in bucketIndexOf.
+    function allArtistGroupEntriesSorted() {
+        const byKey = new Map();
+        allEntries.forEach(entry => {
+            const artist = entryArtist(entry);
+            if (!artist) return;
+            const key = artist.toLowerCase();
+            if (!byKey.has(key)) byKey.set(key, artist);
+        });
+        return Array.from(byKey.entries()).sort((a, b) => compareArtists(a[1], b[1]));
+    }
+
+    // Splits the full artist list into a handful of semi-even buckets by
+    // count, not by letter. Returns { keyToIndex, labels } or null if
+    // there aren't enough artists to bother.
+    function computeArtistBucketPlan() {
+        const entries = allArtistGroupEntriesSorted();
+        const total = entries.length;
         if (total < ARTIST_BUCKET_MIN_TOTAL) return null;
         const numBuckets = Math.max(ARTIST_BUCKET_MIN_COUNT,
             Math.min(ARTIST_BUCKET_MAX_COUNT, Math.round(total / ARTIST_BUCKET_TARGET_SIZE)));
-        const bucketOfIndex = new Array(total);
-        const bucketLabels = [];
+        const keyToIndex = new Map();
+        const labels = [];
         let start = 0;
         for (let b = 0; b < numBuckets; b++) {
             const end = Math.round((b + 1) * total / numBuckets);
             if (end <= start) continue;
-            for (let i = start; i < end; i++) bucketOfIndex[i] = bucketLabels.length;
-            const first = bucketLetter(labels[start]);
-            const last = bucketLetter(labels[end - 1]);
-            bucketLabels.push(first === last ? first : `${first}–${last}`);
+            const bIdx = labels.length;
+            for (let i = start; i < end; i++) keyToIndex.set(entries[i][0], bIdx);
+            const first = bucketLetter(entries[start][1]);
+            const last = bucketLetter(entries[end - 1][1]);
+            labels.push(first === last ? first : `${first}–${last}`);
             start = end;
         }
-        return { bucketOfIndex, labels: bucketLabels };
+        return { keyToIndex, labels };
     }
 
-    // A divider row buried in a 3,000-row list only tells you where a
-    // section starts once you've already scrolled past everything before
-    // it — no help finding it in the first place. So the buckets show up
-    // instead as one jump-nav bar under the sort controls, all visible at
-    // once; each link is a plain anchor to that bucket's first artist
-    // group (see the `group.id` assignment in renderAllTracks below).
-    function renderBucketNav(bucketPlan) {
+    // Which bucket index `entry` falls in, per the given plan — "Unknown
+    // artist" always goes to the last (open-ended) bucket, alongside
+    // whatever real content already landed there.
+    function bucketIndexOf(entry, plan) {
+        if (!plan) return -1;
+        const artist = entryArtist(entry);
+        if (!artist) return plan.labels.length - 1;
+        const idx = plan.keyToIndex.get(artist.toLowerCase());
+        return idx === undefined ? -1 : idx;
+    }
+
+    function renderBucketNav(plan) {
         const nav = document.getElementById('bucketNav');
         nav.innerHTML = '';
-        if (!bucketPlan) { nav.hidden = true; return; }
-        bucketPlan.labels.forEach((label, i) => {
+        if (!plan) { nav.hidden = true; return; }
+        const chip = (href, text, current) => {
             const a = document.createElement('a');
-            a.href = `#bucket-anchor-${i}`;
-            a.textContent = label;
+            a.href = href;
+            a.textContent = text;
+            if (current) a.setAttribute('aria-current', 'page');
             nav.appendChild(a);
+        };
+        chip('headnod-tracklist.html?sort=artist', 'All artists', !bucketFilter);
+        plan.labels.forEach((label, i) => {
+            const qs = new URLSearchParams({ sort: 'artist', bucket: String(i) }).toString();
+            chip('headnod-tracklist.html?' + qs, label, !!bucketFilter && bucketFilter.index === i);
         });
         nav.hidden = false;
+    }
+
+    // ---------------- URL deep link (?sort=, ?bucket=) ----------------
+    // Read-only, same pattern as headnod.html's ?date= link: parsed once at
+    // load and never written back. A bucket index only means anything in
+    // artist order, so it forces currentSort regardless of ?sort=.
+
+    function applyUrlParams() {
+        const params = new URLSearchParams(location.search);
+        const bucketParam = params.get('bucket');
+        if (bucketParam !== null && /^\d+$/.test(bucketParam)) {
+            currentSort = 'artist';
+            bucketFilter = { index: parseInt(bucketParam, 10), label: '' };
+        } else {
+            const sort = params.get('sort');
+            if (sort === 'date' || sort === 'year' || sort === 'artist') currentSort = sort;
+        }
+        document.getElementById('sortSelect').value = currentSort;
+    }
+
+    // Fills in the bucket's display label once the real plan exists, and
+    // updates the tab title. A bucket index with no matching label (a
+    // stale link after the artist list has shifted enough to change the
+    // bucket count) keeps a generic label — the empty-result message in
+    // renderAllTracks covers that case, this just keeps it from saying
+    // "undefined".
+    function resolveBucketFilterLabel() {
+        if (!bucketFilter) return;
+        bucketFilter.label = (artistBucketPlan && artistBucketPlan.labels[bucketFilter.index]) || 'this range';
+        document.title = `Artists ${bucketFilter.label} · Every Headnod Track`;
     }
 
     function toggleGroup(group) {
@@ -556,17 +559,21 @@
         const container = document.getElementById('allTracksWrap');
         container.innerHTML = '';
 
-        const filtered = yearFilter ? allEntries.filter(e => e.date.slice(0, 4) === yearFilter) : allEntries;
+        const filtered = allEntries.filter(e =>
+            (!yearFilter || e.date.slice(0, 4) === yearFilter)
+            && (!bucketFilter || bucketIndexOf(e, artistBucketPlan) === bucketFilter.index));
 
         if (filtered.length === 0) {
             const none = document.createElement('div');
             none.className = 'small';
             none.style.textAlign = 'center';
-            none.textContent = allEntries.length === 0
-                ? 'No tracks logged for any known Friday yet.'
+            none.textContent = allEntries.length === 0 ? 'No tracks logged for any known Friday yet.'
+                : bucketFilter && yearFilter ? `No tracks by artists ${bucketFilter.label} played in ${yearFilter}.`
+                : bucketFilter ? `No artists in the range ${bucketFilter.label} — the artist list may have shifted since this link was made. Try "All artists" below.`
                 : `No tracks played in ${yearFilter}.`;
             container.appendChild(none);
-            renderBucketNav(null);
+            renderBucketNav(currentSort === 'artist' ? artistBucketPlan : null);
+            renderSummary(filtered);
             updateCollapseToggleLabel();
             return;
         }
@@ -579,39 +586,24 @@
 
         const sorted = filtered.slice().sort(compareEntries);
         const counts = new Map();
-        const groupLabels = new Map();   // key -> label, first occurrence only (preserves group order)
         sorted.forEach(entry => {
             const key = groupKey(entry);
             counts.set(key, (counts.get(key) || 0) + 1);
-            if (!groupLabels.has(key)) groupLabels.set(key, groupLabel(entry));
         });
 
-        const bucketPlan = currentSort === 'artist'
-            ? computeArtistBuckets(Array.from(groupLabels.values()))
-            : null;
-        renderBucketNav(bucketPlan);
+        renderBucketNav(currentSort === 'artist' ? artistBucketPlan : null);
 
         const table = document.createElement('table');
         table.className = 'tracks';
         const frag = document.createDocumentFragment();
         let group = null;
         let lastKey;
-        let groupIndex = -1;
-        let lastBucketIdx = -1;
         sorted.forEach(entry => {
             const key = groupKey(entry);
             if (key !== lastKey) {
-                groupIndex++;
                 group = document.createElement('tbody');
                 group.className = 'track-group';
                 if (collapseByDefault) group.classList.add('collapsed');
-                if (bucketPlan) {
-                    const bIdx = bucketPlan.bucketOfIndex[groupIndex];
-                    if (bIdx !== lastBucketIdx) {
-                        group.id = `bucket-anchor-${bIdx}`;
-                        lastBucketIdx = bIdx;
-                    }
-                }
                 const headerRow = document.createElement('tr');
                 headerRow.className = 'group-header';
                 headerRow.tabIndex = 0;
@@ -640,6 +632,7 @@
         });
         table.appendChild(frag);
         container.appendChild(table);
+        renderSummary(filtered);
         updateCollapseToggleLabel();
     }
 
@@ -665,6 +658,15 @@
 
     function setupControls() {
         document.getElementById('sortSelect').addEventListener('change', e => {
+            // A bucket range only makes sense in artist order, and the URL
+            // is never rewritten in place (no pushState here) — so any
+            // sort change on a filtered page is a plain navigation to a
+            // clean one. Picking "artist" again is therefore also a way
+            // back to the full unfiltered list.
+            if (bucketFilter) {
+                location.href = 'headnod-tracklist.html?sort=' + encodeURIComponent(e.target.value);
+                return;
+            }
             currentSort = e.target.value;
             renderAllTracks();
         });
@@ -684,12 +686,17 @@
     }
 
     // ---------------- track rows ----------------
-    // Same row shape and enrichment hooks as headnod.html's buildTrackRow
-    // (see the comment at the top of this script for why this is a copy,
-    // not a shared function), plus one addition: this page merges every
-    // known Friday into one list, so each row also gets the date it aired
-    // on next to its time — without it, a track that aired on two
-    // different Fridays looks like an unexplained duplicate.
+    // Same row shape as headnod.html's buildTrackRow, plus one addition:
+    // this page merges every known Friday into one list, so each row also
+    // gets the date it aired on next to its time — without it, a track
+    // that aired on two different Fridays looks like an unexplained
+    // duplicate.
+
+    function yearOf(item) {
+        const kmhd = PlaylistUtils.trackYear(item);
+        if (kmhd) return kmhd;
+        return PlaylistUtils.trackYear(PlaylistUtils.expandEntry(item));
+    }
 
     function buildTrackRow(item, playedDate, linkPlayedDate) {
         const startTime = PlaylistUtils.trackStartDate(item);
@@ -804,214 +811,21 @@
 
         row.appendChild(detailsCell);
 
-        if (title && artist) {
-            observeForEnrichment(row, albumCoverContainer, { title, artist, album });
-        }
+        // headnod-tracks.json already carries whatever Apple Music data was
+        // known at build time (see scripts/build-headnod-tracklist.js), so
+        // this is a synchronous data transform, not a network lookup —
+        // unlike headnod.html/index.html, there is no live-fetch queue or
+        // IntersectionObserver here at all.
+        applyEnrichment({ row, coverContainer: albumCoverContainer }, PlaylistUtils.expandEntry(item));
 
         return row;
     }
 
-    // ---------------- iTunes enrichment ----------------
-    // Same design as headnod.html: per-day enrich/ file -> localStorage ->
-    // shared Worker cache -> throttled iTunes JSONP.
-
-    const ENRICH_PROXY_URL = 'https://kmhd-playlist-cache.teedlo.workers.dev/';
-    const ENRICH_STORE_KEY = '70ce6e7a581f43cee202a6439864b576';   // matches the Worker's PURGE_KEY; see pushToSharedCache
-    const ITUNES_INTERVAL_MS = 3500;         // ~17 req/min, under iTunes' ~20/min limit
-    const SHARED_CACHE_CONCURRENCY = 4;      // Worker lookups in flight at once; it's an edge cache, nothing rate-limited happens there
-    const CACHE_PREFIX = 'itunes1:';         // localStorage; shared across every page on purpose
-    const CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000;  // 30 days
-
-    // ---- 1. per-day static files ----
-    const ENRICH_DIR = 'enrich/';
-    const ENRICH_WAIT_MS = 1500;
-    const staticEnrich = new Map();
-    const dayEnrichLoads = new Map();
-
-    function loadDayEnrich(date) {
-        if (!date) return Promise.resolve();
-        let state = dayEnrichLoads.get(date);
-        if (state) return state.promise;
-        state = { settled: false };
-        state.promise = fetch(`${ENRICH_DIR}${date}.json`)
-            .then(r => r.ok ? r.json() : null)
-            .then(data => {
-                if (!data || !data.tracks) return;
-                Object.keys(data.tracks).forEach(key => staticEnrich.set(key, PlaylistUtils.expandEntry(data.tracks[key])));
-            })
-            .catch(() => {})
-            .finally(() => { state.settled = true; });
-        dayEnrichLoads.set(date, state);
-        return state.promise;
-    }
-
-    function dayEnrichReady(date) {
-        return Promise.race([
-            loadDayEnrich(date),
-            new Promise(resolve => setTimeout(resolve, ENRICH_WAIT_MS))
-        ]);
-    }
-
-    function staticEnrichGet(meta) {
-        const key = PlaylistUtils.enrichKey(meta);
-        return staticEnrich.has(key) ? staticEnrich.get(key) : undefined;
-    }
-
-    function pendingDayLoads() {
-        const pending = [];
-        dayEnrichLoads.forEach(state => { if (!state.settled) pending.push(state.promise); });
-        return pending;
-    }
-
-    function knownEnrichment(meta) {
-        const s = staticEnrichGet(meta);
-        if (s !== undefined) return s;
-        return cacheGet(meta) || null;
-    }
-
-    function yearOf(item) {
-        const kmhd = PlaylistUtils.trackYear(item);
-        if (kmhd) return kmhd;
-        const meta = PlaylistUtils.mapItemFields(item);
-        if (!meta.title || !meta.artist) return null;
-        const info = knownEnrichment(meta);
-        return info ? PlaylistUtils.trackYear(info) : null;
-    }
-
-    // ---- 2-4. lookups for everything else ----
-    const enrichQueue = [];
-    const itunesQueue = [];
-    let sharedInFlight = 0;
-    let itunesTimer = null;
-    let jsonpCounter = 0;
-
-    const intersectionObserver = ('IntersectionObserver' in window)
-        ? new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && entry.target._enrichJob) {
-                    enrichQueue.push(entry.target._enrichJob);
-                    delete entry.target._enrichJob;
-                    intersectionObserver.unobserve(entry.target);
-                    pumpQueue();
-                }
-            });
-        }, { rootMargin: '200px' })
-        : null;
-
-    function observeForEnrichment(row, coverContainer, meta) {
-        const job = { row, coverContainer, meta };
-        if (tryKnownSources(job)) return;
-        const pending = pendingDayLoads();
-        if (pending.length) {
-            Promise.race([Promise.all(pending), new Promise(resolve => setTimeout(resolve, ENRICH_WAIT_MS))])
-                .then(() => { if (!tryKnownSources(job)) observeJob(job); });
-            return;
-        }
-        observeJob(job);
-    }
-
-    function tryKnownSources(job) {
-        const s = staticEnrichGet(job.meta);
-        if (s !== undefined) {
-            if (s) applyEnrichment(job, s);
-            return true;
-        }
-        const cached = cacheGet(job.meta);
-        if (cached !== undefined) {
-            if (cached) applyEnrichment(job, cached);
-            return true;
-        }
-        return false;
-    }
-
-    function observeJob(job) {
-        if (intersectionObserver) {
-            job.row._enrichJob = job;
-            intersectionObserver.observe(job.row);
-        } else {
-            enrichQueue.push(job);
-            pumpQueue();
-        }
-    }
-
-    function pumpQueue() {
-        while (sharedInFlight < SHARED_CACHE_CONCURRENCY && enrichQueue.length > 0) {
-            const job = enrichQueue.shift();
-            sharedInFlight++;
-            enrichViaSharedCache(job.meta, result => {
-                sharedInFlight--;
-                if (result) {
-                    cacheSet(job.meta, result);
-                    applyEnrichment(job, result);
-                } else {
-                    itunesQueue.push(job);
-                    pumpItunes();
-                }
-                pumpQueue();
-            });
-        }
-    }
-
-    function pumpItunes() {
-        if (itunesTimer || itunesQueue.length === 0) return;
-        const job = itunesQueue.shift();
-        itunesTimer = setTimeout(() => { itunesTimer = null; pumpItunes(); }, ITUNES_INTERVAL_MS);
-        itunesLookup(job.meta, result => {
-            cacheSet(job.meta, result);
-            if (result) {
-                applyEnrichment(job, result);
-                pushToSharedCache(job.meta, result);
-            }
-        });
-    }
-
-    function enrichViaSharedCache(meta, done) {
-        const url = `${ENRICH_PROXY_URL}?type=enrich&title=${encodeURIComponent(meta.title)}&artist=${encodeURIComponent(meta.artist)}`;
-        fetch(url)
-            .then(r => { if (!r.ok) throw new Error('enrich proxy responded ' + r.status); return r.json(); })
-            .then(data => done(data || null))
-            .catch(() => done(undefined));
-    }
-
-    function pushToSharedCache(meta, result) {
-        fetch(`${ENRICH_PROXY_URL}?type=enrich`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title: meta.title, artist: meta.artist, key: ENRICH_STORE_KEY, data: result })
-        }).catch(() => {});
-    }
-
-    function itunesLookup(meta, done) {
-        const term = `${meta.artist} ${meta.title}`;
-        const cbName = `itunesCb${++jsonpCounter}`;
-        const script = document.createElement('script');
-        let finished = false;
-        const finish = result => {
-            if (finished) return;
-            finished = true;
-            delete window[cbName];
-            script.remove();
-            done(result);
-        };
-        window[cbName] = data => {
-            const r = (data && data.results && data.results[0]) || null;
-            finish(r ? {
-                artworkUrl100: r.artworkUrl100 || null,
-                previewUrl: r.previewUrl || null,
-                trackViewUrl: r.trackViewUrl || null,
-                artistViewUrl: r.artistViewUrl || null,
-                collectionViewUrl: r.collectionViewUrl || null,
-                collectionName: r.collectionName || null,
-                primaryGenreName: r.primaryGenreName || null,
-                releaseDate: r.releaseDate || null
-            } : null);
-        };
-        script.onerror = () => finish(null);
-        setTimeout(() => finish(null), 15000);
-        script.src = `https://itunes.apple.com/search?media=music&entity=song&limit=1&term=${encodeURIComponent(term)}&callback=${cbName}`;
-        document.head.appendChild(script);
-    }
-
+    // Decorates a built row with whatever Apple Music data `info` has:
+    // exact track/artist/album links (swapped onto the plain text), album
+    // art, and the year/genre line. Every field access is guarded, so
+    // calling this with an empty `info` (a track with no enrich match) is
+    // a safe no-op — the row already has its instant search-link fallback.
     function applyEnrichment(job, info) {
         const { row, coverContainer } = job;
 
@@ -1072,104 +886,6 @@
         }
     }
 
-    // ---------------- caches ----------------
-
-    function cacheGet(meta) {
-        try {
-            const key = PlaylistUtils.cacheKey(CACHE_PREFIX, meta);
-            const raw = localStorage.getItem(key);
-            if (!raw) return undefined;
-            const entry = JSON.parse(raw);
-            if (!entry || (Date.now() - entry.t) > CACHE_TTL_MS) {
-                localStorage.removeItem(key);
-                return undefined;
-            }
-            if (entry.d === null) {
-                localStorage.removeItem(key);
-                return undefined;
-            }
-            return entry.d;
-        } catch (e) {
-            return undefined;
-        }
-    }
-
-    function cacheSet(meta, data) {
-        const key = PlaylistUtils.cacheKey(CACHE_PREFIX, meta);
-        try {
-            localStorage.setItem(key, JSON.stringify({ t: Date.now(), d: data }));
-        } catch (e) {
-            try {
-                const keys = [];
-                for (let i = 0; i < localStorage.length; i++) {
-                    const k = localStorage.key(i);
-                    if (k && k.indexOf(CACHE_PREFIX) === 0) keys.push(k);
-                }
-                keys.slice(0, Math.ceil(keys.length / 2)).forEach(k => localStorage.removeItem(k));
-                localStorage.setItem(key, JSON.stringify({ t: Date.now(), d: data }));
-            } catch (e2) { /* give up quietly */ }
-        }
-    }
-
-    const DAY_CACHE_PREFIX = 'kmhdDay1:';   // same prefix as index.html/headnod.html, so a day already fetched anywhere loads instantly here
-    const DAY_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
-    const KMHD_PROXY_URL = 'https://kmhd-playlist-cache.teedlo.workers.dev/';
-
-    function dayCacheGet(date) {
-        try {
-            const raw = localStorage.getItem(DAY_CACHE_PREFIX + date);
-            if (!raw) return undefined;
-            const entry = JSON.parse(raw);
-            if (!entry || (Date.now() - entry.t) > DAY_CACHE_TTL_MS) {
-                localStorage.removeItem(DAY_CACHE_PREFIX + date);
-                return undefined;
-            }
-            return entry.d;
-        } catch (e) {
-            return undefined;
-        }
-    }
-
-    function dayCacheSet(date, data) {
-        try {
-            localStorage.setItem(DAY_CACHE_PREFIX + date, JSON.stringify({ t: Date.now(), d: data }));
-        } catch (e) {
-            try {
-                const keys = [];
-                for (let i = 0; i < localStorage.length; i++) {
-                    const k = localStorage.key(i);
-                    if (k && k.indexOf(DAY_CACHE_PREFIX) === 0) keys.push(k);
-                }
-                keys.slice(0, Math.ceil(keys.length / 2)).forEach(k => localStorage.removeItem(k));
-                localStorage.setItem(DAY_CACHE_PREFIX + date, JSON.stringify({ t: Date.now(), d: data }));
-            } catch (e2) { /* give up quietly */ }
-        }
-    }
-
-    function directKmhdUrl(date) {
-        return `https://www.kmhd.org/pf/api/v3/content/fetch/playlist?query=${encodeURIComponent(JSON.stringify({ day: date }))}`;
-    }
-
-    function fetchDayPlaylist(date) {
-        const ready = dayEnrichReady(date);
-        return fetchDayPlaylistRaw(date).then(data => ready.then(() => data));
-    }
-
-    function fetchDayPlaylistRaw(date) {
-        const cached = dayCacheGet(date);
-        if (cached !== undefined) return Promise.resolve(cached);
-
-        return fetch(`${KMHD_PROXY_URL}?day=${encodeURIComponent(date)}`)
-            .then(r => { if (!r.ok) throw new Error('proxy responded ' + r.status); return r.json(); })
-            .catch(() => fetch(directKmhdUrl(date)).then(r => r.json()))
-            .then(data => {
-                const arr = Array.isArray(data) ? data : [];
-                if (arr.length) dayCacheSet(date, arr);
-                return arr;
-            })
-            .catch(() => []);
-    }
-
     // ---------------- theme toggle ----------------
 
     function systemPrefersDark() {
@@ -1198,19 +914,40 @@
 
     // ---------------- page ----------------
 
-    function showSummary(dates) {
-        const knownDates = new Set(allEntries.map(e => e.date));
-        const rangeLine = document.getElementById('rangeLine');
-        rangeLine.textContent = `Every Friday from ${friendlyDate(dates[dates.length - 1])} through ${friendlyDate(dates[0])}.`;
+    function showRangeLine() {
+        const dates = Array.from(new Set(allEntries.map(e => e.date))).sort();
+        document.getElementById('rangeLine').textContent = dates.length
+            ? `Every Friday from ${friendlyDate(dates[0])} through ${friendlyDate(dates[dates.length - 1])}.`
+            : '';
+    }
+
+    // Recomputed on every render (not just once) so it reflects whichever
+    // combination of bucket and year filter is active, rather than always
+    // showing the whole dataset's numbers.
+    function renderSummary(entries) {
         const summary = document.getElementById('summary');
-        summary.textContent = `${allEntries.length.toLocaleString()} track${allEntries.length === 1 ? '' : 's'} across ${knownDates.size.toLocaleString()} known Friday${knownDates.size === 1 ? '' : 's'}.`;
+        const days = new Set(entries.map(e => e.date)).size;
+        const plural = (c, word) => `${c.toLocaleString()} ${word}${c === 1 ? '' : 's'}`;
+        let text;
+        if (bucketFilter && yearFilter) {
+            const artists = new Set(entries.map(e => (entryArtist(e) || 'Unknown artist').toLowerCase())).size;
+            text = `Artists ${bucketFilter.label}, played in ${yearFilter}: ${plural(entries.length, 'track')} by ${plural(artists, 'artist')} across ${plural(days, 'Friday')}.`;
+        } else if (bucketFilter) {
+            const artists = new Set(entries.map(e => (entryArtist(e) || 'Unknown artist').toLowerCase())).size;
+            text = `Artists ${bucketFilter.label}: ${plural(entries.length, 'track')} by ${plural(artists, 'artist')} across ${plural(days, 'Friday')}.`;
+        } else if (yearFilter) {
+            text = `Played in ${yearFilter}: ${plural(entries.length, 'track')} across ${plural(days, 'Friday')}.`;
+        } else {
+            text = `${plural(entries.length, 'track')} across ${plural(days, 'known Friday')}.`;
+        }
+        summary.textContent = text;
         summary.style.display = 'block';
     }
 
     window.addEventListener('load', () => {
         setupThemeToggle();
 
-        if (typeof PlaylistUtils === 'undefined' || typeof PlaylistUtils.pastWeekdayDates !== 'function' || typeof PlaylistUtils.expandEntry !== 'function') {
+        if (typeof PlaylistUtils === 'undefined' || typeof PlaylistUtils.expandEntry !== 'function') {
             document.getElementById('loading').style.display = 'none';
             const err = document.getElementById('error');
             err.textContent = 'This page needs to reload to pick up a recent update. Please refresh (Ctrl/Cmd+Shift+R) and try again.';
@@ -1218,27 +955,36 @@
             return;
         }
         setupControls();
+        applyUrlParams();
 
-        const dates = allKnownFridays();
-        const progressEl = document.getElementById('loadingProgress');
-        progressEl.textContent = `(0 / ${dates.length} Fridays)`;
-
-        fetchAllFridays(dates, (done, total) => {
-            progressEl.textContent = `(${done} / ${total} Fridays)`;
-        }).then(perDayResults => {
-            allEntries = collectAllTracks(perDayResults);
-            document.getElementById('loading').style.display = 'none';
-            if (allEntries.length === 0) {
+        fetch('headnod-tracks.json')
+            .then(r => {
+                if (!r.ok) throw new Error(`headnod-tracks.json responded ${r.status}`);
+                return r.json();
+            })
+            .then(data => {
+                allEntries = (data.tracks || []).map(t => ({ date: t.date, item: t }));
+                document.getElementById('loading').style.display = 'none';
+                if (allEntries.length === 0) {
+                    const err = document.getElementById('error');
+                    err.textContent = 'Couldn’t load any tracks. Check your connection and refresh.';
+                    err.style.display = 'block';
+                    document.getElementById('rangeLine').textContent = '';
+                    return;
+                }
+                showRangeLine();
+                populateYearFilter();
+                artistBucketPlan = computeArtistBucketPlan();
+                resolveBucketFilterLabel();
+                renderAllTracks();
+            })
+            .catch(() => {
+                document.getElementById('loading').style.display = 'none';
                 const err = document.getElementById('error');
-                err.textContent = 'Couldn’t load any tracks. Check your connection and refresh.';
+                err.textContent = 'Couldn’t load the tracklist. Check your connection and refresh.';
                 err.style.display = 'block';
                 document.getElementById('rangeLine').textContent = '';
-                return;
-            }
-            showSummary(dates);
-            populateYearFilter();
-            renderAllTracks();
-        });
+            });
     });
 </script>
 
