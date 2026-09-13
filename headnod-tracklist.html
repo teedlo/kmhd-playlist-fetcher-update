@@ -447,6 +447,20 @@
         return /[A-Za-z0-9]/.test(ch) ? ch.toUpperCase() : '#';
     }
 
+    // Cosmetic label only — bucket MEMBERSHIP never depends on this. '#'
+    // does double duty as bucketLetter's fallback for two opposite cases:
+    // a leading symbol (quote, "@"), which sorts before every letter, and
+    // a non-Latin-script name, which sorts after "Z" under this locale's
+    // collation. That's harmless for a bucket's first letter (it's always
+    // the "before A" case there) but can make a LAST bucket whose tail is
+    // non-Latin script produce a backwards-looking "T–#" if displayed as a
+    // plain range — show "T+" instead whenever the computed range would
+    // read as going backwards.
+    function bucketDisplayLabel(first, last) {
+        if (first === last) return first;
+        return last < first ? `${first}+` : `${first}–${last}`;
+    }
+
     // Every distinct artist in the FULL dataset (not affected by the year
     // filter, so bucket boundaries mean the same thing on every page),
     // paired [lowercased key, original-case label] and sorted with the
@@ -483,7 +497,7 @@
             for (let i = start; i < end; i++) keyToIndex.set(entries[i][0], bIdx);
             const first = bucketLetter(entries[start][1]);
             const last = bucketLetter(entries[end - 1][1]);
-            labels.push(first === last ? first : `${first}–${last}`);
+            labels.push(bucketDisplayLabel(first, last));
             start = end;
         }
         return { keyToIndex, labels };
