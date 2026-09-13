@@ -472,13 +472,17 @@
         return currentSort !== 'date';
     }
 
-    // First alphanumeric character in a group label, uppercased — used as
-    // a bucket's boundary letter. Falls back to '#' for a label that's
-    // all punctuation (shouldn't happen for an artist name, but cheap to
-    // guard against).
+    // A group label's own leading character, uppercased — used as a
+    // bucket's boundary letter. This has to be the label's actual first
+    // character, not its first *letter*: a handful of KMHD artist names
+    // start with a quote or "@" (e.g. a guest DJ handle), and those sort
+    // before every plain letter, so skipping ahead to the first letter
+    // would mislabel where the bucket really falls (producing a
+    // backwards-looking range like "L-B"). '#' covers that leading-symbol
+    // case, plus any label made entirely of non-Latin script.
     function bucketLetter(label) {
-        const m = label.match(/[A-Za-z0-9]/);
-        return m ? m[0].toUpperCase() : '#';
+        const ch = (label || '').trim().charAt(0);
+        return /[A-Za-z0-9]/.test(ch) ? ch.toUpperCase() : '#';
     }
 
     // Splits `labels` (group labels in their already-sorted order) into a
