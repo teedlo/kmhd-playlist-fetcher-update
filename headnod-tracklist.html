@@ -569,9 +569,110 @@
         updateCollapseToggleLabel();
     }
 
+    // Builds one <tbody class="track-group"> per distinct group in
+    // `entries` (already sorted), each with its collapsible header row.
+    // Pulled out of renderAllTracks so the same grouping logic can build
+    // either the whole table at once (date/year sort, a bucket sub-page,
+    // or any filtered-down view) or one bucket's worth at a time (the
+    // unfiltered artist view — see renderTracksProgressively).
+    function buildGroupsFragment(entries, counts, collapseByDefault, linkDates) {
+        const frag = document.createDocumentFragment();
+        let group = null;
+        let lastKey;
+        entries.forEach(entry => {
+            const key = groupKey(entry);
+            if (key !== lastKey) {
+                group = document.createElement('tbody');
+                group.className = 'track-group';
+                if (collapseByDefault) group.classList.add('collapsed');
+                const headerRow = document.createElement('tr');
+                headerRow.className = 'group-header';
+                headerRow.tabIndex = 0;
+                headerRow.setAttribute('role', 'button');
+                headerRow.setAttribute('aria-expanded', String(!collapseByDefault));
+                const headerCell = document.createElement('td');
+                headerCell.colSpan = 3;
+                headerCell.textContent = `${groupLabel(entry)} (${counts.get(key)})`;
+                headerRow.appendChild(headerCell);
+                // `group` is reassigned on every new group below, so the
+                // click handler needs its own stable binding rather than
+                // reading the shared outer variable — otherwise every
+                // header ends up toggling whichever group was created last.
+                const thisGroup = group;
+                headerRow.addEventListener('click', () => toggleGroup(thisGroup));
+                headerRow.addEventListener('keydown', e => {
+                    if (e.key !== 'Enter' && e.key !== ' ') return;
+                    e.preventDefault();
+                    toggleGroup(thisGroup);
+                });
+                group.appendChild(headerRow);
+                frag.appendChild(group);
+                lastKey = key;
+            }
+            group.appendChild(buildTrackRow(entry.item, entry.date, linkDates));
+        });
+        return frag;
+    }
+
+    // Bumped at the start of every renderAllTracks() call; a background
+    // chunk (see renderTracksProgressively) captures the value current when
+    // IT was scheduled and checks it before touching the DOM, so a sort or
+    // year change mid-fill makes stale chunks silently do nothing instead
+    // of appending into a table that's already been replaced. Same problem,
+    // same fix, as index.html's own generation-token guard.
+    let renderGeneration = 0;
+
+    function scheduleIdle(fn) {
+        if (typeof requestIdleCallback === 'function') requestIdleCallback(fn, { timeout: 1000 });
+        else setTimeout(fn, 0);
+    }
+
+    // Splits already-sorted artist-mode entries into one array per bucket
+    // (using the plan already computed for the nav bar), so the first
+    // bucket can render immediately and the rest fill in afterward.
+    function partitionByBucket(sorted) {
+        const numBuckets = artistBucketPlan.labels.length;
+        const chunks = Array.from({ length: numBuckets }, () => []);
+        sorted.forEach(entry => {
+            const idx = bucketIndexOf(entry, artistBucketPlan);
+            chunks[idx === -1 ? numBuckets - 1 : idx].push(entry);
+        });
+        return chunks;
+    }
+
+    // The unfiltered "by artist" view is the one page still big enough to
+    // matter even with data loading instantly: ~3,300 artists and ~7,000
+    // track rows (most start collapsed, but their elements still have to
+    // be built). The first bucket renders synchronously in renderAllTracks
+    // so the page is immediately useful; this fills in the rest a bucket
+    // at a time via requestIdleCallback, so the remaining ~11,000 DOM
+    // nodes never block the main thread in one go. A bucket sub-page from
+    // the nav bar already only builds ~1/12th of the rows, so it never
+    // needs this.
+    function renderTracksProgressively(table, remainingChunks, counts, collapseByDefault, linkDates, gen) {
+        if (remainingChunks.length === 0) return;
+        const note = document.createElement('div');
+        note.className = 'small';
+        note.style.textAlign = 'center';
+        note.textContent = 'Loading more artists…';
+        table.insertAdjacentElement('afterend', note);
+
+        let i = 0;
+        function step() {
+            if (gen !== renderGeneration) { note.remove(); return; }   // superseded by a newer render
+            table.appendChild(buildGroupsFragment(remainingChunks[i], counts, collapseByDefault, linkDates));
+            i++;
+            updateCollapseToggleLabel();
+            if (i >= remainingChunks.length) { note.remove(); return; }
+            scheduleIdle(step);
+        }
+        scheduleIdle(step);
+    }
+
     function renderAllTracks() {
         const container = document.getElementById('allTracksWrap');
         container.innerHTML = '';
+        const gen = ++renderGeneration;
 
         const filtered = allEntries.filter(e =>
             (!yearFilter || e.date.slice(0, 4) === yearFilter)
@@ -610,45 +711,19 @@
 
         const table = document.createElement('table');
         table.className = 'tracks';
-        const frag = document.createDocumentFragment();
-        let group = null;
-        let lastKey;
-        sorted.forEach(entry => {
-            const key = groupKey(entry);
-            if (key !== lastKey) {
-                group = document.createElement('tbody');
-                group.className = 'track-group';
-                if (collapseByDefault) group.classList.add('collapsed');
-                const headerRow = document.createElement('tr');
-                headerRow.className = 'group-header';
-                headerRow.tabIndex = 0;
-                headerRow.setAttribute('role', 'button');
-                headerRow.setAttribute('aria-expanded', String(!collapseByDefault));
-                const headerCell = document.createElement('td');
-                headerCell.colSpan = 3;
-                headerCell.textContent = `${groupLabel(entry)} (${counts.get(key)})`;
-                headerRow.appendChild(headerCell);
-                // `group` is reassigned on every new group below, so the
-                // click handler needs its own stable binding rather than
-                // reading the shared outer variable — otherwise every
-                // header ends up toggling whichever group was created last.
-                const thisGroup = group;
-                headerRow.addEventListener('click', () => toggleGroup(thisGroup));
-                headerRow.addEventListener('keydown', e => {
-                    if (e.key !== 'Enter' && e.key !== ' ') return;
-                    e.preventDefault();
-                    toggleGroup(thisGroup);
-                });
-                group.appendChild(headerRow);
-                frag.appendChild(group);
-                lastKey = key;
-            }
-            group.appendChild(buildTrackRow(entry.item, entry.date, linkDates));
-        });
-        table.appendChild(frag);
         container.appendChild(table);
-        renderSummary(filtered);
-        updateCollapseToggleLabel();
+
+        if (currentSort === 'artist' && !bucketFilter && artistBucketPlan) {
+            const chunks = partitionByBucket(sorted);
+            table.appendChild(buildGroupsFragment(chunks[0] || [], counts, collapseByDefault, linkDates));
+            renderSummary(filtered);
+            updateCollapseToggleLabel();
+            renderTracksProgressively(table, chunks.slice(1), counts, collapseByDefault, linkDates, gen);
+        } else {
+            table.appendChild(buildGroupsFragment(sorted, counts, collapseByDefault, linkDates));
+            renderSummary(filtered);
+            updateCollapseToggleLabel();
+        }
     }
 
     function updateCollapseToggleLabel() {
