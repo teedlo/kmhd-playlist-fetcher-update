@@ -346,7 +346,7 @@
 <!-- Cache-busting query param: bump whenever these files change (see the
      same note in index.html — a stale cached copy silently breaks any
      function the old copy doesn't have yet). -->
-<script src="playlist-utils.js?v=20260914"></script>
+<script src="playlist-utils.js?v=20260915"></script>
 <script src="shows-schedule.js?v=20260914"></script>
 <script>
     // ------------------------------------------------------------------
@@ -1400,7 +1400,7 @@
     function fridayLinkTarget() {
         const date = new URLSearchParams(location.search).get('date');
         if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
-        if (date < '2022-06-03') return null;   // before headnod-tracklist.html's HEADNOD_KNOWN_START; not a link we'd ever generate
+        if (date < PlaylistUtils.HEADNOD_KNOWN_START) return null;   // not a link we'd ever generate
         const newest = airedFridays(1, 0)[0];
         if (!newest) return null;
         const days = (new Date(newest + 'T00:00:00') - new Date(date + 'T00:00:00')) / 86400000;

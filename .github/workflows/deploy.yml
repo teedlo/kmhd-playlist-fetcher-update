@@ -49,8 +49,12 @@ jobs:
       # and CLAUDE.md. So the deploy names its files explicitly rather than
       # syncing a directory. Add new published files here. `enrich` is the
       # directory of per-day Apple Music link files (see scripts/build-enrich.js);
-      # rsync copies it whole, as /kmhd/enrich/.
-      FILES: .htaccess index.html headnod.html headnod-tracklist.html playlist-utils.js shows-schedule.js enrich
+      # rsync copies it whole, as /kmhd/enrich/. headnod-tracks.json is the
+      # merged, precomputed Headnod tracklist (see
+      # scripts/build-headnod-tracklist.js) — it must already be committed
+      # before this list is extended to include it, or rsync fails looking
+      # for a file that isn't in the checkout yet.
+      FILES: .htaccess index.html headnod.html headnod-tracklist.html headnod-tracks.json playlist-utils.js shows-schedule.js enrich
       REMOTE_DIR: teedlo.com/kmhd/
     steps:
       - uses: actions/checkout@v5

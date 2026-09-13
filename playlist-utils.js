@@ -212,13 +212,27 @@
         return (h || 0) * 60 + (m || 0);
     }
 
-    // True if `item`'s local start time falls within [slot.start, slot.end).
-    // slot.end === '24:00' is treated as end-of-day (inclusive of 23:59).
+    // True if `item` aired within [slot.start, slot.end) of ITS OWN
+    // Portland-local clock — a show's slot ("Headnod: Friday 18:00-20:00")
+    // is a fixed broadcast-schedule concept tied to the station, not to
+    // whoever happens to be looking at the page or running a script.
+    //
+    // This deliberately reads the hour/minute straight off the item's own
+    // `start.local` string (the same field trackDate() already parses this
+    // way) rather than building a Date and calling .getHours()/.getMinutes():
+    // those convert to the CALLING environment's local timezone, which is
+    // wrong here in two different ways — a browser outside the Pacific
+    // timezone gets a slot window that doesn't correspond to the actual
+    // broadcast hours at all, and a Node process on a UTC CI runner (see
+    // scripts/build-headnod-tracklist.js) would shift every track by 7-8
+    // hours and match almost nothing. slot.end === '24:00' is end-of-day
+    // (inclusive of 23:59).
     function trackInSlot(item, slot) {
         if (!item || !slot) return false;
-        const d = trackStartDate(item);
-        if (!d) return false;
-        const mins = d.getHours() * 60 + d.getMinutes();
+        const local = (item.start && item.start.local) || item._start_time;
+        const match = local ? String(local).match(/T(\d{2}):(\d{2})/) : null;
+        if (!match) return false;
+        const mins = parseInt(match[1], 10) * 60 + parseInt(match[2], 10);
         const startMin = minutesOfDay(slot.start);
         const endMin = slot.end === '24:00' ? 1440 : minutesOfDay(slot.end);
         if (endMin > startMin) return mins >= startMin && mins < endMin;
@@ -258,8 +272,19 @@
         return dates;
     }
 
+    // The earliest Friday this site has built Apple Music link data for
+    // (see .github/workflows/backfill.yml's first run) and the practical
+    // edge of "every Headnod track we know about": KMHD's own archive goes
+    // back to 2014, but that slot was a different program before this
+    // date, so going further back would mix in someone else's show. Shared
+    // by headnod-tracklist.html, headnod.html (its ?date= link validity
+    // check), and scripts/build-headnod-tracklist.js, so all three agree
+    // on where the archive starts.
+    const HEADNOD_KNOWN_START = '2022-06-03';
+
     return {
         trackStartDate, trackDate, mapItemFields, enrichKey, cacheKey, trackYear, searchLinks,
-        compactEntry, expandEntry, minutesOfDay, trackInSlot, pastWeekdayDates, toIsoDate
+        compactEntry, expandEntry, minutesOfDay, trackInSlot, pastWeekdayDates, toIsoDate,
+        HEADNOD_KNOWN_START
     };
 }));

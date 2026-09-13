@@ -276,7 +276,7 @@
 <!-- Cache-busting query param: bump whenever these files change (see the
      same note in index.html and headnod.html — a stale cached copy
      silently breaks any function the old copy doesn't have yet). -->
-<script src="playlist-utils.js?v=20260914"></script>
+<script src="playlist-utils.js?v=20260915"></script>
 <script src="shows-schedule.js?v=20260914"></script>
 <script>
     // ------------------------------------------------------------------
@@ -295,12 +295,9 @@
     // is worth doing whenever this next needs touching, but not today).
     // ------------------------------------------------------------------
 
-    // The earliest Friday this site has built Apple Music link data for
-    // (see .github/workflows/backfill.yml's first run) and the practical
-    // edge of "every track we know about": KMHD's own log goes back to
-    // 2014, but that slot was a different program before this date, so
-    // going further back would mix in someone else's show.
-    const HEADNOD_KNOWN_START = '2022-06-03';
+    // Shared with headnod.html and scripts/build-headnod-tracklist.js —
+    // see the constant's own comment in playlist-utils.js.
+    const HEADNOD_KNOWN_START = PlaylistUtils.HEADNOD_KNOWN_START;
 
     // Fallback if shows-schedule.js is missing or ever drops the show.
     const HEADNOD_SLOT = { weekday: 5, start: '18:00', end: '20:00' };

@@ -1,0 +1,95 @@
+name: Update Headnod tracklist
+
+# Rebuilds headnod-tracks.json (every track The Headnod Show has ever
+# played, merged from every known Friday's KMHD playlist plus whatever
+# enrich/YYYY-MM-DD.json already knows about each track), commits it if
+# anything changed, and deploys. headnod-tracklist.html loads that one file
+# instead of fetching and merging ~224 Fridays itself in the browser.
+#
+# Daily rather than hourly like enrich.yml: this script makes no external
+# rate-limited calls (it only merges data that already exists), so a full
+# rebuild is cheap — but a weekly cadence would risk baking in a Friday
+# whose enrich file is still "complete": false for up to a week. Daily at
+# 06:30 UTC gives enrich.yml's hourly run several hours to finish that
+# Friday night's Apple Music lookups first.
+#
+# scripts/build-headnod-tracklist.js always rebuilds the whole known range
+# and sorts deterministically, so a run that finds nothing new produces a
+# byte-identical file and this commits nothing.
+#
+# The commit is made with the workflow's own token, which deliberately does
+# NOT trigger the "on: push" deploy (GitHub's loop protection), so this
+# workflow calls deploy.yml directly when something changed. Own
+# concurrency group (distinct from enrich.yml's) so this workflow can't
+# overlap with itself — the only way two writers of headnod-tracks.json
+# could exist, since enrich.yml/backfill.yml only ever touch files under
+# enrich/.
+
+on:
+  schedule:
+    - cron: '30 6 * * *'   # daily (UTC)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: headnod-tracklist
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
+      sha: ${{ steps.commit.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Rebuild the merged tracklist
+        run: node scripts/build-headnod-tracklist.js
+
+      - name: Commit any changes
+        id: commit
+        run: |
+          git add headnod-tracks.json
+          if git diff --cached --quiet; then
+            echo "Nothing new."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name teedlo
+          git config user.email 213245817+teedlo@users.noreply.github.com
+          git commit -m "Update Headnod tracklist ($(date -u +'%Y-%m-%d %H:%M UTC'))"
+          # Someone (a person, or enrich.yml touching enrich/) may have
+          # pushed to main in the meantime: rebase and retry. This workflow
+          # is the only writer of headnod-tracks.json (its own concurrency
+          # group above rules out a concurrent run of itself), so "-X
+          # theirs" never actually has to discard anything of this run's —
+          # there is nothing else touching this file to conflict with.
+          pushed=false
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then pushed=true; break; fi
+            git pull --rebase -X theirs origin main || exit 1
+            sleep $((attempt * 7))
+          done
+          if [ "$pushed" != true ]; then
+            echo "::error::Could not push to main after 5 attempts"
+            exit 1
+          fi
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    needs: build
+    if: needs.build.outputs.changed == 'true'
+    uses: ./.github/workflows/deploy.yml
+    with:
+      ref: ${{ needs.build.outputs.sha }}
+    secrets: inherit

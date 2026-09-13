@@ -135,18 +135,22 @@ test('searchLinks: eBay links still work from album alone when there is no artis
 });
 
 // ---------------- "By Show" helpers ----------------
-// trackInSlot deliberately compares against the *viewer's* local clock
-// (d.getHours()), which is what the page wants — a slot is "6-8pm" as the
-// listener sees it. That makes a hardcoded UTC-string fixture depend on
-// the machine's timezone: these tests passed on CI (UTC runners) but
-// failed on a Pacific laptop, where 19:05Z reads back as 12:05.
-//
-// So build fixtures from *local* components instead. The resulting
-// instant differs by timezone, but the local hour trackInSlot reads is
-// whatever we asked for, everywhere.
+// A show's slot ("Headnod: Friday 18:00-20:00") is a fixed broadcast-
+// schedule concept tied to the station's own (Portland) clock, not to
+// whoever happens to be running the code — so trackInSlot reads the
+// hour/minute straight off `start.local`'s string, never through a Date's
+// .getHours()/.getMinutes() (which convert to the CALLING environment's
+// timezone). An earlier version of trackInSlot did go through Date, and an
+// earlier version of this fixture worked around the resulting flakiness by
+// baking the requested local hour into a UTC string built from the *test
+// runner's own* local timezone — which happened to make the tests pass
+// everywhere, but only because it never actually exercised a mismatch
+// between the runner's timezone and the track's real (Portland) one. Build
+// `start.local` directly instead, so these tests reflect what the function
+// actually reads.
 function itemAtLocalTime(hours, minutes) {
-    const d = new Date(2026, 7, 14, hours, minutes, 0);   // 2026-08-14, local time
-    return { start: { utc: d.toISOString() } };
+    const pad = n => String(n).padStart(2, '0');
+    return { start: { local: `2026-08-14T${pad(hours)}:${pad(minutes)}:00-07:00` } };
 }
 
 test('minutesOfDay: converts HH:MM to minutes since midnight', () => {
@@ -178,6 +182,28 @@ test('trackInSlot: end "24:00" includes tracks up to (not including) midnight', 
 test('trackInSlot: false for a track with no usable timestamp', () => {
     assert.equal(trackInSlot({}, { start: '18:00', end: '20:00' }), false);
     assert.equal(trackInSlot(null, { start: '18:00', end: '20:00' }), false);
+});
+
+test('trackInSlot: result does not depend on the calling process\'s own timezone', () => {
+    // The regression this guards: an earlier version read the hour via
+    // Date.getHours(), which converts to whatever timezone the runtime is
+    // set to. On a UTC CI runner (or a non-Pacific browser), a real
+    // 18:05-Portland track would be read back as 01:05 the next day and
+    // fail every slot check — silently producing zero matches for every
+    // show. A Friday-night track's UTC instant genuinely lands on Saturday,
+    // so this also guards against a fix that swaps in trackDate()'s UTC
+    // field instead of local.
+    const item = itemAtLocalTime(19, 5);   // 7:05pm Portland time
+    const slot = { start: '18:00', end: '20:00' };
+    const original = process.env.TZ;
+    try {
+        process.env.TZ = 'UTC';
+        assert.equal(trackInSlot(item, slot), true);
+        process.env.TZ = 'Europe/Berlin';
+        assert.equal(trackInSlot(item, slot), true);
+    } finally {
+        if (original === undefined) delete process.env.TZ; else process.env.TZ = original;
+    }
 });
 
 test('toIsoDate: formats a Date as YYYY-MM-DD in local time', () => {
