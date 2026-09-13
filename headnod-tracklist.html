@@ -433,7 +433,14 @@
                 if (aa === ab) return entryTime(a) - entryTime(b);
                 return aa ? -1 : 1;                            // unknown artist sorts last
             }
-            const cmp = aa.localeCompare(ab, undefined, { sensitivity: 'base' });
+            // 'accent' (case-insensitive, diacritic-sensitive), not 'base'
+            // (which also folds diacritics): groupKey below only lowercases
+            // the label, so two artists differing solely by an accent (e.g.
+            // "Gábor Szabó" vs. "Gabor Szabo") are still distinct groups —
+            // sorting them as equal here would interleave the two spellings
+            // by date instead of keeping each artist's tracks contiguous,
+            // splitting it into two separate, non-adjacent group headers.
+            const cmp = aa.localeCompare(ab, undefined, { sensitivity: 'accent' });
             if (cmp !== 0) return cmp;
             if (a.date !== b.date) return a.date < b.date ? 1 : -1;   // newest date first within an artist
             return entryTime(a) - entryTime(b);
