@@ -110,6 +110,17 @@
         return year;
     }
 
+    // Station legal IDs ("Legal ID Hannah Music", "40th LEGAL Bri Benson",
+    // "40th_LEGAL_MF", …) land in KMHD's playlist data matched to an
+    // unrelated real track for its metadata, so they're not actual plays.
+    // Bounded against adjacent LETTERS only (not \b's definition, which
+    // treats "_" as a word character and would miss "40th_LEGAL_MF"), so
+    // real titles like "Illegal" still don't match.
+    const LEGAL_ID_RE = /(?<![a-z])legal(?![a-z])/i;
+    function isStationLegalId(title) {
+        return LEGAL_ID_RE.test(title || '');
+    }
+
     // Builds plain search-link URLs for services that don't have (or
     // aren't worth the setup cost of) a per-track lookup API. Every link
     // is a search results page rather than a guaranteed exact match, so
@@ -296,7 +307,7 @@
 
     return {
         trackStartDate, trackDate, mapItemFields, enrichKey, cacheKey, normalizeArtistKey, trackYear, searchLinks,
-        compactEntry, expandEntry, minutesOfDay, trackInSlot, pastWeekdayDates, toIsoDate,
+        isStationLegalId, compactEntry, expandEntry, minutesOfDay, trackInSlot, pastWeekdayDates, toIsoDate,
         HEADNOD_KNOWN_START
     };
 }));

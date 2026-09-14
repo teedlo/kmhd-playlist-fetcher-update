@@ -271,6 +271,17 @@ test('enrichKey: is "artist|title", lowercased, and what cacheKey builds on', ()
     assert.equal(cacheKey('itunes1:', { artist: 'Art Farmer', title: 'Big Blues' }), 'itunes1:' + enrichKey({ artist: 'Art Farmer', title: 'Big Blues' }));
 });
 
+test('isStationLegalId: matches station break titles, not real songs like "Illegal"', () => {
+    const { isStationLegalId } = require('./playlist-utils.js');
+    assert.equal(isStationLegalId('Legal ID Hannah Music'), true);
+    assert.equal(isStationLegalId('40th LEGAL Bri Benson'), true);
+    assert.equal(isStationLegalId('40th_LEGAL_MF'), true);
+    assert.equal(isStationLegalId('Illegal'), false);
+    assert.equal(isStationLegalId('Fresh'), false);
+    assert.equal(isStationLegalId(''), false);
+    assert.equal(isStationLegalId(undefined), false);
+});
+
 test('trackDate: reads the KMHD (Portland-local) day straight off start.local', () => {
     const { trackDate } = require('./playlist-utils.js');
     // 21:53 Portland on the 5th is already the 6th in UTC; the day file is the 5th.

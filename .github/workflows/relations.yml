@@ -1,0 +1,93 @@
+name: Update sample/cover relations
+
+# Builds relations.json: for every unique Headnod track, what it samples,
+# what samples it, and other recordings of the same underlying work (a
+# heuristic "cover versions" cluster), looked up from MusicBrainz — see
+# scripts/build-relations.js for why MusicBrainz (free, no auth, CC0 core
+# data) rather than WhoSampled (no public API, ToS forbids scraping) or
+# SecondHandSongs (free tier is private-use only).
+#
+# Daily, timed after headnod-tracklist.yml's 06:30 UTC run so this reads a
+# tracklist that already reflects last Friday's show. scripts/build-relations.js
+# only looks up tracks it has never resolved (a resolved track can have
+# every list empty — "checked, nothing found" — and is still never
+# re-queried), so this is a no-op commit once the corpus is caught up;
+# MusicBrainz's own ~1 req/s limit means the very first runs will still be
+# working through the historical backlog (several thousand unique tracks).
+#
+# The commit is made with the workflow's own token, which deliberately does
+# NOT trigger the "on: push" deploy (GitHub's loop protection), so this
+# workflow calls deploy.yml directly when something changed.
+
+on:
+  schedule:
+    - cron: '0 7 * * *'   # daily (UTC), after headnod-tracklist.yml
+  workflow_dispatch:
+    inputs:
+      args:
+        description: 'Arguments for scripts/build-relations.js'
+        default: '--max-lookups 5000 --interval-ms 1500'
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: relations
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
+      sha: ${{ steps.commit.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Look up new relations
+        env:
+          ARGS: ${{ inputs.args || '--max-lookups 5000 --interval-ms 1500' }}
+        run: node scripts/build-relations.js $ARGS
+
+      - name: Commit any changes
+        id: commit
+        run: |
+          git add relations.json
+          if git diff --cached --quiet; then
+            echo "Nothing new."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name teedlo
+          git config user.email 213245817+teedlo@users.noreply.github.com
+          git commit -m "Update sample/cover relations ($(date -u +'%Y-%m-%d %H:%M UTC'))"
+          # This workflow is the only writer of relations.json (its own
+          # concurrency group above rules out a concurrent run of itself),
+          # so "-X theirs" never has to discard anything of this run's.
+          pushed=false
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then pushed=true; break; fi
+            git pull --rebase -X theirs origin main || exit 1
+            sleep $((attempt * 7))
+          done
+          if [ "$pushed" != true ]; then
+            echo "::error::Could not push to main after 5 attempts"
+            exit 1
+          fi
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    needs: build
+    if: needs.build.outputs.changed == 'true'
+    uses: ./.github/workflows/deploy.yml
+    with:
+      ref: ${{ needs.build.outputs.sha }}
+    secrets: inherit

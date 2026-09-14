@@ -122,6 +122,19 @@
         .entry-name { flex: 1; min-width: 0; }
         .entry-name .primary { font-weight: bold; }
         .entry-name .secondary { color: var(--muted); font-size: 0.9em; }
+        .related { margin-top: 4px; }
+        .related-toggle {
+            background: none; border: none; padding: 0; cursor: pointer;
+            color: var(--link); font-size: 0.85em; font-family: inherit;
+        }
+        .related-details { margin-top: 6px; }
+        .related-group-label {
+            font-size: 0.8em; text-transform: uppercase; letter-spacing: 0.04em;
+            color: var(--muted); margin: 8px 0 2px;
+        }
+        .related-group-label:first-child { margin-top: 0; }
+        .related-details ul { list-style: none; margin: 0; padding: 0; }
+        .related-details li { font-size: 0.9em; padding: 2px 0; }
         .entry-count {
             color: var(--muted);
             font-size: 0.9em;
@@ -243,12 +256,6 @@
     // which a bare .toLowerCase() does not collapse. headnod-tracklist.html
     // was retrofitted to use the same shared helper for the same reason.
 
-    // Station legal IDs ("Legal ID Hannah Music", "40th LEGAL Bri Benson", …)
-    // land in KMHD's playlist data matched to an unrelated real track for
-    // its genre/art, so they're not actual plays and would otherwise pollute
-    // the leaderboards.
-    const LEGAL_ID_RE = /\blegal\b/i;
-
     function computeStats(allEntries) {
         const artistCounts = new Map();   // normKey -> { label, count }
         const trackCounts = new Map();    // normKey -> { artist, title, count }
@@ -260,12 +267,19 @@
 
         const musicEntries = allEntries.filter(item => {
             const { title } = PlaylistUtils.mapItemFields(item);
-            return !LEGAL_ID_RE.test(title || '');
+            return !PlaylistUtils.isStationLegalId(title);
         });
+
+        // Apple Music link per track, keyed the same way relations.json is
+        // (PlaylistUtils.enrichKey, not the normArtist+title key below) —
+        // this is what resolves a related-track reference (from
+        // relations.json) to an exact link when we've played it ourselves.
+        const trackUrlByKey = new Map();
 
         musicEntries.forEach(item => {
             const { title, artist, album } = PlaylistUtils.mapItemFields(item);
             const normArtist = PlaylistUtils.normalizeArtistKey(artist);
+            const info = PlaylistUtils.expandEntry(item);
 
             if (normArtist) {
                 const rec = artistCounts.get(normArtist) || { label: artist, count: 0 };
@@ -276,11 +290,11 @@
                     const key = normArtist + '|' + title.trim().toLowerCase();
                     const trec = trackCounts.get(key) || { artist, title, count: 0, url: null };
                     trec.count++;
-                    if (!trec.url) {
-                        const info = PlaylistUtils.expandEntry(item);
-                        trec.url = (info && info.trackViewUrl) || null;
-                    }
+                    if (!trec.url) trec.url = (info && info.trackViewUrl) || null;
                     trackCounts.set(key, trec);
+
+                    const ekey = PlaylistUtils.enrichKey({ artist, title });
+                    if (!trackUrlByKey.has(ekey) && info && info.trackViewUrl) trackUrlByKey.set(ekey, info.trackViewUrl);
                 }
                 if (album) {
                     const key = normArtist + '|' + album.trim().toLowerCase();
@@ -290,7 +304,6 @@
                 }
             }
 
-            const info = PlaylistUtils.expandEntry(item);
             const genre = info && info.primaryGenreName;
             if (genre) { genreCounts.set(genre, (genreCounts.get(genre) || 0) + 1); genreKnown++; }
             else genreUnknown++;
@@ -316,8 +329,65 @@
             genres: topOf(new Map(Array.from(genreCounts, ([label, count]) => [label, { label, count }]))),
             genreKnown, genreUnknown,
             decades: Array.from(decadeCounts.entries()).map(([decade, count]) => ({ decade, count })).sort((a, b) => a.decade - b.decade),
-            yearKnown, yearUnknown
+            yearKnown, yearUnknown,
+            trackUrlByKey
         };
+    }
+
+    // Resolves one relations.json reference ({artist, title, mbid}) to an
+    // Apple Music link: our own exact match if we've played that track
+    // ourselves (trackUrlByKey), otherwise the same graceful search-link
+    // fallback used everywhere else in this codebase.
+    function relatedTrackUrl(ref, trackUrlByKey) {
+        return trackUrlByKey.get(PlaylistUtils.enrichKey(ref)) || PlaylistUtils.searchLinks(ref).appleMusic;
+    }
+
+    // Builds the "Samples" / "Sampled in" / "Other versions" toggle for one
+    // leaderboard track, or null when relations.json has nothing for it.
+    function relatedSection(relEntry, trackUrlByKey) {
+        if (!relEntry) return null;
+        const groups = [
+            ['Samples', relEntry.samples],
+            ['Sampled in', relEntry.sampledBy],
+            ['Other versions', relEntry.otherVersions]
+        ].filter(([, list]) => list && list.length);
+        if (!groups.length) return null;
+
+        const wrap = document.createElement('div');
+        wrap.className = 'related';
+        const toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'related-toggle';
+        const count = groups.reduce((n, [, list]) => n + list.length, 0);
+        toggle.textContent = `▸ Related (${count})`;
+        const details = document.createElement('div');
+        details.className = 'related-details';
+        details.hidden = true;
+        groups.forEach(([label, list]) => {
+            const h = document.createElement('div');
+            h.className = 'related-group-label';
+            h.textContent = label;
+            details.appendChild(h);
+            const ul = document.createElement('ul');
+            list.slice(0, 5).forEach(ref => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = relatedTrackUrl(ref, trackUrlByKey);
+                a.target = '_blank';
+                a.rel = 'noopener';
+                a.textContent = `${ref.title} by ${ref.artist}`;
+                li.appendChild(a);
+                ul.appendChild(li);
+            });
+            details.appendChild(ul);
+        });
+        toggle.addEventListener('click', () => {
+            details.hidden = !details.hidden;
+            toggle.textContent = `${details.hidden ? '▸' : '▾'} Related (${count})`;
+        });
+        wrap.appendChild(toggle);
+        wrap.appendChild(details);
+        return wrap;
     }
 
     // ---------------- rendering ----------------
@@ -346,7 +416,7 @@
         renderNext();
     }
 
-    function nameCell(primary, secondary, url) {
+    function nameCell(primary, secondary, url, related) {
         const span = document.createElement('span');
         span.className = 'entry-name';
         const p = document.createElement('span');
@@ -370,6 +440,7 @@
             s.textContent = secondary;
             span.appendChild(s);
         }
+        if (related) span.appendChild(related);
         return span;
     }
 
@@ -400,7 +471,7 @@
         });
     }
 
-    function renderStats(stats) {
+    function renderStats(stats, relations) {
         renderLeaderboard(
             document.getElementById('topArtists'),
             document.querySelector('.show-more[data-target="topArtists"]'),
@@ -411,7 +482,10 @@
             document.getElementById('topTracks'),
             document.querySelector('.show-more[data-target="topTracks"]'),
             stats.tracks,
-            t => nameCell(t.title, `by ${t.artist}`, t.url || PlaylistUtils.searchLinks(t).appleMusic)
+            t => nameCell(
+                t.title, `by ${t.artist}`, t.url || PlaylistUtils.searchLinks(t).appleMusic,
+                relatedSection((relations || {})[PlaylistUtils.enrichKey(t)], stats.trackUrlByKey)
+            )
         );
         renderLeaderboard(
             document.getElementById('topAlbums'),
@@ -470,13 +544,22 @@
             return;
         }
 
-        fetch('headnod-tracks.json')
-            .then(r => {
+        Promise.all([
+            fetch('headnod-tracks.json').then(r => {
                 if (!r.ok) throw new Error(`headnod-tracks.json responded ${r.status}`);
                 return r.json();
-            })
-            .then(data => {
+            }),
+            // relations.json (samples/sampled-in/other-versions, from
+            // scripts/build-relations.js) is optional — the page must
+            // still work before the first backfill run has landed, or if
+            // the fetch fails for any other reason.
+            fetch('relations.json')
+                .then(r => r.ok ? r.json() : { tracks: {} })
+                .catch(() => ({ tracks: {} }))
+        ])
+            .then(([data, relationsData]) => {
                 const allEntries = data.tracks || [];
+                const relations = relationsData.tracks || {};
                 document.getElementById('loading').style.display = 'none';
                 if (allEntries.length === 0) {
                     const err = document.getElementById('error');
@@ -490,7 +573,7 @@
                     `${allEntries.length.toLocaleString()} tracks across ${dates.length.toLocaleString()} known Fridays, `
                     + `${friendlyDate(dates[0])} through ${friendlyDate(dates[dates.length - 1])}.`;
                 document.getElementById('statsWrap').hidden = false;
-                renderStats(computeStats(allEntries));
+                renderStats(computeStats(allEntries), relations);
             })
             .catch(() => {
                 document.getElementById('loading').style.display = 'none';
