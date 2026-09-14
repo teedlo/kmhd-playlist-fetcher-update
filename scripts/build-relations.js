@@ -21,16 +21,26 @@
 //   node scripts/build-relations.js --dry-run
 //
 // Options:
-//   --max-lookups N   stop after N MusicBrainz calls this run (a call is
-//                      spent per API request, not per track — a track with
-//                      a cover-work relation costs 3 calls, one with no
-//                      confident match costs 1). Whatever's left unresolved
-//                      is simply absent from the file for a later run.
-//   --interval-ms N   minimum gap between MusicBrainz calls (default 1100:
-//                      their documented per-IP limit is ~1/s)
-//   --source PATH     track source file (default headnod-tracks.json)
-//   --out PATH        output file (default relations.json)
-//   --dry-run         build and report, but write nothing
+//   --max-lookups N     stop after N MusicBrainz calls this run (a call is
+//                        spent per API request, not per track — a track with
+//                        a cover-work relation costs 3 calls, one with no
+//                        confident match costs 1). Whatever's left unresolved
+//                        is simply absent from the file for a later run.
+//   --interval-ms N     minimum gap between MusicBrainz calls (default 1100:
+//                        their documented per-IP limit is ~1/s)
+//   --time-budget-ms N  stop after N ms of wall-clock time this run, same as
+//                        running out of --max-lookups. Set this comfortably
+//                        below any CI job timeout: relations.json is only
+//                        written per-track WHILE the process is running —
+//                        if the job itself gets killed by an external
+//                        timeout instead of this script returning on its
+//                        own, the workflow's commit step never runs at all
+//                        and every checkpoint since the last commit is lost
+//                        with it. This is what actually happened on this
+//                        script's first scheduled run.
+//   --source PATH       track source file (default headnod-tracks.json)
+//   --out PATH          output file (default relations.json)
+//   --dry-run           build and report, but write nothing
 //
 // No dependencies; Node 18+ (global fetch). Run from anywhere: paths are
 // resolved relative to this file.
@@ -60,6 +70,7 @@ const NOTE = 'Built by scripts/build-relations.js from MusicBrainz (https://musi
 const DEFAULTS = {
     intervalMs: 1100,
     maxLookups: Infinity,
+    timeBudgetMs: Infinity,
     maxAttempts: 6,
     backoffMs: 2000,
     fetchTimeoutMs: 20000,
@@ -82,6 +93,7 @@ function parseArgs(argv) {
         switch (a) {
             case '--max-lookups': opts.maxLookups = num(a); break;
             case '--interval-ms': opts.intervalMs = num(a); break;
+            case '--time-budget-ms': opts.timeBudgetMs = num(a); break;
             case '--source': opts.source = args.shift(); break;
             case '--out': opts.out = args.shift(); break;
             case '--dry-run': opts.dryRun = true; break;
@@ -369,7 +381,9 @@ async function main(argv) {
     const tracks = { ...known };
     let budget = opts.maxLookups;
     let stopped = false;
+    let outOfTime = false;
     let matched = 0, unmatched = 0, skipped = 0, withRelations = 0;
+    const deadline = Date.now() + opts.timeBudgetMs;
 
     // Checkpointed after every resolved track (not just once at the end):
     // a run can be killed mid-lookup by CI's job timeout (a real GitHub
@@ -377,8 +391,14 @@ async function main(argv) {
     // MusicBrainz retry backoff, having spent the entire run without ever
     // reaching a final write — a timeout is not a rare edge case here given
     // MusicBrainz's rate limiting, so every track resolved must survive one.
+    // --time-budget-ms is what makes that checkpointing actually pay off:
+    // the loop below must return well before any external CI timeout, or
+    // the workflow's commit step (which runs only after this whole process
+    // exits) never gets a chance to run at all, and every checkpoint since
+    // the last commit is lost along with the killed job.
     for (const [key, meta] of unresolved) {
         if (stopped || budget <= 0) break;
+        if (Date.now() >= deadline) { outOfTime = true; break; }
         budget--;
         let result;
         try {
@@ -401,6 +421,7 @@ async function main(argv) {
         + `${skipped} skipped, ${leftForNextRun} left for next run; ${call.stats.calls} MusicBrainz call(s), ${call.stats.retries} retried`);
 
     if (stopped) console.log((process.env.GITHUB_ACTIONS ? '::warning::' : 'WARNING: ') + 'stopped early because MusicBrainz kept failing; remaining tracks left for a later run');
+    if (outOfTime) log(`Stopped at the --time-budget-ms deadline with ${leftForNextRun} track(s) left for a later run.`);
     return 0;
 }
 

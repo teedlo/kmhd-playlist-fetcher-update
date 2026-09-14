@@ -15,6 +15,17 @@ name: Update sample/cover relations
 # MusicBrainz's own ~1 req/s limit means the very first runs will still be
 # working through the historical backlog (several thousand unique tracks).
 #
+# --time-budget-ms below (150 min) is deliberately well under this job's own
+# timeout-minutes (180): the script checkpoints relations.json to disk after
+# every track, but that only pays off if the "Commit any changes" step
+# actually runs, which it can't if the job itself gets killed by
+# timeout-minutes mid-script — the whole runner (checkpoints included) is
+# torn down with no chance to commit. This is exactly what happened on this
+# workflow's first-ever run before --time-budget-ms existed: it spent the
+# full 3 hours deep in MusicBrainz retry backoffs and was cancelled with
+# nothing committed at all. Letting the script stop itself with time to
+# spare guarantees a commit every run, even a slow one.
+#
 # The commit is made with the workflow's own token, which deliberately does
 # NOT trigger the "on: push" deploy (GitHub's loop protection), so this
 # workflow calls deploy.yml directly when something changed.
@@ -26,7 +37,7 @@ on:
     inputs:
       args:
         description: 'Arguments for scripts/build-relations.js'
-        default: '--max-lookups 5000 --interval-ms 1500'
+        default: '--max-lookups 5000 --interval-ms 1500 --time-budget-ms 9000000'
         required: false
 
 permissions:
@@ -53,7 +64,7 @@ jobs:
 
       - name: Look up new relations
         env:
-          ARGS: ${{ inputs.args || '--max-lookups 5000 --interval-ms 1500' }}
+          ARGS: ${{ inputs.args || '--max-lookups 5000 --interval-ms 1500 --time-budget-ms 9000000' }}
         run: node scripts/build-relations.js $ARGS
 
       - name: Commit any changes

@@ -261,4 +261,5 @@ test('parseArgs: rejects unknown flags and bad values', () => {
     assert.equal(R.parseArgs(['--interval-ms', '50', '--dry-run']).intervalMs, 50);
     assert.equal(R.parseArgs(['--dry-run']).dryRun, true);
     assert.equal(R.parseArgs(['--source', 'x.json', '--out', 'y.json']).source, 'x.json');
+    assert.equal(R.parseArgs(['--time-budget-ms', '90000']).timeBudgetMs, 90000);
 });
