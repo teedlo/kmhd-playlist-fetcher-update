@@ -274,8 +274,12 @@
 
                 if (title) {
                     const key = normArtist + '|' + title.trim().toLowerCase();
-                    const trec = trackCounts.get(key) || { artist, title, count: 0 };
+                    const trec = trackCounts.get(key) || { artist, title, count: 0, url: null };
                     trec.count++;
+                    if (!trec.url) {
+                        const info = PlaylistUtils.expandEntry(item);
+                        trec.url = (info && info.trackViewUrl) || null;
+                    }
                     trackCounts.set(key, trec);
                 }
                 if (album) {
@@ -342,12 +346,22 @@
         renderNext();
     }
 
-    function nameCell(primary, secondary) {
+    function nameCell(primary, secondary, url) {
         const span = document.createElement('span');
         span.className = 'entry-name';
         const p = document.createElement('span');
         p.className = 'primary';
-        p.textContent = primary;
+        if (url) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.title = 'Open in Apple Music';
+            a.textContent = primary;
+            p.appendChild(a);
+        } else {
+            p.textContent = primary;
+        }
         span.appendChild(p);
         if (secondary) {
             span.appendChild(document.createTextNode(' '));
@@ -397,7 +411,7 @@
             document.getElementById('topTracks'),
             document.querySelector('.show-more[data-target="topTracks"]'),
             stats.tracks,
-            t => nameCell(t.title, `by ${t.artist}`)
+            t => nameCell(t.title, `by ${t.artist}`, t.url || PlaylistUtils.searchLinks(t).appleMusic)
         );
         renderLeaderboard(
             document.getElementById('topAlbums'),
