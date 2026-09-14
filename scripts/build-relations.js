@@ -371,6 +371,12 @@ async function main(argv) {
     let stopped = false;
     let matched = 0, unmatched = 0, skipped = 0, withRelations = 0;
 
+    // Checkpointed after every resolved track (not just once at the end):
+    // a run can be killed mid-lookup by CI's job timeout (a real GitHub
+    // Actions run of this script was cancelled at 180 minutes, deep into a
+    // MusicBrainz retry backoff, having spent the entire run without ever
+    // reaching a final write — a timeout is not a rare edge case here given
+    // MusicBrainz's rate limiting, so every track resolved must survive one.
     for (const [key, meta] of unresolved) {
         if (stopped || budget <= 0) break;
         budget--;
@@ -387,13 +393,12 @@ async function main(argv) {
         tracks[key] = result.entry;
         if (result.entry.mbid) matched++; else unmatched++;
         if (result.entry.samples.length || result.entry.sampledBy.length || result.entry.otherVersions.length) withRelations++;
+        if (!opts.dryRun) writeRelationsFile(outFile, tracks);
     }
 
     const leftForNextRun = unresolved.length - (matched + unmatched + skipped);
     log(`Done: ${matched} matched (${withRelations} with at least one relation), ${unmatched} no confident match, `
         + `${skipped} skipped, ${leftForNextRun} left for next run; ${call.stats.calls} MusicBrainz call(s), ${call.stats.retries} retried`);
-
-    if (!opts.dryRun) writeRelationsFile(outFile, tracks);
 
     if (stopped) console.log((process.env.GITHUB_ACTIONS ? '::warning::' : 'WARNING: ') + 'stopped early because MusicBrainz kept failing; remaining tracks left for a later run');
     return 0;
