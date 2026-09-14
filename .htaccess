@@ -22,6 +22,16 @@
     <FilesMatch "^headnod-tracks\.json$">
         Header set Cache-Control "max-age=3600, must-revalidate"
     </FilesMatch>
+    # relations.json (built by scripts/build-relations.js, same daily cadence
+    # as headnod-tracks.json above) needs the same override — without one it
+    # silently inherits the host's 2-day default, so a visitor's browser can
+    # serve a relations.json from before that day's update for up to 2 days.
+    # This was caught live: right after a run added real relation data,
+    # headnod-stats.html's own fetch of this file still returned the old
+    # (pre-run) copy from cache.
+    <FilesMatch "^relations\.json$">
+        Header set Cache-Control "max-age=3600, must-revalidate"
+    </FilesMatch>
 </IfModule>
 
 # The server gzips HTML and JS on its own but not JSON. A day's link file
