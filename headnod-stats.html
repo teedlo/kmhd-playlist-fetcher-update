@@ -101,6 +101,11 @@
         section.stat-section { margin: 0 0 36px; }
         h2 { font-size: 1.3em; margin: 0 0 4px; }
         .section-note { margin: 0 0 14px; font-size: 0.85em; color: var(--muted); }
+        .filter-toggle {
+            display: flex; align-items: center; gap: 6px;
+            margin: 0 0 14px; font-size: 0.9em; cursor: pointer; width: fit-content;
+        }
+        .filter-toggle input { cursor: pointer; }
 
         /* ---------------- leaderboards ---------------- */
         ol.leaderboard { list-style: none; margin: 0; padding: 0; }
@@ -193,6 +198,10 @@
         <section class="stat-section">
             <h2>Most-played tracks</h2>
             <p class="section-note">The same song, by the same artist, played more than once.</p>
+            <label class="filter-toggle">
+                <input type="checkbox" id="samplesOnlyFilter">
+                Only tracks with known samples
+            </label>
             <ol class="leaderboard" id="topTracks"></ol>
             <button type="button" class="show-more" data-target="topTracks" hidden>Show 20 more</button>
         </section>
@@ -392,7 +401,14 @@
 
     // ---------------- rendering ----------------
 
+    // Re-invocable on the same listEl/buttonEl (the samples-only filter
+    // re-renders topTracks in place): clears any previous render and swaps
+    // in a fresh button so re-running this doesn't pile up an extra
+    // "Show more" click listener on every toggle.
     function renderLeaderboard(listEl, buttonEl, entries, renderItem) {
+        listEl.innerHTML = '';
+        const freshButton = buttonEl.cloneNode(true);
+        buttonEl.replaceWith(freshButton);
         let shown = 0;
         function renderNext() {
             const slice = entries.slice(shown, shown + SHOW_MORE_STEP);
@@ -410,9 +426,9 @@
                 listEl.appendChild(li);
             });
             shown += slice.length;
-            buttonEl.hidden = shown >= entries.length;
+            freshButton.hidden = shown >= entries.length;
         }
-        buttonEl.addEventListener('click', renderNext);
+        freshButton.addEventListener('click', renderNext);
         renderNext();
     }
 
@@ -471,6 +487,15 @@
         });
     }
 
+    // True when relations.json has an actual sample relationship for this
+    // track (it samples something, or something samples it) — deliberately
+    // excludes otherVersions, which is cover/alternate-recording data, not
+    // sampling.
+    function trackHasSampleData(track, relations) {
+        const rel = (relations || {})[PlaylistUtils.enrichKey(track)];
+        return !!(rel && (rel.samples.length || rel.sampledBy.length));
+    }
+
     function renderStats(stats, relations) {
         renderLeaderboard(
             document.getElementById('topArtists'),
@@ -478,15 +503,18 @@
             stats.artists,
             a => nameCell(a.label)
         );
-        renderLeaderboard(
+
+        const renderTopTracks = samplesOnly => renderLeaderboard(
             document.getElementById('topTracks'),
             document.querySelector('.show-more[data-target="topTracks"]'),
-            stats.tracks,
+            samplesOnly ? stats.tracks.filter(t => trackHasSampleData(t, relations)) : stats.tracks,
             t => nameCell(
                 t.title, `by ${t.artist}`, t.url || PlaylistUtils.searchLinks(t).appleMusic,
                 relatedSection((relations || {})[PlaylistUtils.enrichKey(t)], stats.trackUrlByKey)
             )
         );
+        renderTopTracks(false);
+        document.getElementById('samplesOnlyFilter').addEventListener('change', e => renderTopTracks(e.target.checked));
         renderLeaderboard(
             document.getElementById('topAlbums'),
             document.querySelector('.show-more[data-target="topAlbums"]'),
