@@ -243,6 +243,12 @@
     // which a bare .toLowerCase() does not collapse. headnod-tracklist.html
     // was retrofitted to use the same shared helper for the same reason.
 
+    // Station legal IDs ("Legal ID Hannah Music", "40th LEGAL Bri Benson", …)
+    // land in KMHD's playlist data matched to an unrelated real track for
+    // its genre/art, so they're not actual plays and would otherwise pollute
+    // the leaderboards.
+    const LEGAL_ID_RE = /\blegal\b/i;
+
     function computeStats(allEntries) {
         const artistCounts = new Map();   // normKey -> { label, count }
         const trackCounts = new Map();    // normKey -> { artist, title, count }
@@ -252,7 +258,12 @@
         let genreKnown = 0, genreUnknown = 0;
         let yearKnown = 0, yearUnknown = 0;
 
-        allEntries.forEach(item => {
+        const musicEntries = allEntries.filter(item => {
+            const { title } = PlaylistUtils.mapItemFields(item);
+            return !LEGAL_ID_RE.test(title || '');
+        });
+
+        musicEntries.forEach(item => {
             const { title, artist, album } = PlaylistUtils.mapItemFields(item);
             const normArtist = PlaylistUtils.normalizeArtistKey(artist);
 
@@ -294,7 +305,7 @@
 
         const topOf = map => Array.from(map.values()).sort((a, b) => b.count - a.count);
         return {
-            total: allEntries.length,
+            total: musicEntries.length,
             artists: topOf(artistCounts),
             tracks: topOf(trackCounts),
             albums: topOf(albumCounts),
