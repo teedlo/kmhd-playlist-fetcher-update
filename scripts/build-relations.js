@@ -113,9 +113,11 @@ function usage() {
 // ---------------- track keys ----------------
 
 // The unique "artist|title" keys in headnod-tracks.json's track list, each
-// with the {artist, title} the lookup should use (first occurrence wins).
-// Station legal IDs and blank title/artist entries can't be usefully
-// looked up and are skipped, same as build-enrich.js's playlistKeys.
+// with the {artist, title} the lookup should use (first occurrence wins)
+// and playCount (how many times it's been played — headnod-tracks.json's
+// track list has one entry per play, not per unique track). Station legal
+// IDs and blank title/artist entries can't be usefully looked up and are
+// skipped, same as build-enrich.js's playlistKeys.
 function relationKeys(tracks) {
     const keys = new Map();
     (Array.isArray(tracks) ? tracks : []).forEach(item => {
@@ -123,7 +125,8 @@ function relationKeys(tracks) {
         if (!meta.title || !meta.artist) return;
         if (PlaylistUtils.isStationLegalId(meta.title)) return;
         const key = PlaylistUtils.enrichKey(meta);
-        if (!keys.has(key)) keys.set(key, { artist: meta.artist, title: meta.title });
+        if (keys.has(key)) { keys.get(key).playCount++; return; }
+        keys.set(key, { artist: meta.artist, title: meta.title, playCount: 1 });
     });
     return keys;
 }
@@ -374,8 +377,17 @@ async function main(argv) {
 
     const keys = relationKeys(source.tracks);
     const known = loadKnown(outFile);
-    const unresolved = [...keys.entries()].filter(([key]) => !(key in known));
-    log(`${keys.size} unique track(s) in ${sourceFile}, ${keys.size - unresolved.length} already known, ${unresolved.length} to look up`);
+    // Most-played first: headnod-tracks.json lists tracks chronologically
+    // (earliest Friday first), and a budget-limited run — every run, given
+    // MusicBrainz's rate limit — would otherwise spend years of real-world
+    // cron cycles working through 2022's one-play deep cuts before ever
+    // reaching the tracks that actually surface on headnod-stats.html's
+    // leaderboard. This ordering is a live rebuild each run, not persisted,
+    // so a track's priority stays current as its play count grows.
+    const unresolved = [...keys.entries()]
+        .filter(([key]) => !(key in known))
+        .sort((a, b) => b[1].playCount - a[1].playCount);
+    log(`${keys.size} unique track(s) in ${sourceFile}, ${keys.size - unresolved.length} already known, ${unresolved.length} to look up (most-played first)`);
 
     const call = makeThrottledCall({ intervalMs: opts.intervalMs, maxAttempts: opts.maxAttempts, backoffMs: opts.backoffMs, log });
     const tracks = { ...known };

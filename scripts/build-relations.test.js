@@ -72,8 +72,19 @@ test('relationKeys: dedupes by artist|title, skips blanks and station legal IDs'
         { title: 'Legal ID Hannah Music', artist: 'Hannah' }   // station ID
     ]);
     assert.deepEqual([...keys.keys()], ['bob james|nautilus']);
-    assert.deepEqual(keys.get('bob james|nautilus'), { artist: 'Bob James', title: 'Nautilus' });
+    assert.deepEqual(keys.get('bob james|nautilus'), { artist: 'Bob James', title: 'Nautilus', playCount: 2 });
     assert.deepEqual(R.relationKeys(null).size, 0);
+});
+
+test('relationKeys: playCount tallies every play of a unique track, not just its first', () => {
+    const keys = R.relationKeys([
+        { title: 'Fresh', artist: 'Quakers' },
+        { title: 'Fresh', artist: 'Quakers' },
+        { title: 'Fresh', artist: 'Quakers' },
+        { title: 'Circles', artist: 'DJ Day' }
+    ]);
+    assert.equal(keys.get('quakers|fresh').playCount, 3);
+    assert.equal(keys.get('dj day|circles').playCount, 1);
 });
 
 // ---------------- URL builders ----------------
