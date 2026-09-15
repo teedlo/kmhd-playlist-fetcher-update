@@ -1,0 +1,15 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-09-15",
+  "complete": true,
+  "tracks": {
+    "bennie maupin|quasar": {"t":1362910872,"c":1362910441,"r":396158,"a":"Music118/v4/99/cb/e8/99cbe801-b0bc-9ebc-6417-af29e8b069d6/00602567413998.rgb.jpg","h":1,"g":"Jazz","y":1977},
+    "bola sete|my sweet lord": null,
+    "earth wind & fire|spirit (dedicated to charles stepney)": null,
+    "george duke|reach for it": {"t":512214420,"c":512214410,"r":11094,"a":"Music124/v4/c4/fc/41/c4fc412b-f040-dfd3-cad4-64ac179de37f/886443397767.jpg","h":1,"g":"Jazz","y":1977},
+    "hiromasa suzuki|high-flying": {"t":1557393221,"c":1557393220,"r":256414074,"a":"Music114/v4/8e/16/5d/8e165d0a-c213-c844-6a1f-e732fb20d1b2/COKM-43126.jpg","h":1,"g":"Jazz","y":1976},
+    "john coltrane|cousin mary": {"t":1531037504,"c":1531037502,"r":120199,"a":"Music114/v4/4e/2f/8b/4e2f8b1f-7e14-1ce4-1c76-4683b1b9173d/603497847549.jpg","h":1,"g":"Jazz","y":1959},
+    "saskia|you left your soul behind": {"t":1809816713,"c":1809816405,"r":6802394757,"a":"Music211/v4/26/50/76/265076c2-df6c-d3fe-9eac-a07f14361950/603051911624.jpg","h":1,"g":"Pop","y":2020},
+    "wynton kelly|opus caprice": null
+  }
+}
