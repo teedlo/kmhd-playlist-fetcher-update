@@ -68,7 +68,18 @@ jobs:
           install -m 700 -d ~/.ssh
           printf '%s\n' "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H "${{ secrets.SFTP_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+          # Pin the server's host keys rather than scanning for them at run time.
+          # ssh-keyscan opens three rapid connect/disconnect cycles, which is the
+          # most fragile thing to run against a host that is already dropping us
+          # (see the Deploy step). Pinning also beats trust-on-first-use, since
+          # keyscan believes whatever answers.
+          # PUBLIC keys for teedlo.com; refresh with `ssh-keyscan -T 15 teedlo.com`
+          # if the server is rebuilt -- ssh fails loudly on a mismatch.
+          {
+            printf '%s ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKtlB1X+ASqyQoF5yQRqzSjqBe63rPEVisl3cQ6kS4fS\n' "${{ secrets.SFTP_HOST }}"
+            printf '%s ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBD8bf6mZtBadyRV8ryn6vszQC6swhYxSMqX2cKWh8VMMd0q3bGNqqyT09RE7X++LUEbHD/wnC8ELcoC2UFLEDn0=\n' "${{ secrets.SFTP_HOST }}"
+          } >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
 
       # No --delete: the file list is explicit, and /1/ also holds a stray site/
       # directory left by an old sftp nesting bug that is not this repo's to remove.
@@ -76,13 +87,37 @@ jobs:
       # is new, so ensure it exists before the first deploy lands.
       - name: Ensure remote directory exists
         run: |
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes \
-            "${{ secrets.SFTP_USERNAME }}@${{ secrets.SFTP_HOST }}" \
-            'mkdir -p teedlo.com/kmhd'
+          # Same DreamHost SSH resets as the Deploy step; mkdir -p is idempotent.
+          delay=15
+          for attempt in 1 2 3 4; do
+            if \
+              ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -o ConnectTimeout=30 -o ServerAliveInterval=15 -o ServerAliveCountMax=4 \
+                "${{ secrets.SFTP_USERNAME }}@${{ secrets.SFTP_HOST }}" \
+                'mkdir -p teedlo.com/kmhd'; then exit 0; fi
+            echo "attempt $attempt failed; retrying in ${delay}s"
+            sleep "$delay"; delay=$((delay * 2))
+          done
+          echo "::error::deploy host unreachable after 4 attempts"
+          exit 1
 
       - name: Deploy
         run: |
-          rsync -az --itemize-changes \
-            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
-            $FILES \
-            "${{ secrets.SFTP_USERNAME }}@${{ secrets.SFTP_HOST }}:$REMOTE_DIR"
+          # DreamHost intermittently resets SSH from GitHub runners
+          # ("Connection closed/reset by 173.236.194.30 port 22", exit 255) --
+          # seen across every teedlo repo on 2026-09-19, interleaved with
+          # successes minutes apart. Nothing is wrong with the key or the host,
+          # and the next attempt almost always works. rsync is idempotent, so
+          # retrying is safe -- with or without --delete. `if` keeps a failure
+          # from tripping `bash -e` before the retry can run.
+          delay=15
+          for attempt in 1 2 3 4; do
+            if \
+              rsync -az --itemize-changes \
+                -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -o ConnectTimeout=30 -o ServerAliveInterval=15 -o ServerAliveCountMax=4" \
+                $FILES \
+                "${{ secrets.SFTP_USERNAME }}@${{ secrets.SFTP_HOST }}:$REMOTE_DIR"; then exit 0; fi
+            echo "attempt $attempt failed; retrying in ${delay}s"
+            sleep "$delay"; delay=$((delay * 2))
+          done
+          echo "::error::deploy host unreachable after 4 attempts"
+          exit 1
