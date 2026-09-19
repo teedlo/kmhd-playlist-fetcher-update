@@ -126168,6 +126168,779 @@
       "h": 1,
       "g": "Jazz",
       "y": 1979
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Better By the Pound",
+      "artist": "Funkadelic",
+      "album": "Let's Take It To the Stage",
+      "start": {
+        "utc": "2026-09-19T01:00:00Z",
+        "local": "2026-09-18T18:00:00-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1975-04-21T12:00:00Z",
+      "t": 1595227720,
+      "c": 1595227717,
+      "r": 32181103,
+      "a": "Music126/v4/cd/91/33/cd913306-15fb-9e13-0e68-d2b565b7b599/artwork.jpg",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 1975
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Kogenamachiniha (Remaster)",
+      "artist": "Chinatsu Nakayam & Masahiko Satoh",
+      "album": "Hato / Kogenamachiniha (Remaster) - Single",
+      "start": {
+        "utc": "2026-09-19T01:02:28Z",
+        "local": "2026-09-18T18:02:28-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2021-06-26T12:00:00Z",
+      "t": 1573527271,
+      "c": 1573527267,
+      "r": 107579645,
+      "a": "Music125/v4/3a/73/e1/3a73e18a-4d43-7c63-78ed-cbdf834bf18e/4526180564669.jpg",
+      "h": 1,
+      "g": "J-Pop",
+      "y": 2021
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Slap",
+      "artist": "Sam Fribush, Corey Fonville & Alan Good Parker",
+      "album": "Slap - Single",
+      "start": {
+        "utc": "2026-09-19T01:04:04Z",
+        "local": "2026-09-18T18:04:04-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2026-09-04T12:00:00Z",
+      "t": 6795679155,
+      "c": 6795679151,
+      "r": 1488982798,
+      "a": "Music211/v4/bb/b3/9e/bbb39e36-8ebf-60f9-a33b-f929b5444fc6/artwork.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2026
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Cosmic Sea",
+      "artist": "The Mystic Moods Orchestra",
+      "album": "Awakening",
+      "start": {
+        "utc": "2026-09-19T01:06:01Z",
+        "local": "2026-09-18T18:06:01-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1979-01-01T12:00:00Z",
+      "t": 350512061,
+      "c": 350512056,
+      "r": 262381338,
+      "a": "Music/79/45/b5/mzi.bzkvyibx.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1979
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Broasted or Fried",
+      "artist": "Willie Bobo And The Bo-Gents",
+      "album": "Do What You Want to Do...",
+      "start": {
+        "utc": "2026-09-19T01:06:32Z",
+        "local": "2026-09-18T18:06:32-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1971-04-17T12:00:00Z",
+      "t": 1477758539,
+      "c": 1477758403,
+      "r": 1477758406,
+      "a": "Music123/v4/c5/5a/9a/c55a9aba-4887-38f1-1240-20d6f01f2642/193483759203.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1971
+    },
+    {
+      "date": "2026-09-18",
+      "title": "On Stilts",
+      "artist": "J Dilla",
+      "album": "Jay Stay Paid",
+      "start": {
+        "utc": "2026-09-19T01:08:54Z",
+        "local": "2026-09-18T18:08:54-07:00",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    {
+      "date": "2026-09-18",
+      "title": "El Mosquito (feat. Phon, Tamuz & Tane)",
+      "artist": "Brothers Of My Uncle",
+      "album": "Saucy Experiments (feat. Tane)",
+      "start": {
+        "utc": "2026-09-19T01:10:03Z",
+        "local": "2026-09-18T18:10:03-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2021-10-22T12:00:00Z",
+      "t": 1597791971,
+      "c": 1597791693,
+      "r": 1583785237,
+      "a": "Music126/v4/03/1f/a9/031fa9ed-a5d5-c3a8-f0e7-043cbdbaefcb/artwork.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2021
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Água De Beber",
+      "artist": "Tamba Trio",
+      "album": "Tamba Trio Classics",
+      "start": {
+        "utc": "2026-09-19T01:12:28Z",
+        "local": "2026-09-18T18:12:28-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1997-01-01T12:00:00Z",
+      "t": 1441034325,
+      "c": 1441034010,
+      "r": 3584304,
+      "a": "Music118/v4/ff/bf/fb/ffbffbde-ef19-e58a-4ce3-baa6c48561cc/00602567235415.rgb.jpg",
+      "h": 1,
+      "g": "MPB",
+      "y": 1966
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Tahn Ice Rhythm",
+      "artist": "Dabrye",
+      "album": "Three/Three",
+      "start": {
+        "utc": "2026-09-19T01:14:41Z",
+        "local": "2026-09-18T18:14:41-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2018-02-16T12:00:00Z",
+      "t": 1302366736,
+      "c": 1302366396,
+      "r": 5635274,
+      "a": "Music118/v4/85/da/25/85da2513-2017-7186-f2ca-c08df14b8f25/804297830322.jpg",
+      "h": 1,
+      "g": "Electronic",
+      "y": 2018
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Cucu's Nest (feat. Urszula Dudziak)",
+      "artist": "Michal Urbaniak's Fusion",
+      "album": "Heritage (feat. Urszula Dudziak)",
+      "start": {
+        "utc": "2026-09-19T01:16:31Z",
+        "local": "2026-09-18T18:16:31-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2016-06-17T12:00:00Z",
+      "t": 1074322594,
+      "c": 1074322157,
+      "r": 374993559,
+      "a": "Music122/v4/cf/f2/b0/cff2b0ed-097a-e843-e262-a4e477d4885f/cover.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2016
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Music Is the Key",
+      "artist": "Weldon Irvine",
+      "album": "Sinbad",
+      "start": {
+        "utc": "2026-09-19T01:20:21Z",
+        "local": "2026-09-18T18:20:21-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1976-11-03T12:00:00Z",
+      "t": 274773732,
+      "c": 274773656,
+      "r": 489768,
+      "a": "Music/3f/44/c7/mzi.ghwaesfm.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1976
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Loves In Your Corner",
+      "artist": "Bridge",
+      "album": "Crying For Love",
+      "start": {
+        "utc": "2026-09-19T01:26:33Z",
+        "local": "2026-09-18T18:26:33-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2000-09-05T12:00:00Z",
+      "t": 1543718285,
+      "c": 1543717719,
+      "r": 3986087,
+      "a": "Music124/v4/f5/bb/55/f5bb5500-d294-3fd9-e824-0d81c2a85872/4251804110426_3000.jpg",
+      "h": 1,
+      "g": "Soul",
+      "y": 2000
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Zippo's",
+      "artist": "David Holmes",
+      "album": "Ocean's Thirteen (Music from the Motion Picture)",
+      "start": {
+        "utc": "2026-09-19T01:28:54Z",
+        "local": "2026-09-18T18:28:54-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2007-05-25T12:00:00Z",
+      "t": 256147828,
+      "c": 256147739,
+      "r": 315355,
+      "a": "Music/ac/18/f9/mzi.yrhmqqbv.jpg",
+      "h": 1,
+      "g": "Soundtrack",
+      "y": 2007
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Space (Stereo Master Tape Transfer)",
+      "artist": "Galt MacDermot",
+      "album": "Woman Is Sweeter (Original Sound Track) [Stereo Master Tape Transfer]",
+      "start": {
+        "utc": "2026-09-19T01:29:17Z",
+        "local": "2026-09-18T18:29:17-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1969-04-21T12:00:00Z",
+      "t": 1683570728,
+      "c": 1683569463,
+      "r": 6120634,
+      "a": "Music116/v4/8f/50/f9/8f50f9c3-b03a-3783-2fef-ef194e79f053/196922447754_Cover.jpg",
+      "h": 1,
+      "g": "Soundtrack",
+      "y": 1969
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Woo Hah!! Got You All in Check (Instrumental)",
+      "artist": "Busta Rhymes",
+      "album": "The Coming (Instrumentals & Acapellas)",
+      "start": {
+        "utc": "2026-09-19T01:31:08Z",
+        "local": "2026-09-18T18:31:08-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1996-02-15T12:00:00Z",
+      "t": 1246914054,
+      "c": 1246914041,
+      "r": 54583,
+      "a": "Music117/v4/76/76/35/767635f6-b7b8-dafc-f5be-a525b57fa8f3/190295912062.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2017
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Do Your Thing",
+      "artist": "Julius Brockington",
+      "album": "Sophisticated Funk",
+      "start": {
+        "utc": "2026-09-19T01:32:58Z",
+        "local": "2026-09-18T18:32:58-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1972-01-01T12:00:00Z",
+      "t": 1657514419,
+      "c": 1657513475,
+      "r": 260183442,
+      "a": "Music112/v4/82/f8/b9/82f8b92b-803d-d3f9-af20-e6e096944e93/197187277155.jpg",
+      "h": 1,
+      "g": "Funk",
+      "y": 1972
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Virgo Lady",
+      "artist": "Johnny Hammond",
+      "album": "Gambler's Life",
+      "start": {
+        "utc": "2026-09-19T01:37:13Z",
+        "local": "2026-09-18T18:37:13-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1974-01-01T12:00:00Z",
+      "t": 1747994707,
+      "c": 1747994496,
+      "r": 649741,
+      "a": "Music211/v4/b2/e9/1b/b2e91b37-1b80-5ac6-302e-ca76b8d1d64c/196872002690.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1974
+    },
+    {
+      "date": "2026-09-18",
+      "title": "EYE LEVEL",
+      "artist": "Nate Smith, Kiefer, CARRTOONS & Kenny Beats",
+      "album": "FATHERS",
+      "start": {
+        "utc": "2026-09-19T01:41:43Z",
+        "local": "2026-09-18T18:41:43-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2026-07-10T12:00:00Z",
+      "t": 6779502139,
+      "c": 6779502137,
+      "r": 1215724,
+      "a": "Music221/v4/40/95/89/40958918-3042-d6fb-0582-427f2d219409/26UMGIM16917.rgb.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2026
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Le viol",
+      "artist": "Jean Claudric",
+      "album": "Jeu de dames (Bande originale du film) - EP",
+      "start": {
+        "utc": "2026-09-19T01:44:46Z",
+        "local": "2026-09-18T18:44:46-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1973-05-17T12:00:00Z",
+      "t": 1707202658,
+      "c": 1707202299,
+      "r": 62382583,
+      "a": "Music126/v4/e2/c0/d8/e2c0d854-9b06-4afd-0ccc-df964d01d56d/3521381577419_cover.jpg",
+      "h": 1,
+      "g": "Soundtrack",
+      "y": 1973
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Hot Beach",
+      "artist": "Patrick Cowley",
+      "album": "Afternooners",
+      "start": {
+        "utc": "2026-09-19T01:47:15Z",
+        "local": "2026-09-18T18:47:15-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2017-10-19T12:00:00Z",
+      "t": 1280170835,
+      "c": 1280170831,
+      "r": 39897882,
+      "a": "Music124/v4/7d/93/22/7d93222c-bb0f-59cf-fcca-6bfc93645696/191515752260_Cover.jpg",
+      "h": 1,
+      "g": "Electronic",
+      "y": 2017
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Wooden Ships",
+      "artist": "Jimmy Stewart",
+      "album": "Fire Flower",
+      "start": {
+        "utc": "2026-09-19T01:49:32Z",
+        "local": "2026-09-18T18:49:32-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1977-11-21T12:00:00Z",
+      "t": 1834994415,
+      "c": 1834994106,
+      "r": 213303,
+      "a": "Music211/v4/a4/6b/b6/a46bb65b-f5ce-2f8b-4fef-d5a1890f41cd/730167335560.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1977
+    },
+    {
+      "date": "2026-09-18",
+      "title": "TLC",
+      "artist": "Average White Band",
+      "album": "Put It Where You Want It",
+      "start": {
+        "utc": "2026-09-19T01:53:05Z",
+        "local": "2026-09-18T18:53:05-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 258417797,
+      "c": 258417222,
+      "r": 577297,
+      "a": "Music124/v4/11/21/f6/1121f6f8-a458-e729-0e72-a82d26da7096/mzi.urqgbwsd.jpg",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 1977
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Spiral",
+      "artist": "The Crusaders",
+      "album": "Those Southern Knights",
+      "start": {
+        "utc": "2026-09-19T01:59:06Z",
+        "local": "2026-09-18T18:59:06-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1975-01-01T12:00:00Z",
+      "t": 1443128022,
+      "c": 1443127626,
+      "r": 27614,
+      "a": "Music118/v4/e9/79/24/e97924ce-746f-d0bc-e0ee-abac3c78035e/00076732164921.rgb.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1975
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Big Balls",
+      "artist": "Smoove",
+      "album": "Totally Wired, Series 2, Vol. 2",
+      "start": {
+        "utc": "2026-09-19T02:04:13Z",
+        "local": "2026-09-18T19:04:13-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2000-12-29T12:00:00Z",
+      "t": 1656247416,
+      "c": 1656247401,
+      "r": 1477247018,
+      "a": "Music112/v4/ff/8a/7d/ff8a7dad-793a-9eba-980a-bb71ebd33ab6/3663729228260_cover.jpg",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 2004
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Porky",
+      "artist": "1860 Band",
+      "album": "1860 Band",
+      "start": {
+        "utc": "2026-09-19T02:06:02Z",
+        "local": "2026-09-18T19:06:02-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2009-01-01T12:00:00Z",
+      "t": 1774381645,
+      "c": 1774381409,
+      "r": 1774381412,
+      "a": "Music221/v4/28/1f/58/281f5821-f92c-ee57-24d5-bda2cf04b15c/9421024215323.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2009
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Miss Neptune",
+      "artist": "Marco Benevento & Lizzie Steiner",
+      "album": "Glera",
+      "start": {
+        "utc": "2026-09-19T02:12:05Z",
+        "local": "2026-09-18T19:12:05-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2026-07-24T12:00:00Z",
+      "t": 1887949827,
+      "c": 1887949801,
+      "r": 4509551,
+      "a": "Music211/v4/01/9d/49/019d49b6-3d14-26d8-4d1f-10eb00767f3f/64436.jpg",
+      "h": 1,
+      "g": "Alternative",
+      "y": 2026
+    },
+    {
+      "date": "2026-09-18",
+      "title": "The God Pan",
+      "artist": "Michel Colombier",
+      "album": "Old Fool Back On Earth",
+      "start": {
+        "utc": "2026-09-19T02:15:14Z",
+        "local": "2026-09-18T19:15:14-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2002-01-01T12:00:00Z",
+      "t": 65924411,
+      "c": 65925357,
+      "r": 18304664,
+      "a": "Music/y2005/m05/d26/h13/s06.vycyslnb.jpg",
+      "h": 1,
+      "g": "Vocal",
+      "y": 2002
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Opening Theme",
+      "artist": "Pete Knutsen Orchestra",
+      "album": "Operation Cobra",
+      "start": {
+        "utc": "2026-09-19T02:19:01Z",
+        "local": "2026-09-18T19:19:01-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2018-02-23T12:00:00Z",
+      "t": 1568325149,
+      "c": 1568324641,
+      "r": 1339247529,
+      "a": "Music115/v4/43/42/4d/43424d07-004d-1e73-c436-4a162ff87af2/196006734695.jpg",
+      "h": 1,
+      "g": "Soundtrack",
+      "y": 2018
+    },
+    {
+      "date": "2026-09-18",
+      "title": "God City",
+      "artist": "Dirty Art Club",
+      "album": "Basement Seance",
+      "start": {
+        "utc": "2026-09-19T02:20:55Z",
+        "local": "2026-09-18T19:20:55-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2017-08-04T12:00:00Z",
+      "t": 1248433310,
+      "c": 1248432821,
+      "r": 418681050,
+      "a": "Music127/v4/5a/26/c1/5a26c19c-2b5f-673d-1d3f-0381fc21cb04/2912.jpg",
+      "h": 1,
+      "g": "Electronic",
+      "y": 2017
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Noves Fora",
+      "artist": "Elis Regina",
+      "album": "Especial",
+      "start": {
+        "utc": "2026-09-19T02:22:41Z",
+        "local": "2026-09-18T19:22:41-07:00",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Coastin'",
+      "artist": "Caldera",
+      "album": "Caldera",
+      "start": {
+        "utc": "2026-09-19T02:24:53Z",
+        "local": "2026-09-18T19:24:53-07:00",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Soft Landing",
+      "artist": "Edd Kalehoff",
+      "album": "Moog Grooves",
+      "start": {
+        "utc": "2026-09-19T02:27:45Z",
+        "local": "2026-09-18T19:27:45-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2023-12-29T12:00:00Z",
+      "t": 1721269966,
+      "c": 1721269957,
+      "r": 1675986473,
+      "a": "Music126/v4/96/bd/3f/96bd3f30-ede5-d9e6-b413-84deef2f346d/198026575494.jpg",
+      "h": 1,
+      "g": "Electronic",
+      "y": 2023
+    },
+    {
+      "date": "2026-09-18",
+      "title": "You Make Me Feel Brand New",
+      "artist": "Ron English",
+      "album": "Fish Feet",
+      "start": {
+        "utc": "2026-09-19T02:28:25Z",
+        "local": "2026-09-18T19:28:25-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2015-12-11T12:00:00Z",
+      "t": 335686501,
+      "c": 335686315,
+      "r": 57471,
+      "a": "Music124/v4/04/a5/d7/04a5d7c8-7178-b57c-b401-bd90f9afe68d/mzi.pltdjwxy.jpg",
+      "h": 1,
+      "g": "Rock",
+      "y": 2009
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Lady Day and John Coltrane",
+      "artist": "Gil Scott-Heron",
+      "album": "Pieces of a Man",
+      "start": {
+        "utc": "2026-09-19T02:33:28Z",
+        "local": "2026-09-18T19:33:28-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1971-01-01T12:00:00Z",
+      "t": 1621384716,
+      "c": 1621384497,
+      "r": 315331,
+      "a": "Music116/v4/f8/e8/5b/f8e85bc3-8854-a257-9622-524e0dbc7b76/29667527484.jpg",
+      "h": 1,
+      "g": "Vocal Jazz",
+      "y": 1971
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Hot BiBi (Apostle 2) ",
+      "artist": "Erykah Badu & The Alchemist",
+      "album": "Before The World Blows",
+      "start": {
+        "utc": "2026-09-19T02:37:01Z",
+        "local": "2026-09-18T19:37:01-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2026-08-28T12:00:00Z",
+      "t": 1440756135,
+      "c": 1440755899,
+      "r": 54556,
+      "a": "Music112/v4/63/9c/05/639c0568-e961-2146-f4cb-819a1f9226d3/06UMGIM01547.rgb.jpg",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 2000
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Breezy",
+      "artist": "Erykah Badu & The Alchemist",
+      "album": "Before The World Blows",
+      "start": {
+        "utc": "2026-09-19T02:38:46Z",
+        "local": "2026-09-18T19:38:46-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2026-08-28T12:00:00Z",
+      "t": 1440756135,
+      "c": 1440755899,
+      "r": 54556,
+      "a": "Music112/v4/63/9c/05/639c0568-e961-2146-f4cb-819a1f9226d3/06UMGIM01547.rgb.jpg",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 2000
+    },
+    {
+      "date": "2026-09-18",
+      "title": "For Real",
+      "artist": "Flowers",
+      "album": "For Real - Single",
+      "start": {
+        "utc": "2026-09-19T02:42:09Z",
+        "local": "2026-09-18T19:42:09-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1976-08-12T12:00:00Z",
+      "t": 431007398,
+      "c": 431007285,
+      "r": 431007399,
+      "a": "Music/a2/c8/93/mzi.vyqkbkmf.jpg",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 2009
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Il commissario di ferro, Seq. 13",
+      "artist": "Lallo Gori",
+      "album": "Ritornano quelli della Calibro 38 / Il commissario di ferro (Original Motion Picture Soundtrack)",
+      "start": {
+        "utc": "2026-09-19T02:45:21Z",
+        "local": "2026-09-18T19:45:21-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2011-03-29T12:00:00Z",
+      "t": 1540800832,
+      "c": 1540800645,
+      "r": 426428934,
+      "a": "Music124/v4/5d/be/46/5dbe4686-a467-0821-a85b-f133178f72c2/8053306604450_cover.jpg",
+      "h": 1,
+      "g": "Soundtrack",
+      "y": 2011
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Kérgeskezű favágók",
+      "artist": "Omega",
+      "album": "10000 lépés",
+      "start": {
+        "utc": "2026-09-19T02:46:01Z",
+        "local": "2026-09-18T19:46:01-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1969-01-01T12:00:00Z",
+      "t": 390364659,
+      "c": 390364633,
+      "r": 422001794,
+      "a": "Music125/v4/7d/a9/a5/7da9a5c5-06e2-98a6-2785-6528d60db086/mzi.odaxxecp.jpg",
+      "h": 1,
+      "g": "Rock",
+      "y": 1969
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Univac Loves You",
+      "artist": "Deodato",
+      "album": "Very Together",
+      "start": {
+        "utc": "2026-09-19T02:49:03Z",
+        "local": "2026-09-18T19:49:03-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1976-01-01T12:00:00Z",
+      "t": 1588154279,
+      "c": 1588154261,
+      "r": 514329,
+      "a": "Music115/v4/37/58/66/375866eb-78e8-b2e8-0427-6606f19be935/21UM1IM19006.rgb.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1976
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Rhodes Piano Four",
+      "artist": "Dexter Wansel",
+      "album": "Keyboard Riffs For DJ's, Vol. 2 - EP",
+      "start": {
+        "utc": "2026-09-19T02:52:47Z",
+        "local": "2026-09-18T19:52:47-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1993-01-05T12:00:00Z",
+      "t": 1696197780,
+      "c": 1696197574,
+      "r": 1488766761,
+      "a": "Music126/v4/b2/27/b2/b227b2ae-6fc7-5d0e-fd43-f93905c24763/487.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 1993
+    },
+    {
+      "date": "2026-09-18",
+      "title": "Together",
+      "artist": "Misha Panfilov Sound Combo",
+      "album": "Days As Echoes",
+      "start": {
+        "utc": "2026-09-19T02:54:39Z",
+        "local": "2026-09-18T19:54:39-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2020-08-28T12:00:00Z",
+      "t": 1529360411,
+      "c": 1529360285,
+      "r": 1506435528,
+      "a": "Music125/v4/cb/0b/44/cb0b4473-6b53-0415-e352-2bfed3acf602/artwork.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2020
     }
   ]
 }
