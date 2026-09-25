@@ -1,0 +1,15 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-09-25",
+  "complete": true,
+  "tracks": {
+    "eddie harris|samia": {"t":478682756,"c":478682730,"r":56601,"a":"Music/fc/c6/f0/mzi.sbbdpsob.jpg","h":1,"g":"Jazz","y":1971},
+    "galt macdermot|golden apples, pt. iii": {"t":804844707,"c":804844696,"r":6120634,"a":"Music4/v4/12/3e/44/123e4458-4c62-8869-0a2e-1a580d9827f7/888295009546.jpg","h":1,"g":"Jazz","y":2014},
+    "jackie mclean|blue rondo": {"t":716043128,"c":716042948,"r":802975,"a":"Music4/v4/21/d6/ae/21d6ae56-206a-39d4-97cd-c94be31e9914/05099926513959.jpg","h":1,"g":"Jazz","y":1961},
+    "john coltrane|moment's notice": {"t":724748959,"c":724748588,"r":120199,"a":"Music124/v4/22/21/96/22219694-4a24-d379-3ab3-82f344b3b8de/00724359692456.rgb.jpg","h":1,"g":"Jazz","y":1958},
+    "lloyd miller and the mike johnson quartet|yona": {"t":1680802290,"c":1680802173,"r":274480782,"a":"Music126/v4/a5/a6/76/a5a676dc-6c37-c7c4-c784-e26be9673562/659457516819_Cover.jpg","h":1,"g":"Jazz","y":1967},
+    "sonny rollins|i've grown accustomed to your face (feat. kenny dorham & max roach)": {"t":1442207826,"c":1442207508,"r":37020,"a":"Music118/v4/3b/34/9c/3b349c21-a956-25e9-9aa6-b714755e3909/00025218621427.rgb.jpg","h":1,"g":"Jazz","y":1956},
+    "sunbirds|kwaeli": {"t":287838788,"c":287838645,"r":14510345,"a":"Music/93/2e/2e/mzi.pmirdsqe.jpg","h":1,"g":"Jazz","y":1971},
+    "the temptations|treat her like a lady": {"t":1443643786,"c":1443643440,"r":127358,"a":"Music128/v4/ae/dd/21/aedd213f-319d-b418-5e6f-cc9043ca002e/00050109611928.rgb.jpg","h":1,"g":"R&B/Soul","y":1984}
+  }
+}
