@@ -126941,6 +126941,759 @@
       "h": 1,
       "g": "Jazz",
       "y": 2020
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Machine Gun",
+      "artist": "Janko Nilovic",
+      "album": "Volume 1 (3 Albums: Super America, Soul Impressions, Pop Impressions)",
+      "start": {
+        "utc": "2026-09-26T01:00:00Z",
+        "local": "2026-09-25T18:00:00-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1976-01-01T12:00:00Z",
+      "t": 949584092,
+      "c": 949584057,
+      "r": 292148931,
+      "a": "Music3/v4/1f/c4/dc/1fc4dc3b-270a-335f-31f7-46289c92af51/cover.jpg",
+      "h": 1,
+      "g": "Funk",
+      "y": 1976
+    },
+    {
+      "date": "2026-09-25",
+      "title": "The Unknown Planet",
+      "artist": "John Keating",
+      "album": "Space Experience Volume 1 & Volume 2",
+      "start": {
+        "utc": "2026-09-26T01:02:55Z",
+        "local": "2026-09-25T18:02:55-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1998-01-01T12:00:00Z",
+      "t": 690803543,
+      "c": 690803112,
+      "artistViewUrl": "https://books.apple.com/us/author/john-keating/id2085796?uo=4",
+      "a": "Music/v4/35/55/0b/35550b2d-77c5-96d0-9c0f-9a66f9317547/5099964623856.jpg",
+      "h": 1,
+      "g": "Pop",
+      "y": 1998
+    },
+    {
+      "date": "2026-09-25",
+      "title": "I'm Not so Sure",
+      "artist": "Milt Jackson",
+      "album": "Olinga (Bonus Track Version)",
+      "start": {
+        "utc": "2026-09-26T01:05:24Z",
+        "local": "2026-09-25T18:05:24-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2003-09-12T12:00:00Z",
+      "t": 1158324563,
+      "c": 1158321194,
+      "r": 50103,
+      "a": "Music42/v4/4a/ca/78/4aca78d3-6940-0c38-1fc8-0f373d22d817/884977777154.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2003
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Law Laffeina El Ard",
+      "artist": "MaHa",
+      "album": "Orkos (Habibi Funk 020)",
+      "start": {
+        "utc": "2026-09-26T01:09:36Z",
+        "local": "2026-09-25T18:09:36-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2022-10-10T12:00:00Z",
+      "t": 1834599676,
+      "c": 1834599670,
+      "r": 287116232,
+      "a": "Music211/v4/b9/53/b5/b953b58c-6c70-ed2c-170b-8fd080cafffa/4018939524920.png",
+      "h": 1,
+      "g": "Worldwide",
+      "y": 2022
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Cravo e Canela",
+      "artist": "Banda Black Rio",
+      "album": "Gafieira Universal",
+      "start": {
+        "utc": "2026-09-26T01:12:14Z",
+        "local": "2026-09-25T18:12:14-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2001-08-15T12:00:00Z",
+      "t": 309664128,
+      "c": 309664104,
+      "r": 18233851,
+      "a": "Music/98/32/c2/mzi.thrhznrp.jpg",
+      "h": 1,
+      "g": "Brazilian",
+      "y": 2001
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Between Dreams",
+      "artist": "Saib",
+      "album": "Dreamland",
+      "start": {
+        "utc": "2026-09-26T01:14:31Z",
+        "local": "2026-09-25T18:14:31-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2017-03-03T12:00:00Z",
+      "t": 1377955345,
+      "c": 1377955332,
+      "r": 1267845389,
+      "a": "Music123/v4/75/45/38/75453865-9111-1c42-61ee-c54a9f5780c4/053000012856_cover.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2017
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Ruby Smiles (feat. Conor Albert & Soweto Kinch)",
+      "artist": "Reuben James",
+      "album": "Tunnel Vision",
+      "start": {
+        "utc": "2026-09-26T01:16:28Z",
+        "local": "2026-09-25T18:16:28-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2022-04-29T12:00:00Z",
+      "t": 6806045843,
+      "c": 6806045682,
+      "r": 1470056174,
+      "a": "Music211/v4/af/18/76/af187640-9f1c-393b-b612-3c20c0d5b50f/1173.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2022
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Gone and Forever",
+      "artist": "Mike Makhalemele",
+      "album": "As-Shams Archive Vol. 2: Super Jazz from Joburg & Soweto 1974-1978",
+      "start": {
+        "utc": "2026-09-26T01:18:36Z",
+        "local": "2026-09-25T18:18:36-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2026-05-01T12:00:00Z",
+      "t": 6763539759,
+      "c": 1895364066,
+      "r": 1025281056,
+      "a": "Music221/v4/f7/03/e9/f703e9ee-f2a4-1165-275c-bd89f0a31c8b/820233115810.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2026
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Moderate Motion (Theme from Slow Motion)",
+      "artist": "Alfi Kabiljo",
+      "album": "Sex, Crime & Politics (Cinematic Disco, Jazz & Electronica From Yugoslavia 1974-1984)",
+      "start": {
+        "utc": "2026-09-26T01:22:04Z",
+        "local": "2026-09-25T18:22:04-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2019-12-23T12:00:00Z",
+      "t": 1856596426,
+      "c": 1856595820,
+      "r": 396388451,
+      "a": "Music211/v4/a2/ae/9c/a2ae9c5b-f785-4caf-77ca-fcf1888ac2bf/793597119773.jpg",
+      "h": 1,
+      "g": "Original Score",
+      "y": 2019
+    },
+    {
+      "date": "2026-09-25",
+      "title": "B4 Pina",
+      "artist": "Ahwlee",
+      "album": "Life2",
+      "start": {
+        "utc": "2026-09-26T01:25:13Z",
+        "local": "2026-09-25T18:25:13-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2016-12-27T12:00:00Z",
+      "t": 1202849826,
+      "c": 1202849506,
+      "r": 1153457282,
+      "a": "Music111/v4/bc/d8/6d/bcd86d2d-1e54-39d0-8b1d-a264b9b120a3/4260470377576_1448.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2016
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Ey...! Op. I (Remasterizado)",
+      "artist": "Juan Pablo Torres y Algo Nuevo",
+      "album": "Súper Son (Remasterizado)",
+      "start": {
+        "utc": "2026-09-26T01:26:35Z",
+        "local": "2026-09-25T18:26:35-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1977-01-01T08:00:00Z",
+      "t": 1437836634,
+      "c": 1437836350,
+      "r": 1437836418,
+      "a": "Music118/v4/c6/1e/87/c61e87ce-b817-4a47-cca4-a96ac611e665/192562983324.jpg",
+      "h": 1,
+      "g": "Latin",
+      "y": 1977
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Oxbergsmarschen",
+      "artist": "Merit Hemmingson & Folkmusikgruppen",
+      "album": "Bergtagen",
+      "start": {
+        "utc": "2026-09-26T01:29:02Z",
+        "local": "2026-09-25T18:29:02-07:00",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Fools and Kings",
+      "artist": "Emapea",
+      "album": "Jazzy Tape",
+      "start": {
+        "utc": "2026-09-26T01:31:11Z",
+        "local": "2026-09-25T18:31:11-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2018-11-23T12:00:00Z",
+      "t": 1442144592,
+      "c": 1442144492,
+      "r": 880947085,
+      "a": "Music128/v4/d3/d7/91/d3d79192-26bd-8c37-4593-4d0ed72accaf/artwork.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2018
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Sweetheart",
+      "artist": "Charles Kynard",
+      "album": "Afro-Disiac",
+      "start": {
+        "utc": "2026-09-26T01:33:04Z",
+        "local": "2026-09-25T18:33:04-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1970-04-06T12:00:00Z",
+      "t": 1444119676,
+      "c": 1444119421,
+      "r": 2780372,
+      "a": "Music118/v4/bd/2a/0d/bd2a0d43-66f8-9af6-8d2a-336607cfecd9/00888072025431.rgb.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1970
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Tape Speed Warp 2",
+      "artist": "Karriem Riggins",
+      "album": "To The Jungle",
+      "start": {
+        "utc": "2026-09-26T01:38:18Z",
+        "local": "2026-09-25T18:38:18-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2024-02-02T12:00:00Z",
+      "t": 1724050740,
+      "c": 1724049054,
+      "r": 5421197,
+      "a": "Music116/v4/48/e6/22/48e6226e-f559-5ac3-d15a-23c5866a36e4/196922772047_Cover.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2024
+    },
+    {
+      "date": "2026-09-25",
+      "title": "You Make Me Feel So Good",
+      "artist": "Bobbi Humphrey",
+      "album": "Fancy Dancer",
+      "start": {
+        "utc": "2026-09-26T01:38:45Z",
+        "local": "2026-09-25T18:38:45-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1975-01-01T12:00:00Z",
+      "t": 715883204,
+      "c": 715882574,
+      "r": 1003753,
+      "a": "Music/v4/02/92/4c/02924c5c-2619-0912-bd40-1028572ef2c0/05099952237553.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1975
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Hommage À La Vielle Garde (Pour Lafarge Et Rinaldi)",
+      "artist": "Jahari Massamba Unit, Madlib & Karriem Riggins",
+      "album": "Pardon My French",
+      "start": {
+        "utc": "2026-09-26T01:41:31Z",
+        "local": "2026-09-25T18:41:31-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2020-11-27T12:00:00Z",
+      "t": 1532325668,
+      "c": 1532325615,
+      "r": 1532325616,
+      "a": "Music124/v4/1f/55/d5/1f55d59e-4db8-41c5-ba6a-b27a82ba6506/Jahara-Massamba-Unit-Pardon-My-French-MMS042.jpg",
+      "h": 1,
+      "g": "Fusion",
+      "y": 2020
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Uzuri (Remastered 2025)",
+      "artist": "Catalyst",
+      "album": "Perception (Remastered 2025)",
+      "start": {
+        "utc": "2026-09-26T01:44:39Z",
+        "local": "2026-09-25T18:44:39-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2025-11-07T12:00:00Z",
+      "t": 1844483082,
+      "c": 1844483064,
+      "r": 1691931964,
+      "a": "Music211/v4/a9/59/ff/a959ff8c-b953-53ca-ff54-eb09fbb82b03/24CRGIM46521.rgb.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2025
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Leflaur Leflah Eshkoshka",
+      "artist": "Heltah Skeltah & Originoo Gunn Clappaz Aka Fab 5",
+      "album": "12\" of Leflaur Leflah Eshkoshka / Lettha Brainz Blo",
+      "start": {
+        "utc": "2026-09-26T01:47:04Z",
+        "local": "2026-09-25T18:47:04-07:00",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Warp Factor II",
+      "artist": "Montana",
+      "album": "A Dance Fantasy Inspired By Close Encounters of the Third Kind",
+      "start": {
+        "utc": "2026-09-26T01:49:09Z",
+        "local": "2026-09-25T18:49:09-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1978-01-01T08:00:00Z",
+      "t": 491192418,
+      "c": 491192415,
+      "r": 47775481,
+      "a": "Music/bf/17/fd/mzi.hbliqfra.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 1978
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Kissing My Love",
+      "artist": "Cold Blood",
+      "album": "Thriller!",
+      "start": {
+        "utc": "2026-09-26T01:54:31Z",
+        "local": "2026-09-25T18:54:31-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1973-01-01T12:00:00Z",
+      "t": 78969536,
+      "c": 78969538,
+      "r": 15162436,
+      "a": "Music124/v4/c0/3d/86/c03d86f1-58ea-5e09-332c-475e4cee65cf/mzi.ppahtrrm.jpg",
+      "h": 1,
+      "g": "Rock",
+      "y": 1973
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Old Devil Moon (Remastered 2025)",
+      "artist": "Johnny Hammond",
+      "album": "Forever Taurus (Remastered 2025)",
+      "start": {
+        "utc": "2026-09-26T01:58:56Z",
+        "local": "2026-09-25T18:58:56-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2025-03-28T12:00:00Z",
+      "t": 1800632141,
+      "c": 1800632136,
+      "r": 649741,
+      "a": "Music211/v4/d2/9d/b3/d29db30b-0e1f-f3b1-1f0b-9e011b93a754/25CRGIM48177.rgb.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2025
+    },
+    {
+      "date": "2026-09-25",
+      "title": "tangelo",
+      "artist": "cosmic collective & Gates",
+      "album": "COSMICOOKS vol. 8",
+      "start": {
+        "utc": "2026-09-26T02:03:10Z",
+        "local": "2026-09-25T19:03:10-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2026-08-03T12:00:00Z",
+      "t": 6796239714,
+      "c": 6796239708,
+      "r": 1595944692,
+      "a": "Music221/v4/39/79/4a/39794ad0-3100-0dc9-8e14-e731bc21b3e7/artwork.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2026
+    },
+    {
+      "date": "2026-09-25",
+      "title": "THIEF",
+      "artist": "corto.alto",
+      "album": "SOME SMALL FORTUNE",
+      "start": {
+        "utc": "2026-09-26T02:05:11Z",
+        "local": "2026-09-25T19:05:11-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2026-05-12T12:00:00Z",
+      "t": 6772167543,
+      "c": 6772167541,
+      "r": 1476163940,
+      "a": "Music221/v4/14/ea/f4/14eaf4b8-3423-4204-b885-b8ce29d96db3/5054429210668.png",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2026
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Pacific Coast Highway",
+      "artist": "Dick Walter",
+      "album": "Metropolis Now (Remastered)",
+      "start": {
+        "utc": "2026-09-26T02:08:23Z",
+        "local": "2026-09-25T19:08:23-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1975-01-01T12:00:00Z",
+      "t": 383000310,
+      "c": 383000277,
+      "r": 281539361,
+      "a": "Music/a0/27/d9/mzi.oeysogpj.jpg",
+      "h": 1,
+      "g": "Instrumental",
+      "y": 1975
+    },
+    {
+      "date": "2026-09-25",
+      "title": "My Place In Space",
+      "artist": "Jimmy Smith",
+      "album": "Sit On It",
+      "start": {
+        "utc": "2026-09-26T02:12:31Z",
+        "local": "2026-09-25T19:12:31-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1976-01-01T12:00:00Z",
+      "t": 1379066807,
+      "c": 1379066709,
+      "r": 119650,
+      "a": "Music118/v4/d8/2b/93/d82b93a4-fadd-f577-e68e-7054186ea515/00602567639510.rgb.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1976
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Hot Pants Road",
+      "artist": "Boogaloo Combo",
+      "album": "Com Muito Ritmo",
+      "start": {
+        "utc": "2026-09-26T02:17:36Z",
+        "local": "2026-09-25T19:17:36-07:00",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Zouche Drums 3",
+      "artist": "Tommy Reilly & David Thomas Reilly",
+      "album": "LPC 1083: Zouche: Pop Sounds by David Holland",
+      "start": {
+        "utc": "2026-09-26T02:19:35Z",
+        "local": "2026-09-25T19:19:35-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2019-10-22T12:00:00Z",
+      "t": 1837551906,
+      "c": 1837551562,
+      "r": 1681613656,
+      "a": "Music211/v4/46/14/9b/46149b08-bc12-3262-9d4a-55da22ec491d/198704712135_Cover.jpg",
+      "h": 1,
+      "g": "Instrumental",
+      "y": 2019
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Sunken Ship, Version 2 (As above, with percussion)",
+      "artist": "Sam Spence",
+      "album": "The Art of the Synthesizer: Interesting, Unusual and Melodic Moog Sounds",
+      "start": {
+        "utc": "2026-09-26T02:20:08Z",
+        "local": "2026-09-25T19:20:08-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1972-07-01T12:00:00Z",
+      "t": 447932264,
+      "c": 447931812,
+      "r": 33999937,
+      "a": "Music125/v4/69/12/51/691251e9-f059-e494-ad80-d895a9daa399/13711103922.jpg",
+      "h": 1,
+      "g": "Electronic",
+      "y": 1972
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Krug (The Circle)",
+      "artist": "Jazz orkestar Radio- televizije Beograd",
+      "album": "Jazz Orkestar radio- Televizije Beograd Sa Gostima",
+      "start": {
+        "utc": "2026-09-26T02:21:15Z",
+        "local": "2026-09-25T19:21:15-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1978-01-01T12:00:00Z",
+      "t": 668357048,
+      "c": 668356787,
+      "r": 668357029,
+      "a": "Music4/v4/a1/b5/5b/a1b55b67-f963-ad05-f06a-b75ea2d11cf7/5027803733428_cover.jpg",
+      "h": 1,
+      "g": "Contemporary Jazz",
+      "y": 1978
+    },
+    {
+      "date": "2026-09-25",
+      "title": "It's Over Now (Undercover Brother Quiet Storm Mix)",
+      "artist": "Various Artists",
+      "album": "Kenny Dope & the Undercover Brother Present Dopebrother Studio A",
+      "start": {
+        "utc": "2026-09-26T02:26:10Z",
+        "local": "2026-09-25T19:26:10-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2009-12-01T12:00:00Z",
+      "t": 340734989,
+      "c": 340734950,
+      "a": "Music/d2/66/52/mzi.cbwwtqzt.jpg",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 2009
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Impeach the President",
+      "artist": "The Honey Drippers",
+      "album": "Impeach the President - Single",
+      "start": {
+        "utc": "2026-09-26T02:29:42Z",
+        "local": "2026-09-25T19:29:42-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1973-06-01T12:00:00Z",
+      "t": 1641992605,
+      "c": 1641992603,
+      "r": 1315891671,
+      "a": "Music122/v4/99/9f/20/999f20a9-5432-2233-c1b5-a113e490354f/29.jpg",
+      "h": 1,
+      "g": "Funk",
+      "y": 1973
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Don't Be Cool",
+      "artist": "Jacky Giordano",
+      "album": "Pop in Devil's Train",
+      "start": {
+        "utc": "2026-09-26T02:33:00Z",
+        "local": "2026-09-25T19:33:00-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2019-01-25T12:00:00Z",
+      "t": 1449588755,
+      "c": 1449588653,
+      "r": 364864011,
+      "a": "Music124/v4/6e/ec/da/6eecdac0-49b8-7963-6b58-a122c178c607/Cover.jpg",
+      "h": 1,
+      "g": "Soul",
+      "y": 2019
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Miss January (Instrumental)",
+      "artist": "The Procussions",
+      "album": "5 Sparrows for 2 Cents (Instrumental)",
+      "start": {
+        "utc": "2026-09-26T02:35:11Z",
+        "local": "2026-09-25T19:35:11-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2006-05-30T12:00:00Z",
+      "t": 1498057645,
+      "c": 1498057231,
+      "r": 45385844,
+      "a": "Music113/v4/36/40/92/36409251-12af-235c-889a-bbc3244dc27e/888174243054_cover.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2006
+    },
+    {
+      "date": "2026-09-25",
+      "title": "And the Melody Still Lingers On (Night In Tunisia)",
+      "artist": "Chaka Khan",
+      "album": "Epiphany: The Best of Chaka Khan, Vol. 1",
+      "start": {
+        "utc": "2026-09-26T02:37:21Z",
+        "local": "2026-09-25T19:37:21-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1981-04-01T08:00:00Z",
+      "t": 266613018,
+      "c": 266611641,
+      "r": 17402,
+      "a": "Music115/v4/13/55/fb/1355fbb0-60f1-d15e-12cb-ad0008b99524/mzi.zqdpvvdq.jpg",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 1981
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Prison Gate Island Theme",
+      "artist": "Shinichi Tanabe",
+      "album": "Peaches (Music From The Motion Picture)",
+      "start": {
+        "utc": "2026-09-26T02:42:16Z",
+        "local": "2026-09-25T19:42:16-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2022-05-06T12:00:00Z",
+      "t": 1686636327,
+      "c": 1686636323,
+      "r": 387263004,
+      "a": "Music116/v4/40/60/bd/4060bd73-d24a-b2d8-36c4-2f50981c372b/197338744024.jpg",
+      "h": 1,
+      "g": "Soundtrack",
+      "y": 2022
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Magnificent Sanctuary Band",
+      "artist": "Donny Hathaway",
+      "album": "Donny Hathaway",
+      "start": {
+        "utc": "2026-09-26T02:45:26Z",
+        "local": "2026-09-25T19:45:26-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1971-04-02T08:00:00Z",
+      "t": 281714163,
+      "c": 281714087,
+      "r": 259459,
+      "a": "Music115/v4/50/f8/64/50f86432-2051-dcb6-c80c-26751db6c88a/mzi.nsvpouqk.jpg",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 1971
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Magic's Power",
+      "artist": "Francis Lai",
+      "album": "Le corps de mon ennemi (Bande originale du film)",
+      "start": {
+        "utc": "2026-09-26T02:47:15Z",
+        "local": "2026-09-25T19:47:15-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1976-09-03T12:00:00Z",
+      "t": 1188817507,
+      "c": 1188817288,
+      "r": 104643412,
+      "a": "Music111/v4/5a/41/d2/5a41d202-455f-fb57-4d75-4647dd24d0a7/3700403513530_cover.jpg",
+      "h": 1,
+      "g": "Soundtrack",
+      "y": 1976
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Macheeto",
+      "artist": "Slakah the Beatchild",
+      "album": "Mushroom Jazz 7",
+      "start": {
+        "utc": "2026-09-26T02:50:00Z",
+        "local": "2026-09-25T19:50:00-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2010-12-15T08:00:00Z",
+      "t": 419258268,
+      "c": 419258259,
+      "r": 259123127,
+      "a": "Music/37/f6/60/mzi.epxboyze.jpg",
+      "h": 1,
+      "g": "Dance",
+      "y": 2010
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Ozan Koukle (Remastered)",
+      "artist": "Lafayette Afro Rock Band",
+      "album": "Afro Funk Explosion",
+      "start": {
+        "utc": "2026-09-26T02:52:21Z",
+        "local": "2026-09-25T19:52:21-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1978-10-28T12:00:00Z",
+      "t": 1617039643,
+      "c": 1617039561,
+      "r": 183148314,
+      "a": "Music112/v4/6d/27/e6/6d27e699-de90-f87f-ae59-57ac6372fda5/4062548046267.png",
+      "h": 1,
+      "g": "Funk",
+      "y": 1978
+    },
+    {
+      "date": "2026-09-25",
+      "title": "Shadowboxing Fear",
+      "artist": "Terrace Martin and Marcus Gilmore",
+      "album": "PURPOSE",
+      "start": {
+        "utc": "2026-09-26T02:58:52Z",
+        "local": "2026-09-25T19:58:52-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1871036189,
+      "c": 1871036182,
+      "r": 27522754,
+      "a": "Music211/v4/ce/0a/45/ce0a4509-ddf6-f5c8-2538-e61d1c9bc652/199316452624_cover.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2026
     }
   ]
 }
