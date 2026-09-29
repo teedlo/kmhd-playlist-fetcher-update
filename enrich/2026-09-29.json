@@ -1,0 +1,23 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-09-29",
+  "complete": true,
+  "tracks": {
+    "alice coltrane|stopover bombay": {"t":1440719301,"c":1440719294,"r":72553,"a":"Music115/v4/af/5c/40/af5c40a1-54b1-855d-3da2-f875efbd8372/06UMGIM04169.rgb.jpg","h":1,"g":"Jazz","y":1971},
+    "bennie maupin|water torture": {"t":1362910826,"c":1362910441,"r":396158,"a":"Music118/v4/99/cb/e8/99cbe801-b0bc-9ebc-6417-af29e8b069d6/00602567413998.rgb.jpg","h":1,"g":"Jazz","y":1977},
+    "bill evans trio|sweet & lovely": {"t":1443218452,"c":1443217826,"r":151188147,"a":"Music124/v4/1b/ab/89/1bab89a5-ebad-9534-55e3-a5699daeb173/00888072330443.rgb.jpg","h":1,"g":"Jazz","y":1961},
+    "bill summers|brazilian skies": {"t":1666741652,"c":1666741385,"r":5278788,"a":"Music123/v4/3f/ef/0c/3fef0c62-27ae-2d32-a8e1-ffe6a7b1707d/22CRGIM35625.rgb.jpg","h":1,"g":"Jazz","y":2023},
+    "geoff bastow|beautiful people": null,
+    "herbie mann & buddy collette|herbie's buddy": {"t":63830646,"c":63830696,"r":2753958,"a":"Music/y2005/m05/d13/h20/s05.kncusaej.jpg","h":1,"g":"Jazz","y":1957},
+    "herbie mann|groovy samba ": {"t":639876804,"c":639876383,"r":56792,"a":"Music124/v4/e1/f3/72/e1f372ed-23a9-bbdb-c5ed-c43db931448b/8427328607520.jpg","h":1,"g":"Bossa Nova","y":1963},
+    "jimmy smith|when the saints go marching in": {"t":1890335181,"c":1890334965,"r":123130,"a":"Music221/v4/e2/2b/81/e22b81d9-1187-4e0c-90bc-cc80b7cbb69d/00015047800278_Cover.jpg","h":1,"g":"Country","y":1958},
+    "john coltrane|i want to talk about you (live at birdland jazzclub, new york city, ny/1963)": {"t":1469579098,"c":1469578985,"r":120199,"a":"Music126/v4/fa/6a/1e/fa6a1e55-cd92-39e3-af69-7e68a41f1d35/15UMGIM35662.rgb.jpg","h":1,"g":"Jazz","y":1964},
+    "lonnie liston smith & the cosmic echoes|sunbeams": {"t":1621529599,"c":1621529444,"r":395634,"a":"Music126/v4/20/fc/0f/20fc0f5b-5edb-d2cb-ed8f-52b1e756c1c9/29667529686.jpg","h":1,"g":"Funk","y":1976},
+    "nipsey russell|what would i do if i could feel?": {"t":1440874533,"c":1440874038,"r":61626412,"a":"Music125/v4/1b/9c/38/1b9c385a-43b0-9f2d-a2b2-6e5cf2755163/00602547223937.rgb.jpg","h":1,"g":"Soundtrack","y":1978},
+    "paul desmond quartet|wendy": {"t":1442911562,"c":1442911557,"r":13088545,"a":"Music122/v4/47/04/f1/4704f1fa-3268-4443-53b0-27c7568d6e31/06UMGIM15445.rgb.jpg","h":1,"g":"Jazz","y":1975},
+    "robin kenyatta|neither one of us": {"t":466357885,"c":466357877,"r":466329603,"a":"Music/d6/e2/a5/mzi.yquyjkcu.jpg","h":1,"g":"Jazz","y":1974},
+    "rufus feat. chaka khan|circles": {"t":1443807264,"c":1443806525,"r":59865,"a":"Music125/v4/99/ce/d5/99ced51d-3cfb-a6fa-4a99-92181ec7fa88/00076743137327.rgb.jpg","h":1,"g":"R&B/Soul","y":1975},
+    "sidney joe qualls|how can you say goodbye": {"t":464292296,"c":464291783,"r":464290322,"a":"Music/2e/34/5e/mzi.dlnhzqtu.jpg","h":1,"g":"R&B/Soul","y":2011},
+    "woo|baa lamb": {"t":688143486,"c":688143474,"r":1436057325,"a":"Music4/v4/29/2b/e9/292be928-a26a-e421-217a-b5438807b2a4/885767023321.jpg","h":1,"g":"Electronic","y":1981}
+  }
+}
