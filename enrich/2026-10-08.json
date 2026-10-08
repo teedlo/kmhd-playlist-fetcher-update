@@ -1,0 +1,16 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-10-08",
+  "complete": true,
+  "tracks": {
+    "beverly glenn-copeland|old melody": {"t":1504284047,"c":1504283269,"r":1202234699,"a":"Music115/v4/c4/e4/a7/c4e4a799-4d76-35ba-66a9-c0670448d88f/5400863029630_cover.jpg","h":1,"g":"New Age","y":1986},
+    "ella fitzgerald|for once in my life (live)": {"t":1442836195,"c":1442836193,"r":46726,"a":"Music211/v4/36/b9/52/36b952f0-ae28-86e9-bea0-c8eda8ced06f/14UMGIM51153.rgb.jpg","h":1,"g":"R&B/Soul","y":1968},
+    "jeremy pelt|everything you can imagine is real": {"t":1438055625,"c":1438055310,"r":20836531,"a":"Music118/v4/7e/4e/bd/7e4ebdc2-7b15-5b99-ed8d-002e6baf1464/632375727024_cover.jpg","h":1,"g":"Jazz","y":2015},
+    "marion brown|maimoun": {"t":1444197931,"c":1444197924,"r":72844,"a":"Music118/v4/f8/c7/f6/f8c7f679-e69d-eb63-59c0-933a90dc43f1/00602547710376.rgb.jpg","h":1,"g":"Jazz","y":1975},
+    "miles davis|human nature": {"t":190071500,"c":190071333,"r":44984,"a":"Music112/v4/87/3b/3d/873b3d1a-7836-e8f8-9c7a-d67cdcf8c524/074644002324.jpg","h":1,"g":"Jazz","y":1985},
+    "ramon ropain & his piano and band|mi cumbia": {"t":384063741,"c":384063696,"r":164351295,"a":"Music/81/49/1f/mzi.jkhpxxcy.tif","h":1,"g":"Latin Jazz","y":1956},
+    "ramsey lewis|good night": {"t":1443508450,"c":1443508249,"r":541011,"a":"Music128/v4/6d/59/a9/6d59a9ee-8dc8-89f7-fd26-7c95ab79c376/00602498875797.rgb.jpg","h":1,"g":"Jazz","y":1968},
+    "ray brown trio|cry me a river": {"t":1444137858,"c":1444137487,"r":3203368,"a":"Music115/v4/ce/65/da/ce65dafd-8e3b-1f0e-e293-e4ff721f929f/00013431426820.rgb.jpg","h":1,"g":"Jazz","y":1985},
+    "the jazz crusaders|cookie man": {"t":1609683843,"c":1609683824,"r":1134235,"a":"Music116/v4/84/69/3f/84693f30-6851-3946-a0d1-358be3e23f77/196626241016.jpg","h":1,"g":"Jazz","y":1969}
+  }
+}
