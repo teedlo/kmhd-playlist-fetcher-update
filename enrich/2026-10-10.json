@@ -1,0 +1,21 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-10-10",
+  "complete": true,
+  "tracks": {
+    "alice clark|never did i stop loving you": {"t":1168133739,"c":1168133470,"r":159753371,"a":"Music19/v4/16/60/40/166040cc-b974-79ab-6266-a53f7678d8c3/Cover.jpg","h":1,"g":"Jazz","y":1972},
+    "aretha franklin|a brand new me": {"t":266606553,"c":266602438,"r":98742,"a":"Music115/v4/68/3e/ca/683eca66-cff0-9f78-d63c-1e4ed7912801/603497987856.jpg","h":1,"g":"Rock","y":1971},
+    "clora bryant|this can't be love": {"t":63590165,"c":63590174,"r":63590089,"a":"Music/y2005/m05/d12/h11/s05.aaysdcfs.jpg","h":1,"g":"Jazz","y":1957},
+    "eddie henderson (feat. herbie hancock)|emotions": {"t":394272464,"c":394272416,"r":30703,"a":"Music62/v4/2d/b0/b2/2db0b242-4d8f-f240-776b-c70f41cb4ad7/dj.xncuinrp.jpg","h":1,"g":"Jazz","y":1970},
+    "funk inc.|kool is back": {"t":1442684689,"c":1442683895,"r":2772910,"a":"Music124/v4/0b/32/d8/0b32d8c1-18f9-6599-f028-f9df5cf30e46/00888072025523.rgb.jpg","h":1,"g":"R&B/Soul","y":1971},
+    "joan bibiloni|val, i vuw ya": {"t":1695759797,"c":1695759445,"r":31394080,"a":"Music116/v4/58/f8/e6/58f8e63e-4445-e816-ae13-1b397b650704/197189317460.jpg","h":1,"g":"Dance","y":2023},
+    "jon lucien|love everlasting": {"t":1261594905,"c":1261594373,"r":4658187,"a":"Music124/v4/25/b0/03/25b003a6-0c3e-a58d-0aed-07d9c0fe4d73/886446557519.jpg","h":1,"g":"Jazz","y":1973},
+    "joni mitchell|black crow": {"t":1492262295,"c":1492262288,"r":203373,"a":"Music124/v4/38/42/0b/38420bcf-f3aa-ba5b-2594-d9b3db6bb637/075596061421.jpg","h":1,"g":"Pop","y":1976},
+    "marian mcpartland, mary osborne, vi redd, lynn milano, dotti|now's the time": null,
+    "mccoy tyner|some day": {"t":1442866399,"c":1442865939,"r":27875,"a":"Music118/v4/26/72/29/267229b7-0fb2-403c-416e-a8628ecee600/00025218661829.rgb.jpg","h":1,"g":"Jazz","y":1973},
+    "sestetto dino piana and oscar valdambrini|placido": null,
+    "shirley scott|deep down soul": {"t":1612737683,"c":1612736906,"r":76917,"a":"Music116/v4/08/76/3e/08763e65-13c1-1b2c-991c-c74d1ed7d0ab/22CRGIM31548.rgb.jpg","h":1,"g":"Jazz","y":1963},
+    "stan getz & luiz bonfa|menina flor (feat. maría toledo)": {"t":1762471556,"c":1762471203,"r":439789905,"a":"Music211/v4/b4/20/48/b420486f-341d-45f8-91f8-311a3dcd1024/06UMGIM22885.rgb.jpg","h":1,"g":"Bossa Nova","y":1963},
+    "toshiko akiyoshi-lew tabackin big band|shades of yellow": {"t":1781140920,"c":1781140918,"r":3506852,"a":"Music211/v4/cf/4f/8b/cf4f8b35-19c4-73c3-2f97-f46040a58793/4547366717099.jpg","h":1,"g":"Jazz","y":1974}
+  }
+}
