@@ -1,0 +1,19 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-10-11",
+  "complete": true,
+  "tracks": {
+    "bernard purdie|theme from shaft": {"t":1488045386,"c":1488045013,"r":3075652,"a":"Music123/v4/c4/cb/50/c4cb506a-1d03-1be2-a646-dabb8f8e0070/19CRGIM11675.rgb.jpg","h":1,"g":"Jazz","y":2019},
+    "eddie harris|listen here": {"t":300197286,"c":300197267,"r":463784,"a":"Music62/v4/c6/93/f6/c693f691-a424-3154-6bc4-0bd8de8ec944/mzm.vcykqahd.jpg","h":1,"g":"Jazz","y":1968},
+    "jimmy mcgriff|the worm": {"t":724559131,"c":724558683,"r":1005312,"a":"Music6/v4/99/43/50/994350fb-9707-c3ab-9882-f5293e670686/00724353869953.jpg","h":1,"g":"Blues","y":1968},
+    "jimmy smith|stay loose": {"t":1453160293,"c":1453158682,"r":119650,"a":"Music124/v4/64/a3/31/64a3318f-acc7-ac01-049f-6549d5bc2e46/00602557474954.rgb.jpg","h":1,"g":"Jazz","y":2005},
+    "jiro inagaki and his soul media|breeze": {"t":1508946503,"c":1508946500,"r":1506558105,"a":"Music115/v4/1c/74/01/1c74013f-2229-d610-c283-62465471e1ca/COKM-42678.jpg","h":1,"g":"Jazz","y":1975},
+    "kenny burrell|burning spear": {"t":1443997027,"c":1443997017,"r":119995,"a":"Music114/v4/f5/09/f2/f509f2a1-b949-b295-7f78-ad055176741f/06UMGIM08222.rgb.jpg","h":1,"g":"Jazz","y":1968},
+    "lonnie liston smith & the cosmic echoes|expansions": {"t":1621356613,"c":1621356607,"r":395634,"a":"Music126/v4/fb/45/43/fb45432f-5eb4-76c4-27f3-dded1e4f2a8c/29667526388.jpg","h":1,"g":"Funk","y":1974},
+    "lou donaldson|it's your thing": {"t":1444200036,"c":1444199344,"r":394680,"a":"Music128/v4/8a/d1/1c/8ad11c26-5e1b-c2e1-0868-6507431d6f7b/00602537952694.rgb.jpg","h":1,"g":"Jazz","y":1969},
+    "ramsey lewis|spring high": {"t":527360329,"c":527360193,"r":541011,"a":"Music114/v4/40/28/00/40280064-04ba-b258-b391-0abfc58ae717/886443443761.jpg","h":1,"g":"Jazz","y":1977},
+    "reuben wilson & the cost of living|got to get your own": {"t":723459126,"c":723458510,"r":54571,"a":"Music124/v4/cc/e8/fe/cce8fe70-162e-b642-5e44-0b79b373c7b6/00724383429059.jpg","h":1,"g":"Jazz","y":1995},
+    "roy ayers ubiquity|red, black & green": {"t":1442662476,"c":1442662051,"r":51261,"a":"Music115/v4/70/1c/a9/701ca92e-0849-d5c5-778e-72299033aa2d/00602498631836.rgb.jpg","h":1,"g":"Jazz","y":1973},
+    "the leaders|it's a rat race": {"t":499866690,"c":499866501,"r":208960115,"a":"Music/c0/d9/a1/mzi.ejydlarb.jpg","h":1,"g":"R&B/Soul","y":2010}
+  }
+}
