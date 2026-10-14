@@ -1,0 +1,33 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-10-14",
+  "complete": true,
+  "tracks": {
+    "billy taylor|a secret": {"t":1357081464,"c":1357080221,"r":945708804,"a":"Music128/v4/e8/30/79/e8307943-bf3a-6df7-765d-cc80118b8665/4000127902221_1448.jpg","h":1,"g":"Latin Jazz","y":2012},
+    "buddy miles express|funky mule": {"t":1443593223,"c":1443592931,"r":44015291,"a":"Music124/v4/06/f5/b0/06f5b0bb-1561-a14b-d665-4702da5c3326/00731451254628.rgb.jpg","h":1,"g":"Rock","y":1968},
+    "chocolate milk|hurry down sunset": {"t":475836393,"c":475836391,"r":41783560,"a":"Music/b7/f8/38/mzi.lhadyrum.jpg","h":1,"g":"R&B/Soul","y":1979},
+    "frisell carter motian|eighty-one": {"t":189115599,"c":189115586,"r":160518,"a":"Music/32/1a/8e/mzi.nxbnpcmf.jpg","h":1,"g":"Jazz","y":2006},
+    "george benson|ode to a kudu": {"t":300961267,"c":300961178,"r":1523080,"a":"Music/23/cc/d7/mzi.eqthhnuh.jpg","h":1,"g":"Jazz","y":1978},
+    "george shearing|midnight on cloud 69": {"t":1518867295,"c":1518867049,"r":3454960,"a":"Music113/v4/a8/0a/70/a80a70bc-2411-cc39-017d-89113ac36bd3/20UMGIM48048.rgb.jpg","h":1,"g":"Jazz","y":2002},
+    "herbie hancock|people music": {"t":762188910,"c":762188901,"r":51639,"a":"Music6/v4/07/ca/e9/07cae91c-891e-a9d4-65df-0f473448024f/886444334105.jpg","h":1,"g":"Jazz","y":1976},
+    "julian priester|24-hour leave": {"t":1443156447,"c":1443156188,"r":2887917,"a":"Music128/v4/84/d7/c7/84d7c7c7-b340-3410-fe69-e8c148dd0891/00025218186322.rgb.jpg","h":1,"g":"Jazz","y":1960},
+    "keith jarrett|from nagoya": {"t":1576461148,"c":1576461131,"r":72348,"a":"Music125/v4/6b/8c/2f/6b8c2f35-692c-54fb-98ee-21f1fed2c6da/21UMGIM37894.rgb.jpg","h":1,"g":"Jazz","y":1978},
+    "kenny burrell|the squeeze": {"t":1442863609,"c":1442862758,"r":119995,"a":"Music118/v4/9f/14/b8/9f14b8a7-5c1e-f785-3b3e-acdf5c498833/00025218790826.rgb.jpg","h":1,"g":"Jazz","y":1977},
+    "lester young|(back home again in) indiana": {"t":78654947,"c":78655026,"r":121027,"a":"Music/y2005/m08/d10/h10/mzi.smztrdkm.tif","h":1,"g":"Jazz","y":1944},
+    "madone|turquoise": {"t":1604090671,"c":1604090668,"r":1596581059,"a":"Music126/v4/78/9c/ff/789cff53-0ad1-0e93-a058-7910b0a999ce/artwork.jpg","h":1,"g":"Alternative","y":2022},
+    "montego joe|fat man": {"t":1443063711,"c":1443063701,"r":5375731,"a":"Music128/v4/82/84/77/82847760-8855-550a-547d-f1c4d041a5e2/00025218513920.rgb.jpg","h":1,"g":"Jazz","y":1964},
+    "nina simone|keeper of the flame": {"t":1443220127,"c":1443219668,"r":79798,"a":"Music116/v4/c9/38/19/c938194c-3141-8175-e315-3969369d07b1/13UAAIM08282.rgb.jpg","h":1,"g":"Jazz","y":1966},
+    "renaldo domino|i'll get you back": {"t":911794225,"c":911794116,"r":211163100,"a":"Music115/v4/5a/4d/17/5a4d1768-28c1-d1ed-4c50-e0180d5999de/cover.jpg","h":1,"g":"R&B/Soul","y":2014},
+    "sly5thave|early morning": {"t":1371927687,"c":1371927683,"r":984034699,"a":"Music118/v4/96/b7/7e/96b77e2e-1a93-c09f-2fd5-f3d9d44c4473/5060205158918.jpg","h":1,"g":"Electronica","y":2017},
+    "susumu yokota|long long silk bridge": {"t":61544760,"c":61545681,"r":42151157,"a":"Music/y2005/m04/d28/h17/s05.nxqrdllg.tif","h":1,"g":"Electronic","y":2005},
+    "syl johnson|thank you baby": {"t":1021321060,"c":1021318237,"r":173726,"a":"Music7/v4/a8/1f/cc/a81fcc9b-4264-7a66-7cc2-ea31b37a93d9/cover.jpg","h":1,"g":"R&B/Soul","y":2010},
+    "terry gibbs quartet|gibberish (feat. terry pollard)": null,
+    "the dells|a summer place": {"t":1369109322,"c":1369109074,"r":538811449,"a":"Music126/v4/dc/98/51/dc9851bd-9521-6fcb-c4b7-499f23b05498/18UMGIM09114.rgb.jpg","h":1,"g":"Pop","y":2018},
+    "the explosions|jockey ride (parts 1 &2)": {"t":1641817976,"c":1641817972,"r":366267463,"a":"Music122/v4/4f/d8/05/4fd805ff-5062-428e-ca21-0b65ba73c93e/145.jpg","h":1,"g":"Funk","y":2008},
+    "the heath brothers|warm valley": {"t":1850089879,"c":1850089877,"r":3218278,"a":"Music211/v4/95/85/b0/9585b08b-fdba-621f-c92a-8563200643bf/118351.jpg","h":1,"g":"Jazz","y":1976},
+    "tony williams|snake oil": {"t":294443393,"c":294443378,"r":52545,"a":"Music7/v4/7c/2d/b7/7c2db7d0-109c-dc89-f23d-eed91aaab2d0/dj.enbwdisd.jpg","h":1,"g":"Jazz","y":1975},
+    "vels trio|godzilla": {"t":1531963074,"c":1531963068,"r":1245719421,"a":"Music114/v4/0a/9f/36/0a9f368d-1451-3f54-f7ef-6701ba34bcae/4062548016345_3000.jpg","h":1,"g":"Jazz","y":2017},
+    "vladimir cosma|airport drinks": null,
+    "yusef lateef|african song": {"t":357837358,"c":357837150,"r":55640,"a":"Music/38/c4/52/mzi.ahuwoktz.jpg","h":1,"g":"Jazz","y":1972}
+  }
+}
