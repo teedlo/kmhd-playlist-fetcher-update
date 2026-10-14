@@ -47,6 +47,7 @@
     "george benson|ode to a kudu": {"t":300961267,"c":300961178,"r":1523080,"a":"Music/23/cc/d7/mzi.eqthhnuh.jpg","h":1,"g":"Jazz","y":1978},
     "george shearing|midnight on cloud 69": {"t":1518867295,"c":1518867049,"r":3454960,"a":"Music113/v4/a8/0a/70/a80a70bc-2411-cc39-017d-89113ac36bd3/20UMGIM48048.rgb.jpg","h":1,"g":"Jazz","y":2002},
     "grant green|outer space": {"t":1483150875,"c":1483150863,"r":44688,"a":"Music123/v4/6b/f2/54/6bf254f7-cbe2-0581-56e4-2765f490b8a5/19UMGIM83449.rgb.jpg","h":1,"g":"Jazz","y":1985},
+    "henri salvador|et des mandolines": {"t":1563950513,"c":1563950192,"r":7025919,"a":"Music125/v4/00/4c/9a/004c9aeb-4669-1ca1-85f9-705bd8904e68/3521383464779_cover.jpg","h":1,"g":"French Pop","y":2021},
     "herbie hancock|people music": {"t":762188910,"c":762188901,"r":51639,"a":"Music6/v4/07/ca/e9/07cae91c-891e-a9d4-65df-0f473448024f/886444334105.jpg","h":1,"g":"Jazz","y":1976},
     "james moody & hank jones|soul trane": {"t":1245779141,"c":1245778674,"r":57053,"a":"Music211/v4/f2/cb/e1/f2cbe119-a0c6-d2cb-0214-33339180b52c/191079486564_cover.jpg","h":1,"g":"Mainstream Jazz","y":2008},
     "jimmy smith|red top": {"t":716452595,"c":716452524,"r":119650,"a":"Music/v4/84/9c/a7/849ca7bf-61b5-4ebe-477c-416e609e394f/00724359084657.jpg","h":1,"g":"Jazz","y":1963},
@@ -63,6 +64,7 @@
     "luigi malatesta, franco bixio & sandro brugnolini|gungala nido": {"t":1053026747,"c":1053024879,"r":323818544,"a":"Music42/v4/5b/1e/be/5b1ebe42-ac9e-4a7d-5893-ce186a5c8f71/mzm.yegwubme.jpg","h":1,"g":"Soundtrack","y":1968},
     "luiz bonfa|these foolish things": {"t":1460249782,"c":1460248010,"r":281115,"a":"Music123/v4/a3/41/ee/a341ee79-0e89-a4a8-3eaf-a066a9e74e7c/cover.jpg","h":1,"g":"Brazilian","y":2009},
     "madone|turquoise": {"t":1604090671,"c":1604090668,"r":1596581059,"a":"Music126/v4/78/9c/ff/789cff53-0ad1-0e93-a058-7910b0a999ce/artwork.jpg","h":1,"g":"Alternative","y":2022},
+    "mauricio smith|doug's room": null,
     "mildred bailey|that ain't right": {"t":285658301,"c":285658169,"r":73644,"a":"Features/v4/57/f5/6d/57f56d55-ffce-9cdb-5b58-e6f7829677be/dj.zfygnhkp.jpg","h":1,"g":"Jazz","y":2008},
     "monnette sudler|time for a change": {"t":159326475,"c":159326414,"r":102641102,"a":"Music114/v4/19/f7/04/19f704e7-139a-04ec-3430-ff46a13f00a3/mzi.fbrmeahn.jpg","h":1,"g":"Jazz","y":1995},
     "montego joe|fat man": {"t":1443063711,"c":1443063701,"r":5375731,"a":"Music128/v4/82/84/77/82847760-8855-550a-547d-f1c4d041a5e2/00025218513920.rgb.jpg","h":1,"g":"Jazz","y":1964},
@@ -76,7 +78,9 @@
     "phi-psonics|green dreams": {"t":1677361703,"c":1677361065,"r":1497365571,"a":"Music126/v4/01/af/59/01af59bc-a464-f267-2f2e-1614ffb659ca/5050580794726_cover.jpg","h":1,"g":"Jazz","y":2023},
     "ray barretto|love beads (remastered 2026)": {"t":1881777367,"c":1881777353,"r":68069744,"a":"Music211/v4/40/4f/81/404f8169-7886-4455-9131-c05ae7dce6ea/26CRGIM53780.rgb.jpg","h":1,"g":"Música tropical","y":2026},
     "renaldo domino|i'll get you back": {"t":911794225,"c":911794116,"r":211163100,"a":"Music115/v4/5a/4d/17/5a4d1768-28c1-d1ed-4c50-e0180d5999de/cover.jpg","h":1,"g":"R&B/Soul","y":2014},
+    "ron everett|glitter of the city (song by tahira)": {"t":1563361505,"c":1563361503,"r":891434875,"a":"Music115/v4/fd/12/f6/fd12f6d7-9f57-5830-6f21-2f6b90df4d9d/5050580762572.png","h":1,"g":"Jazz","y":2021},
     "roy haynes quartet|some other spring": {"t":1443751654,"c":1443751634,"r":27771,"a":"Music128/v4/c4/3a/6a/c43a6abf-164f-74e8-d116-81defe4c7143/00011105018029.rgb.jpg","h":1,"g":"Jazz","y":1962},
+    "sadao watanabe|it might as well be spring": {"t":668139276,"c":668139120,"r":298235,"a":"Music6/v4/d9/1a/5a/d91a5a5a-04e8-8756-1dc2-df83ce081330/886444093880.jpg","h":1,"g":"Jazz","y":2006},
     "sly5thave|early morning": {"t":1371927687,"c":1371927683,"r":984034699,"a":"Music118/v4/96/b7/7e/96b77e2e-1a93-c09f-2fd5-f3d9d44c4473/5060205158918.jpg","h":1,"g":"Electronica","y":2017},
     "sonny rollins & coleman hawkins|lover man": {"t":304784297,"c":304784291,"r":37020,"a":"Music/07/04/9a/mzi.stskbtwb.jpg","h":1,"g":"Jazz","y":1963},
     "stan hope|georgia on my mind": {"t":1309782567,"c":1309782158,"r":92285993,"a":"Music221/v4/dd/11/49/dd1149a0-b7b9-776b-6def-53b0dcb8ded5/018736866739_cover.jpg","h":1,"g":"Jazz","y":1971},
@@ -96,7 +100,9 @@
     "vels trio|godzilla": {"t":1531963074,"c":1531963068,"r":1245719421,"a":"Music114/v4/0a/9f/36/0a9f368d-1451-3f54-f7ef-6701ba34bcae/4062548016345_3000.jpg","h":1,"g":"Jazz","y":2017},
     "vladimir cosma|airport drinks": null,
     "vladimir jurevich martynov|song of morning": {"t":158240990,"c":158240860,"r":158240996,"a":"Music/9f/8a/6d/mzi.kjiqmdfk.jpg","h":1,"g":"New Age","y":2006},
+    "weldon irvine|we gettin down": {"t":1221180342,"c":1221179347,"r":489768,"a":"Music122/v4/b7/66/26/b76626d6-404a-173b-13af-58ba80b257de/886446214276.jpg","h":1,"g":"Jazz","y":1975},
     "wendell harrison|reawakening (feat. leon thomas, phillip ranelin & pamela wise)": {"t":1034588151,"c":1034587874,"r":4553669,"a":"Music7/v4/0c/f9/50/0cf950da-560c-ec17-c193-a793989893b4/cover.jpg","h":1,"g":"Jazz","y":1985},
-    "yusef lateef|african song": {"t":357837358,"c":357837150,"r":55640,"a":"Music/38/c4/52/mzi.ahuwoktz.jpg","h":1,"g":"Jazz","y":1972}
+    "yusef lateef|african song": {"t":357837358,"c":357837150,"r":55640,"a":"Music/38/c4/52/mzi.ahuwoktz.jpg","h":1,"g":"Jazz","y":1972},
+    "yusef lateef|goin' home": {"t":1443093566,"c":1443093445,"r":55640,"a":"Music128/v4/d9/56/b9/d956b91f-462f-9118-778e-6c23b228f786/00025218675925.rgb.jpg","h":1,"g":"Jazz","y":1960}
   }
 }
