@@ -128818,6 +128818,647 @@
       "h": 1,
       "g": "Doo Wop",
       "y": 2011
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Metrópole",
+      "artist": "Cesar Camargo Mariano",
+      "album": "São Paulo - Brasil",
+      "start": {
+        "utc": "2026-10-17T01:00:00Z",
+        "local": "2026-10-16T18:00:00-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 309659487,
+      "c": 309659356,
+      "r": 1975408,
+      "a": "Music/7b/0f/bc/mzi.lnyttqwv.jpg",
+      "h": 1,
+      "g": "Brazilian",
+      "y": 2002
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Tamborine",
+      "artist": "John Tropea",
+      "album": "NYCats Direct",
+      "start": {
+        "utc": "2026-10-17T01:02:47Z",
+        "local": "2026-10-16T18:02:47-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 488327493,
+      "c": 488327270,
+      "r": 20374482,
+      "a": "Music116/v4/b4/65/e0/b465e020-53a4-d8cf-b123-ff298e4738e3/885767254725.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1985
+    },
+    {
+      "date": "2026-10-16",
+      "title": "The Come Up (with Miguel Atwood-Ferguson, Randal Fisher, Joey Dosik, Aponte Poro, Nia Andrews, Lucky Paul, Deron Johnson, Mark De Clive-Lowe, Harry Foster & Brandon Eugene Owens)",
+      "artist": "Mocky",
+      "album": "A Day at United",
+      "start": {
+        "utc": "2026-10-17T01:05:59Z",
+        "local": "2026-10-16T18:05:59-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1440278786,
+      "c": 1440278784,
+      "r": 27907270,
+      "a": "Music126/v4/77/d4/3c/77d43cbc-a4f5-c77b-b737-e56e306d6c83/880918232102.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2018
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Cat Walk",
+      "artist": "Pete Moore",
+      "album": "Stroll On",
+      "start": {
+        "utc": "2026-10-17T01:09:23Z",
+        "local": "2026-10-16T18:09:23-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 477856468,
+      "c": 477855814,
+      "artistViewUrl": "https://books.apple.com/us/artist/pete-moore/126060286?uo=4",
+      "a": "Music/d9/fc/bb/mzi.hbjeiynf.tif",
+      "h": 1,
+      "g": "Pop",
+      "y": 2011
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Come Live With Me",
+      "artist": "Dorothy Ashby",
+      "album": "Afro-Harping",
+      "start": {
+        "utc": "2026-10-17T01:12:20Z",
+        "local": "2026-10-16T18:12:20-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1443482193,
+      "c": 1443481982,
+      "r": 2778672,
+      "a": "Music125/v4/ef/a6/3e/efa63e4f-47a4-ccba-f401-d70fae167a60/00044007603727.rgb.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1968
+    },
+    {
+      "date": "2026-10-16",
+      "title": "foreplay perfume",
+      "artist": "Knowsum",
+      "album": "midnight special",
+      "start": {
+        "utc": "2026-10-17T01:14:52Z",
+        "local": "2026-10-16T18:14:52-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1671016279,
+      "c": 1671015622,
+      "r": 575737570,
+      "a": "Music126/v4/23/5e/29/235e2954-6d1d-5f2d-502d-3a98883d8289/cover.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2022
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Pre-stretch Warm Up",
+      "artist": "Rick Panzer",
+      "album": "Music For The Complete Jazz Dance Class With Lea Darwin",
+      "start": {
+        "utc": "2026-10-17T01:16:45Z",
+        "local": "2026-10-16T18:16:45-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1718744025,
+      "c": 1718743692,
+      "r": 1718744183,
+      "a": "Music116/v4/10/a2/a4/10a2a4c3-b65f-0e86-e7aa-766c43221510/197189570902.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2024
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Sawtelle (feat. Emiliano Lasansky)",
+      "artist": "Ted Taforo",
+      "album": "Friends & Family",
+      "start": {
+        "utc": "2026-10-17T01:26:58Z",
+        "local": "2026-10-16T18:26:58-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1753493319,
+      "c": 1753493317,
+      "r": 1325756287,
+      "a": "Music221/v4/bb/20/51/bb205181-05de-4a9e-d2bb-95157d56414d/artwork.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2024
+    },
+    {
+      "date": "2026-10-16",
+      "title": "92 Interlude",
+      "artist": "Gang Starr",
+      "album": "Daily Operation",
+      "start": {
+        "utc": "2026-10-17T01:30:15Z",
+        "local": "2026-10-16T18:30:15-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1442868264,
+      "c": 1442868254,
+      "r": 112111,
+      "a": "Music116/v4/78/2e/f3/782ef315-2bf3-8536-dec0-b673d748ea84/16UMGIM09195.rgb.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 1992
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Tojo",
+      "artist": "Pete Yellin",
+      "album": "It's the Right Thing",
+      "start": {
+        "utc": "2026-10-17T01:31:12Z",
+        "local": "2026-10-16T18:31:12-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 422561823,
+      "c": 422561816,
+      "r": 203741002,
+      "a": "Music/0a/61/b5/mzi.lzvqcijy.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1973
+    },
+    {
+      "date": "2026-10-16",
+      "title": "I Want to Be Somebody",
+      "artist": "Eddie Russ",
+      "album": "Take a Look At Yourself",
+      "start": {
+        "utc": "2026-10-17T01:35:21Z",
+        "local": "2026-10-16T18:35:21-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 501796989,
+      "c": 501796837,
+      "r": 1277521,
+      "a": "Music/d0/c7/3b/mzi.ttdunpoz.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1978
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Heaven's Design",
+      "artist": "Bobby McFerrin",
+      "album": "Bang!Zoom",
+      "start": {
+        "utc": "2026-10-17T01:39:25Z",
+        "local": "2026-10-16T18:39:25-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 724051559,
+      "c": 724051429,
+      "r": 63710,
+      "a": "Music4/v4/a0/be/36/a0be36bb-ccf0-9097-55b2-402a54d10b5c/00724383167753.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1995
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Tropical Wave",
+      "artist": "You & The Explosion Band",
+      "album": "Lupin the Third Original Soundtrack 3",
+      "start": {
+        "utc": "2026-10-17T01:42:32Z",
+        "local": "2026-10-16T18:42:32-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1588680646,
+      "c": 1588680244,
+      "r": 511820661,
+      "a": "Music125/v4/6e/f5/68/6ef5685d-6f96-358a-ad66-17415a07894e/COCX-39267.jpg",
+      "h": 1,
+      "g": "Soundtrack",
+      "y": 1983
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Fuji2Hood",
+      "artist": "Roane Namuh",
+      "album": "single",
+      "start": {
+        "utc": "2026-10-17T01:45:05Z",
+        "local": "2026-10-16T18:45:05-07:00",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    {
+      "date": "2026-10-16",
+      "title": "L'Auca",
+      "artist": "J&F Quintet",
+      "album": "Contrast",
+      "start": {
+        "utc": "2026-10-17T01:47:07Z",
+        "local": "2026-10-16T18:47:07-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1675339993,
+      "c": 1675339972,
+      "r": 1675339992,
+      "a": "Music126/v4/ce/82/60/ce826003-12a7-137f-8fee-5cc521dcfca5/196925386258.jpg",
+      "h": 1,
+      "g": "Hard Bop",
+      "y": 1976
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Byram's Groove (Cut a Rug)",
+      "artist": "Slakah the Beatchild",
+      "album": "Nostalgia: Beats of 2008 - 2020",
+      "start": {
+        "utc": "2026-10-17T01:50:03Z",
+        "local": "2026-10-16T18:50:03-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1444658120,
+      "c": 1444657920,
+      "r": 259123127,
+      "a": "Music128/v4/26/94/c0/2694c0b9-4177-3797-3f51-f0b36ea81471/193483214702.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2003
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Black Glamour Girl (versione. 2)",
+      "artist": "Piero Piccioni",
+      "album": "In viaggio con papà (colonna sonora originale)",
+      "start": {
+        "utc": "2026-10-17T01:52:46Z",
+        "local": "2026-10-16T18:52:46-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 166510632,
+      "c": 166506794,
+      "r": 5676744,
+      "a": "Music/f7/85/d8/mzi.ogcooitd.jpg",
+      "h": 1,
+      "g": "Soundtrack",
+      "y": 1983
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Eu Só Quero Um Xodó",
+      "artist": "Osmar Milito",
+      "album": "Viagem",
+      "start": {
+        "utc": "2026-10-17T01:55:05Z",
+        "local": "2026-10-16T18:55:05-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1719660226,
+      "c": 1719660012,
+      "r": 62049240,
+      "a": "Music116/v4/53/6a/e7/536ae7f9-564e-2b63-fd85-ca4ccdc697b1/5054197778124.jpg",
+      "h": 1,
+      "g": "Brazilian",
+      "y": 1994
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Back Again (feat. Egozi)",
+      "artist": "Roy Reemy",
+      "album": "Back Again (feat. Egozi) - Single",
+      "start": {
+        "utc": "2026-10-17T01:57:54Z",
+        "local": "2026-10-16T18:57:54-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1510316905,
+      "c": 1510316902,
+      "r": 1487386464,
+      "a": "Music123/v4/3c/31/c1/3c31c107-a6c6-1d94-042a-69f48ac5187e/artwork.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2020
+    },
+    {
+      "date": "2026-10-16",
+      "title": "AbracaDAMNbrah",
+      "artist": "Headnodic",
+      "album": "Thursday",
+      "start": {
+        "utc": "2026-10-17T02:00:02Z",
+        "local": "2026-10-16T19:00:02-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1545683375,
+      "c": 1545683360,
+      "r": 78026316,
+      "a": "Music124/v4/0f/90/da/0f90da2a-304f-0477-a20a-1218bb7ed0d8/artwork.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2002
+    },
+    {
+      "date": "2026-10-16",
+      "title": "You're As Right As Rain",
+      "artist": "Bob James",
+      "album": "Two",
+      "start": {
+        "utc": "2026-10-17T02:02:12Z",
+        "local": "2026-10-16T19:02:12-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1404206533,
+      "c": 1404206027,
+      "r": 368630,
+      "a": "Music125/v4/26/71/5f/26715f98-84bb-c920-ca81-d7c71819128f/4897012133705_3000.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1975
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Testdrive",
+      "artist": "Slowya.roll",
+      "album": "Testdrive - Single",
+      "start": {
+        "utc": "2026-10-17T02:07:23Z",
+        "local": "2026-10-16T19:07:23-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1574924931,
+      "c": 1574924930,
+      "r": 1357615494,
+      "a": "Music125/v4/35/4f/8a/354f8ad5-3f21-93b3-4f87-388bcbcd4bea/7330178066144.png",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2021
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Motion 1-8",
+      "artist": "Trevor Bastow",
+      "album": "Luke Vibert's Nuggets 3",
+      "start": {
+        "utc": "2026-10-17T02:09:39Z",
+        "local": "2026-10-16T19:09:39-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 714005386,
+      "c": 714003696,
+      "r": 205384775,
+      "a": "Music/v4/ec/94/34/ec943498-8a45-e82d-d547-4f785fd407a4/cover.jpg",
+      "h": 1,
+      "g": "Electronic",
+      "y": 2013
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Pegasus",
+      "artist": "Caldera",
+      "album": "Sky Islands",
+      "start": {
+        "utc": "2026-10-17T02:11:49Z",
+        "local": "2026-10-16T19:11:49-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1584249359,
+      "c": 1584248671,
+      "r": 1527593803,
+      "a": "Music115/v4/bb/49/98/bb49986e-7ed9-c7ad-5627-63a91606eec3/21UMGIM81137.rgb.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1977
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Evig Evig",
+      "artist": "Flammer Dance Band",
+      "album": "Dedikasjon Til Inspirasjon",
+      "start": {
+        "utc": "2026-10-17T02:16:29Z",
+        "local": "2026-10-16T19:16:29-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1679525705,
+      "c": 1679525693,
+      "r": 1524321777,
+      "a": "Music126/v4/36/c8/b6/36c8b609-e25d-235f-0cd5-4bf2c49fe707/116500.jpg",
+      "h": 1,
+      "g": "Funk",
+      "y": 2023
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Oz Bump (Soul Thing)",
+      "artist": "Hot Source",
+      "album": "Back On The Street Again",
+      "start": {
+        "utc": "2026-10-17T02:19:05Z",
+        "local": "2026-10-16T19:19:05-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1826912284,
+      "c": 1826912269,
+      "r": 260877321,
+      "a": "Music221/v4/a8/6b/1c/a86b1c6b-6c08-ce0e-46be-59bee08f9cbc/116340.jpg",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 2025
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Liquid Diamonds",
+      "artist": "Leon Lowman",
+      "album": "Liquid Diamonds",
+      "start": {
+        "utc": "2026-10-17T02:21:49Z",
+        "local": "2026-10-16T19:21:49-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 986838662,
+      "c": 986838651,
+      "r": 150480016,
+      "a": "Music7/v4/95/6b/a7/956ba7f2-085b-0a2e-6560-77785a0418c9/0670579630207_cover.jpg",
+      "h": 1,
+      "g": "Funk",
+      "y": 2015
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Taste the Biscuit",
+      "artist": "Vincent Gargiulo & Toasters 'n' Moose",
+      "album": "Chickens in the Shadows (Official Soundtrack)",
+      "start": {
+        "utc": "2026-10-17T02:24:29Z",
+        "local": "2026-10-16T19:24:29-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1741521977,
+      "c": 1741521976,
+      "r": 292319776,
+      "a": "Music211/v4/76/c8/9d/76c89d0d-ceda-c51d-92b3-e96a0ae05042/198500633788.jpg",
+      "h": 1,
+      "g": "Pop",
+      "y": 2012
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Nose Job",
+      "artist": "James Brown & The James Brown Band",
+      "album": "Ain't It Funky",
+      "start": {
+        "utc": "2026-10-17T02:25:51Z",
+        "local": "2026-10-16T19:25:51-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1444195217,
+      "c": 1444194415,
+      "r": 117118,
+      "a": "Music114/v4/a3/1b/e4/a31be438-6303-8a87-45a7-6e5c24e459dd/00602527994376.rgb.jpg",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 1970
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Sun Touch",
+      "artist": "Herbie Hancock",
+      "album": "Man-Child",
+      "start": {
+        "utc": "2026-10-17T02:28:22Z",
+        "local": "2026-10-16T19:28:22-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 186017774,
+      "c": 186017684,
+      "r": 51639,
+      "a": "Features124/v4/8c/5a/5e/8c5a5e00-99f9-e61e-00a0-3e32f058e03f/dj.irhlelse.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1975
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Bas",
+      "artist": "Eric Lau",
+      "album": "Examples",
+      "start": {
+        "utc": "2026-10-17T02:33:30Z",
+        "local": "2026-10-16T19:33:30-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1192120932,
+      "c": 1192120845,
+      "r": 266108343,
+      "a": "Music111/v4/e7/7e/36/e77e364f-11fa-c8e8-5468-2fe85af69f96/5050580663503.png",
+      "h": 1,
+      "g": "East Coast Rap",
+      "y": 2017
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Dance Kobina",
+      "artist": "Joe Chambers",
+      "album": "Dance Kobina",
+      "start": {
+        "utc": "2026-10-17T02:35:40Z",
+        "local": "2026-10-16T19:35:40-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1655967880,
+      "c": 1655967876,
+      "r": 698568,
+      "a": "Music112/v4/3a/0f/55/3a0f5510-3dac-baf1-d65c-c3e72821905b/22UMGIM51860.rgb.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2022
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Man of Means",
+      "artist": "Alan Hawkshaw",
+      "album": "Kpm 1000 Series: The Road Forward",
+      "start": {
+        "utc": "2026-10-17T02:41:47Z",
+        "local": "2026-10-16T19:41:47-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1183975660,
+      "c": 1183975528,
+      "r": 28677738,
+      "a": "Music19/v4/22/85/47/22854789-58b5-69da-4a0f-7962082fc93c/191018094256.jpg",
+      "h": 1,
+      "g": "Easy Listening",
+      "y": 1977
+    },
+    {
+      "date": "2026-10-16",
+      "title": "The Human Abstract",
+      "artist": "David Axelrod",
+      "album": "Songs of Experience",
+      "start": {
+        "utc": "2026-10-17T02:44:55Z",
+        "local": "2026-10-16T19:44:55-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 724719419,
+      "c": 724718970,
+      "r": 1211603,
+      "a": "Music6/v4/11/cd/02/11cd0202-0e3b-e646-568d-f87f2ef5f06d/00724352158959.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1969
+    },
+    {
+      "date": "2026-10-16",
+      "title": "I've Changed My Mind",
+      "artist": "J3PO",
+      "album": "Mains",
+      "start": {
+        "utc": "2026-10-17T02:49:58Z",
+        "local": "2026-10-16T19:49:58-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1452966517,
+      "c": 1452966513,
+      "r": 1339384851,
+      "a": "Music124/v4/6b/4c/20/6b4c2067-8765-24af-991d-585afa6ed995/artwork.jpg",
+      "h": 1,
+      "g": "Alternative",
+      "y": 2019
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Setembro",
+      "artist": "Pedro Aznar",
+      "album": "Pedro Aznar",
+      "start": {
+        "utc": "2026-10-17T02:53:06Z",
+        "local": "2026-10-16T19:53:06-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1613800313,
+      "c": 1613800308,
+      "r": 6626242,
+      "a": "Music126/v4/ed/6f/00/ed6f0081-bda6-8c91-7898-3c82dcd467f1/656291242126.jpg",
+      "h": 1,
+      "g": "Rock",
+      "y": 2017
     }
   ]
 }
