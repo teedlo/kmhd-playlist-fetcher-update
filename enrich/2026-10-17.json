@@ -1,0 +1,8 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-10-17",
+  "complete": true,
+  "tracks": {
+    "ernest ranglin|everybody's talking": {"t":1084166708,"c":1084166682,"r":121759,"a":"Music49/v4/dd/01/8f/dd018fdd-748c-a29e-9054-d0735f486aa7/cover.jpg","h":1,"g":"Reggae","y":1969}
+  }
+}
