@@ -9,6 +9,7 @@
     "boogaloo joe jones|boardwalk blues": {"t":1443213716,"c":1443213415,"r":144740178,"a":"Music124/v4/0a/2c/03/0a2c035b-4298-c30d-364f-3c82cc35cf8a/00025218516723.rgb.jpg","h":1,"g":"Jazz","y":1996},
     "brenda ray|another dream": {"t":1586330613,"c":1586330212,"r":259459092,"a":"Music115/v4/75/ff/04/75ff0436-7995-0d60-ee87-2ba300354d71/5036848002932_cover.jpg","h":1,"g":"Dub","y":2006},
     "calvin keys|aunt lovey": {"t":1509140149,"c":1509139834,"r":5861787,"a":"Music113/v4/5d/60/f9/5d60f969-7fa3-6930-6c48-b7805444ff82/195081346656.jpg","h":1,"g":"Jazz","y":1974},
+    "cedar walton|jacob's ladder": {"t":437153136,"c":437153129,"r":939796,"a":"Music/7f/fa/d0/mzi.efvqjxru.jpg","h":1,"g":"Jazz","y":1978},
     "charles mcpherson|my cherie amour": {"t":1760372865,"c":1760372629,"r":5373852,"a":"Music211/v4/be/a5/1d/bea51d6b-152e-1831-f316-1296cfc1bfb9/24CRGIM43041.rgb.jpg","h":1,"g":"Jazz","y":1970},
     "chico hamilton|forest flower": {"t":1444213276,"c":1444212639,"r":55602,"a":"Music118/v4/e2/24/2b/e2242b12-a3ed-96e8-7de5-44b94c4d5482/00602547710130.rgb.jpg","h":1,"g":"Jazz","y":1963},
     "cro-magnon|midnight magic feat. roy ayers": {"t":1535787479,"c":1535787458,"r":172457021,"a":"Music114/v4/68/6b/69/686b69fb-9a87-e492-7eac-8ec9de57187f/091512_J.jpg","h":1,"g":"Electronic","y":2009},
@@ -26,17 +27,23 @@
     "john lee hooker|deep blue sea": {"t":1720265316,"c":1720265308,"r":97536,"a":"Music116/v4/f6/75/23/f6752334-37a5-040d-b7de-318a26005bc1/0888072395046.jpg","h":1,"g":"Blues","y":1995},
     "king curtis|memphis soul stew (live)": {"t":162635068,"c":162635066,"r":823440,"a":"Music/b0/d8/23/mzi.mxrakcnp.jpg","h":1,"g":"R&B/Soul","y":1971},
     "latimore|let's straighten it out": {"t":102496291,"c":102497047,"r":97994296,"a":"Music/b0/4e/f4/mzi.rrgjjprh.jpg","h":1,"g":"Blues","y":1983},
+    "light of the world|london town": {"t":1629178764,"c":1629178763,"r":1465993659,"a":"Music122/v4/7c/77/0a/7c770a79-24e6-1fd7-97bb-c6f57e180f0d/5054526647800.png","h":1,"g":"Pop","y":1992},
     "little barrie & malcolm catto|count of four": {"t":1786455162,"c":1786455154,"r":26092349,"a":"Music221/v4/eb/c1/23/ebc123f4-4a84-5d8a-1592-b237193c040f/24CRGIM46836.rgb.jpg","h":1,"g":"Rock","y":2025},
+    "luis bonfa|vem s?": null,
     "lyn collins|you can't love me if you don't respect me": {"t":1427786896,"c":1427781814,"r":250548,"a":"Music118/v4/c2/3d/8c/c23d8cd4-0f6d-e79e-5a05-c73d5da5d39b/00602567848547.rgb.jpg","h":1,"g":"R&B/Soul","y":1998},
     "marc moulin|humpty dumpty (2006 - remaster)": {"t":693284338,"c":693283940,"r":15029461,"a":"Music115/v4/98/94/84/98948482-329c-6e2b-0598-37e83d768a50/0094635668858_1701x1701_360dpi.jpg","h":1,"g":"Jazz","y":2006},
+    "michael urbaniak|a day in the park": {"t":1572847141,"c":1572847128,"r":6414205,"a":"Music125/v4/b9/6b/58/b96b58e8-f3c5-378d-30af-cdb58f9ad450/884385539559_cover.jpg","h":1,"g":"R&B/Soul","y":1978},
     "novi singers|five, four, three": null,
     "passport|the cat from katmandu": {"t":1595220949,"c":1595220782,"r":687141140,"a":"Music126/v4/c9/42/50/c94250b6-7670-94b9-ccfa-e54eeb1394ed/cover.jpg","h":1,"g":"Rock","y":1972},
     "phil upchurch|black gold": {"t":1567970498,"c":1567970249,"r":14941518,"a":"Music115/v4/99/77/e0/9977e05c-17d1-5a7b-287a-ea885b597bcb/21UMGIM40484.rgb.jpg","h":1,"g":"Jazz","y":1969},
     "quincy jones|superstition": {"t":1443997878,"c":1443997207,"r":49436,"a":"Music221/v4/1d/98/11/1d981191-1424-3821-e11a-e99d57b8e3a9/08UMGIM27850.rgb.jpg","h":1,"g":"Jazz","y":1973},
+    "robin kenyatta|stompin' at the savoy": {"t":466357878,"c":466357877,"r":466329603,"a":"Music/d6/e2/a5/mzi.yquyjkcu.jpg","h":1,"g":"Jazz","y":1974},
+    "roland kirk|ma cherie amour": {"t":81896267,"c":81896283,"r":723069,"a":"Music/y2005/m10/d05/h01/mzi.dazjfjdt.jpg","h":1,"g":"Jazz","y":1969},
     "sadao watanabe|california shower": {"t":672195591,"c":672195557,"r":298235,"a":"Music/v4/ba/9a/69/ba9a6944-8b0e-af15-b6ac-1580b7ead60d/886444093842.jpg","h":1,"g":"Easy Listening","y":1972},
     "sarah webster fabio|sweet songs": {"t":279268939,"c":279268929,"r":91711192,"a":"Music/34/84/fa/mzi.nvxptuey.jpg","h":1,"g":"Spoken Word","y":1976},
     "the fatback band|njia (nija) walk": {"t":1466885488,"c":1466885041,"r":7251393,"a":"Music113/v4/53/63/64/536364c8-fdf7-a8ea-0063-fb6d4fd4ca39/193483922577.jpg","h":1,"g":"R&B/Soul","y":2012},
     "the olympians|california": {"t":1844745523,"c":1844745517,"r":288743953,"a":"Music221/v4/61/b8/d8/61b8d86c-61bc-4e19-c521-706cfc215a39/117920.jpg","h":1,"g":"R&B/Soul","y":2026},
-    "the t.m.g.'s|the hatch": {"t":299437926,"c":299437883,"r":264834681,"a":"Music/4d/c1/10/mzi.ludprinv.jpg","h":1,"g":"R&B/Soul","y":1967}
+    "the t.m.g.'s|the hatch": {"t":299437926,"c":299437883,"r":264834681,"a":"Music/4d/c1/10/mzi.ludprinv.jpg","h":1,"g":"R&B/Soul","y":1967},
+    "tornado wallace|voices": {"t":1183895867,"c":1183895152,"r":371799679,"a":"Music111/v4/e2/70/ee/e270eefc-75cb-f41d-770c-87d5db968162/4260470375541_1448.jpg","h":1,"g":"Electronic","y":2017}
   }
 }
