@@ -1,0 +1,11 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-10-19",
+  "complete": true,
+  "tracks": {
+    "aretha franklin|wholy holy (live at new temple missionary baptist church, los angeles, ca, 01/13/72)": {"t":1628094106,"c":1628093959,"r":98742,"a":"Music122/v4/59/fc/3d/59fc3ded-16c3-69b2-0ce7-b3192221b312/603497837397.jpg","h":1,"g":"R&B/Soul","y":1985},
+    "eddie russ|hill where the lord hides": {"t":1448931915,"c":1448931459,"r":1277521,"a":"Music114/v4/52/4f/0a/524f0a37-63c8-52aa-aab9-20dd9a7ff23e/5026328504414.jpg","h":1,"g":"Jazz","y":1974},
+    "harold budd|bismillahi 'rrahmani 'rrahim": {"t":714394890,"c":714393472,"r":165411,"a":"Music4/v4/db/cf/df/dbcfdfa9-869e-d5b4-e317-2b865a76999c/00017046156653.jpg","h":1,"g":"Electronic","y":1978},
+    "matthew halsall & the gondwana orchestra|tribute to alice coltrane": {"t":1579028246,"c":1579027954,"r":290241107,"a":"Music125/v4/79/dc/8b/79dc8b3b-e1f5-8c01-15bf-b3a8ff011e30/5050580614680_cover.jpg","h":1,"g":"Jazz","y":2014}
+  }
+}
