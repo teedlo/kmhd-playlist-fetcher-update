@@ -1,0 +1,29 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-10-20",
+  "complete": true,
+  "tracks": {
+    "aretha franklin|i say a little prayer": {"t":933583588,"c":933583586,"r":98742,"a":"Music124/v4/7c/f9/f4/7cf9f44b-f47e-224b-1b40-bcdf1f9bcbbb/603497896653.jpg","h":1,"g":"R&B/Soul","y":1968},
+    "butcher brown feat. nicholas payton|blue in green": {"t":6765482849,"c":6765482846,"r":130552,"a":"Music221/v4/29/e4/c0/29e4c0c0-8879-d860-05d2-d9ea4ce92b3d/26CRGIM54615.rgb.jpg","h":1,"g":"Jazz","y":2026},
+    "dave brubeck|perfidia": {"t":1445887963,"c":1445886916,"r":20426030,"a":"Music128/v4/7c/bb/93/7cbb9318-8469-bf39-85e1-d33aaeff3ea6/00025218242622.rgb.jpg","h":1,"g":"Jazz","y":1951},
+    "derrick hodge|boro march": {"t":1443233097,"c":1443232861,"r":1978884,"a":"Music124/v4/ec/69/34/ec693407-9f86-fdef-7194-8af810e9abe6/05099998449453.rgb.jpg","h":1,"g":"Jazz","y":2013},
+    "doug carn with jean carn|sweet season": {"t":1494387717,"c":1494387703,"r":19309759,"a":"Music123/v4/a2/1b/29/a21b2919-dbfc-3e1f-9238-c14eb54c5c8b/194491715601.jpg","h":1,"g":"Jazz","y":1973},
+    "earl \"fatha\" hines|at sundown": {"t":895325369,"c":895325322,"r":405220,"a":"Music/v4/63/c6/c0/63c6c069-7a3b-808f-6d15-37adb7d8984a/886444612661.jpg","h":1,"g":"Jazz","y":1964},
+    "eddie jefferson|psychedelic sally": {"t":1443922920,"c":1443922908,"r":366346,"a":"Music118/v4/24/3c/f3/243cf34f-de8d-d228-a3de-26d01edda8f3/00025218639620.rgb.jpg","h":1,"g":"Jazz","y":1968},
+    "himiko kikuchi & ernie watts|stormy spring(ストーミー・スプリング)": null,
+    "joao gilberto, caetano veloso, gilberto gil, maria bethania|cordeiro de nanã": {"t":486400267,"c":486400177,"r":43976,"a":"Music/e6/fd/f4/mzi.rvsthpry.jpg","h":1,"g":"Bossa Nova","y":1981},
+    "jose mauro|apocalipse": {"t":1145407796,"c":1145407003,"r":36152613,"a":"Music115/v4/98/49/56/98495665-fe80-c5bd-2b24-2a2e52278fab/cover.jpg","h":1,"g":"Brazilian","y":1970},
+    "l.a. 4|pavane pour une infante defunte": {"t":281949799,"c":281949768,"r":5172614,"a":"Music/d9/6d/1c/mzi.zekbxgms.jpg","h":1,"g":"Classical","y":2000},
+    "lou donaldson|candy": {"t":716035888,"c":716035556,"r":394680,"a":"Music123/v4/3b/13/eb/3b13eb55-9579-79d2-6447-8bab55de695f/13UAAIM05925.rgb.jpg","h":1,"g":"Jazz","y":1954},
+    "morris nanton trio|soul fingers": {"t":633342985,"c":633342978,"r":633342982,"a":"Music123/v4/d7/b7/cf/d7b7cf84-5716-f277-814e-6829d0440812/603497923304.jpg","h":1,"g":"Jazz","y":1959},
+    "prince lasha|kwadwo safari (feat. herbie hancock)": {"t":1598406774,"c":1598406550,"r":2970280,"a":"Music116/v4/5f/33/27/5f3327a1-9eb6-23fd-9fa1-48a1e2d91413/195497650200.jpg","h":1,"g":"Jazz","y":2022},
+    "ramsey lewis trio|love for sale": {"t":1443920132,"c":1443919881,"r":340467200,"a":"Music125/v4/17/6d/9e/176d9e2e-16f4-b40d-ae5d-80a50066c13a/00011105080620.rgb.jpg","h":1,"g":"Jazz","y":1995},
+    "rubio faviere & songs of birdland|in the end, i miss the train": {"t":1614396682,"c":1614396666,"r":1614223209,"a":"Music116/v4/3d/6d/0f/3d6d0f62-3287-ca51-9928-1559bc240331/859760606201_cover.jpg","h":1,"g":"Children's Music","y":2022},
+    "sounds of liberation|thoughts": {"t":1445356746,"c":1445356742,"r":346956140,"a":"Music118/v4/4a/22/ac/4a22acf0-c7b4-6b6e-a92f-e2d029559c13/artwork.jpg","h":1,"g":"Jazz","y":2018},
+    "steven halpern|seventh chakra keynote b (violet)": {"t":1790508652,"c":1790508542,"r":4307806,"a":"Music211/v4/cc/bc/b7/ccbcb706-f2f9-70e3-f226-52a9eca8f050/72.jpg","h":1,"g":"New Age","y":1975},
+    "turn of the century|alfie": {"t":1048475559,"c":1048475557,"r":154011,"a":"Music6/v4/72/94/5d/72945df4-6fe6-298e-a6b5-d08fd9ffc581/603497886142.jpg","h":1,"g":"Rock","y":1977},
+    "walter bishop, jr.|speak low (take 5)": {"t":142956229,"c":142956197,"r":83227,"a":"Music/89/6b/2f/mzi.pozkahwl.jpg","h":1,"g":"Jazz","y":1961},
+    "wes montgomery|fingerpickin'": {"t":723525197,"c":723524647,"r":119646,"a":"Music/v4/29/a3/ff/29a3ff47-be86-8d9e-c7b0-12b35b275897/00724383798759.jpg","h":1,"g":"Jazz","y":1958},
+    "willie bobo|fried neck bones and some home fries": {"t":1396663078,"c":1396661982,"r":44129,"a":"Music114/v4/e5/a4/3e/e5a43e1d-47a6-8026-af93-babda3772989/00602567743996.rgb.jpg","h":1,"g":"Jazz","y":1966}
+  }
+}
