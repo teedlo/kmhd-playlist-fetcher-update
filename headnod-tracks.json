@@ -129459,6 +129459,697 @@
       "h": 1,
       "g": "Rock",
       "y": 2017
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Gang progress",
+      "artist": "André Ceccarelli",
+      "album": "Rithmes",
+      "start": {
+        "utc": "2026-10-24T01:00:00Z",
+        "local": "2026-10-23T18:00:00-07:00",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Open Season",
+      "artist": "Orgone",
+      "album": "Bacano",
+      "start": {
+        "utc": "2026-10-24T01:02:12Z",
+        "local": "2026-10-23T18:02:12-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2008-10-01T12:00:00Z",
+      "t": 1534846908,
+      "c": 1534846901,
+      "r": 41500528,
+      "a": "Music221/v4/ab/45/a0/ab45a0a7-3ba7-d1fa-243c-23acb3f67861/50443.jpg",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 2008
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Deixa A Tristeza (Mixed)",
+      "artist": "Neno Exporta Som",
+      "album": "Brazil 45s (DJ Mix)",
+      "start": {
+        "utc": "2026-10-24T01:04:35Z",
+        "local": "2026-10-23T18:04:35-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2024-04-19T12:00:00Z",
+      "t": 1469283483,
+      "c": 1469283480,
+      "r": 1469283481,
+      "a": "Music123/v4/b7/e0/ec/b7e0ec06-049d-63c2-c20d-40f568aad0af/7899989971363.jpg",
+      "h": 1,
+      "g": "Samba",
+      "y": 2019
+    },
+    {
+      "date": "2026-10-23",
+      "title": "High Snobiety",
+      "artist": "Ralph Marco Band",
+      "album": "Party-Keller, Vol. 3",
+      "start": {
+        "utc": "2026-10-24T01:07:56Z",
+        "local": "2026-10-23T18:07:56-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2010-07-16T12:00:00Z",
+      "t": 377705290,
+      "c": 377705241,
+      "r": 377705291,
+      "a": "Music/1d/13/c6/mzi.uyameive.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2010
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Messaggio",
+      "artist": "Lesiman",
+      "album": "Here and Now Vol 2",
+      "start": {
+        "utc": "2026-10-24T01:10:40Z",
+        "local": "2026-10-23T18:10:40-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1973-01-17T12:00:00Z",
+      "t": 1657564606,
+      "c": 1657564121,
+      "r": 264750699,
+      "a": "Music122/v4/fe/39/e3/fe39e3af-0e82-828d-0ffb-507587f167cf/8053470812989.png",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1973
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Blessings",
+      "artist": "Visionaries",
+      "album": "Galleries",
+      "start": {
+        "utc": "2026-10-24T01:14:22Z",
+        "local": "2026-10-23T18:14:22-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1998-11-10T12:00:00Z",
+      "t": 157800576,
+      "c": 157800412,
+      "r": 14355482,
+      "a": "Music211/v4/19/ce/d1/19ced151-71de-b2d2-4965-cb5f84a3174e/803680485552.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 1998
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Voyage",
+      "artist": "Peter Somuah",
+      "album": "Walking Distance",
+      "start": {
+        "utc": "2026-10-24T01:16:20Z",
+        "local": "2026-10-23T18:16:20-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2026-03-13T12:00:00Z",
+      "t": 1859607577,
+      "c": 1859607203,
+      "r": 1470475915,
+      "a": "Music221/v4/0e/ae/98/0eae983e-dc27-859a-c5b5-c28aa9fd8944/cover.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2026
+    },
+    {
+      "date": "2026-10-23",
+      "title": "American Girls",
+      "artist": "Paul Hart",
+      "album": "Bruton BRB15: Jingles, Vol. 15",
+      "start": {
+        "utc": "2026-10-24T01:19:47Z",
+        "local": "2026-10-23T18:19:47-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1982-12-31T12:00:00Z",
+      "t": 293521573,
+      "c": 293521570,
+      "r": 339834,
+      "a": "Music125/v4/1b/b9/16/1bb9167c-e0eb-5418-960d-e9adb61d0fdd/mzi.kqpazwnw.jpg",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 1971
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Tamotua",
+      "artist": "Keyboard Circle",
+      "album": "1976",
+      "start": {
+        "utc": "2026-10-24T01:20:09Z",
+        "local": "2026-10-23T18:20:09-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2011-01-17T12:00:00Z",
+      "t": 413653131,
+      "c": 413653105,
+      "r": 413653109,
+      "a": "Music/6b/9e/cd/mzi.ksigmscb.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2011
+    },
+    {
+      "date": "2026-10-23",
+      "title": "So Cold (feat. David Mrakpor)",
+      "artist": "Jackson Mathod",
+      "album": "So Cold - Single",
+      "start": {
+        "utc": "2026-10-24T01:24:14Z",
+        "local": "2026-10-23T18:24:14-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2022-07-21T12:00:00Z",
+      "t": 1660117302,
+      "c": 1660117298,
+      "r": 637845411,
+      "a": "Music122/v4/f7/c1/de/f7c1de16-f211-20da-201f-359363cf7d47/3617050874238.png",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2022
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Sitting in the Park (feat. Otis Gayle) [Vocal]",
+      "artist": "Risco Connection",
+      "album": "Risco Version",
+      "start": {
+        "utc": "2026-10-24T01:28:13Z",
+        "local": "2026-10-23T18:28:13-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2022-07-01T12:00:00Z",
+      "t": 1615806285,
+      "c": 1615805970,
+      "r": 916550313,
+      "a": "Music126/v4/6a/d7/8f/6ad78f6f-6815-eb29-9d17-67e10c94c4e6/4062548043549.png",
+      "h": 1,
+      "g": "Funk",
+      "y": 2022
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Put the Funk on You",
+      "artist": "Fatback Band",
+      "album": "Yum Yum",
+      "start": {
+        "utc": "2026-10-24T01:32:30Z",
+        "local": "2026-10-23T18:32:30-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1975-01-01T12:00:00Z",
+      "t": 1621370118,
+      "c": 1621369879,
+      "r": 25284115,
+      "a": "Music112/v4/a9/d6/ee/a9d6ee66-87e0-3780-bd73-2739787136e2/196626769596.jpg",
+      "h": 1,
+      "g": "Funk",
+      "y": 1975
+    },
+    {
+      "date": "2026-10-23",
+      "title": "La Rockette",
+      "artist": "Organi",
+      "album": "Babylonia",
+      "start": {
+        "utc": "2026-10-24T01:34:29Z",
+        "local": "2026-10-23T18:34:29-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2024-11-29T12:00:00Z",
+      "t": 1777288721,
+      "c": 1777288719,
+      "r": 1517446337,
+      "a": "Music221/v4/6b/af/6f/6baf6ff1-0b26-0af0-97c8-7eb5ed0dd2e0/880918268873.jpg",
+      "h": 1,
+      "g": "Indie Pop",
+      "y": 2024
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Shack Up",
+      "artist": "Banbarra",
+      "album": "We Came To Funk You Out: Disco From the United Artists Label",
+      "start": {
+        "utc": "2026-10-24T01:37:17Z",
+        "local": "2026-10-23T18:37:17-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2009-01-09T12:00:00Z",
+      "t": 693199989,
+      "c": 693199737,
+      "r": 280518217,
+      "a": "Music/v4/58/a4/3a/58a43a27-43d9-e56e-2b33-0db59bce74db/5099926781853_1536x1536_300dpi.jpg",
+      "h": 1,
+      "g": "Dance",
+      "y": 2009
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Soft Winds",
+      "artist": "Pierre Dutour & Son Orchestra",
+      "album": "Dance And Mood Music Volume 21",
+      "start": {
+        "utc": "2026-10-24T01:40:36Z",
+        "local": "2026-10-23T18:40:36-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1749504958,
+      "c": 1749504595,
+      "r": 40017164,
+      "a": "Music211/v4/70/34/ce/7034ce3b-68bc-faaa-07df-1f7afbe1fc3e/198704004575_Cover.jpg",
+      "h": 1,
+      "g": "Pop",
+      "y": 1997
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Imagination Flight",
+      "artist": "The Chaffey College Jazz Ensemble",
+      "album": "Imagination Flight",
+      "start": {
+        "utc": "2026-10-24T01:43:06Z",
+        "local": "2026-10-23T18:43:06-07:00",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Amidnightcruise",
+      "artist": "Knowsum",
+      "album": "Loops Are My Religion",
+      "start": {
+        "utc": "2026-10-24T01:46:49Z",
+        "local": "2026-10-23T18:46:49-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2026-09-25T12:00:00Z",
+      "t": 6811126789,
+      "c": 6811125616,
+      "r": 575737570,
+      "a": "Music211/v4/da/76/42/da7642d5-6382-f010-3058-15a6e9412c13/4064946808539_3000.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2026
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Shamboozie",
+      "artist": "Bob James",
+      "album": "Hands Down",
+      "start": {
+        "utc": "2026-10-24T01:49:11Z",
+        "local": "2026-10-23T18:49:11-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1982-08-15T12:00:00Z",
+      "t": 917040286,
+      "c": 917040131,
+      "r": 368630,
+      "a": "Music124/v4/26/9d/91/269d916b-577e-2802-9295-5d483822c473/886444155236.tif",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1982
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Say Something Nice",
+      "artist": "Jack McDuff",
+      "album": "Kisses",
+      "start": {
+        "utc": "2026-10-24T01:52:03Z",
+        "local": "2026-10-23T18:52:03-07:00",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Night Games",
+      "artist": "Bobby \"Blue\" Bland",
+      "album": "Come Fly With Me",
+      "start": {
+        "utc": "2026-10-24T01:56:04Z",
+        "local": "2026-10-23T18:56:04-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1978-01-01T12:00:00Z",
+      "t": 1443903819,
+      "c": 1443903124,
+      "r": 38554,
+      "a": "Music118/v4/0d/61/df/0d61df44-3e74-d4ab-f166-95b3e68cd493/00008811197728.rgb.jpg",
+      "h": 1,
+      "g": "Blues",
+      "y": 1999
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Akai Michi ga Hashiru Kuni",
+      "artist": "Nobuo Yagi",
+      "album": "Mi Mi Africa",
+      "start": {
+        "utc": "2026-10-24T01:58:41Z",
+        "local": "2026-10-23T18:58:41-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2017-09-20T12:00:00Z",
+      "t": 1722566863,
+      "c": 1722566860,
+      "r": 1720931364,
+      "a": "Music126/v4/5f/91/ec/5f91eca4-66a0-bab9-00a7-5a1b2891ae4f/VICJ-77056.jpg",
+      "h": 1,
+      "g": "J-Pop",
+      "y": 2017
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Alpenrose",
+      "artist": "Wun Two",
+      "album": "Alps",
+      "start": {
+        "utc": "2026-10-24T02:02:15Z",
+        "local": "2026-10-23T19:02:15-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2026-09-11T12:00:00Z",
+      "t": 6803449639,
+      "c": 6803449343,
+      "r": 658475412,
+      "a": "Music211/v4/6f/2f/25/6f2f2577-ec45-47c4-122d-3b96be17e952/885288209624.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2026
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Here Is Where Your Love Belongs",
+      "artist": "Jaye P. Morgan",
+      "album": "Jaye P. Morgan",
+      "start": {
+        "utc": "2026-10-24T02:03:31Z",
+        "local": "2026-10-23T19:03:31-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1976-01-01T08:00:00Z",
+      "t": 1445183461,
+      "c": 1445183457,
+      "r": 104452872,
+      "a": "Music124/v4/9f/ce/7f/9fce7fad-8036-678d-1590-28b5f5960286/Cover.jpg",
+      "h": 1,
+      "g": "Funk",
+      "y": 1976
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Alcohol",
+      "artist": "McGruff the Crime Dog",
+      "album": "McGruff's Smart Kids Album",
+      "start": {
+        "utc": "2026-10-24T02:05:17Z",
+        "local": "2026-10-23T19:05:17-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2024-09-13T12:00:00Z",
+      "t": 1770631921,
+      "c": 1770631914,
+      "r": 1765586897,
+      "a": "Music211/v4/22/ee/de/22eede40-57c1-2f80-cef0-2bf752989862/198595759417.jpg",
+      "h": 1,
+      "g": "Children's Music",
+      "y": 2024
+    },
+    {
+      "date": "2026-10-23",
+      "title": "From Italy",
+      "artist": "Carlo Savina",
+      "album": "Grand Tour",
+      "start": {
+        "utc": "2026-10-24T02:07:30Z",
+        "local": "2026-10-23T19:07:30-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1977-01-01T12:00:00Z",
+      "t": 1729761901,
+      "c": 1729760106,
+      "r": 561898,
+      "a": "Music126/v4/c7/7b/4b/c77b4b5b-fed8-2732-8d0e-c6f31b396364/cover.jpg",
+      "h": 1,
+      "g": "Lounge",
+      "y": 1977
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Colours",
+      "artist": "The Men Of Vision",
+      "album": "Dramatic Diversions / Romantic Relaxation / Gentle Movement",
+      "start": {
+        "utc": "2026-10-24T02:10:57Z",
+        "local": "2026-10-23T19:10:57-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1437333664,
+      "c": 1437333655,
+      "r": 153718,
+      "a": "Music126/v4/09/ff/d4/09ffd48c-f525-ae2b-be96-b12696d83a49/18UMGIM62087.rgb.jpg",
+      "h": 1,
+      "g": "Soundtrack",
+      "y": 1999
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Bongos And Sound",
+      "artist": "Guy Boyer ",
+      "album": "Ballad Pour Un Vibra",
+      "start": {
+        "utc": "2026-10-24T02:12:49Z",
+        "local": "2026-10-23T19:12:49-07:00",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Den Gåtfulla Jungfrun (feat. Bjorn J:son Lindh, Ola Brunkert, Stefan Brolund & Malando Gassama)",
+      "artist": "Janne Schaffer",
+      "album": "Janne Schaffer's Andra LP (feat. Bjorn J:son Lindh)",
+      "start": {
+        "utc": "2026-10-24T02:14:47Z",
+        "local": "2026-10-23T19:14:47-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1973-01-01T12:00:00Z",
+      "t": 1557979951,
+      "c": 1557979729,
+      "r": 318897057,
+      "a": "Music124/v4/df/cd/17/dfcd1723-ffda-ecaf-5c84-1a31b9f57ead/7319200041694.jpg",
+      "h": 1,
+      "g": "Pop",
+      "y": 1973
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Nomalizo",
+      "artist": "Letta Mbulu",
+      "album": "In The Music The Village Never Ends",
+      "start": {
+        "utc": "2026-10-24T02:18:00Z",
+        "local": "2026-10-23T19:18:00-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1999-10-01T12:00:00Z",
+      "t": 1451481612,
+      "c": 1451481598,
+      "r": 28473923,
+      "a": "Music114/v4/a4/63/93/a4639386-7377-383b-4c72-d17da6fb75c4/888880268839.jpg",
+      "h": 1,
+      "g": "Pop",
+      "y": 1999
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Transit",
+      "artist": "Clive Hicks",
+      "album": "Kpm 1000 Series: Drama",
+      "start": {
+        "utc": "2026-10-24T02:19:49Z",
+        "local": "2026-10-23T19:19:49-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1975-01-01T12:00:00Z",
+      "t": 816551831,
+      "c": 816551780,
+      "r": 806225187,
+      "a": "Music4/v4/33/6e/8d/336e8d4d-8621-dc19-cd3c-48a5543bfba4/5026328202709.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1975
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Ancient Source (feat. Dianne Reeves)",
+      "artist": "Caldera",
+      "album": "Sky Islands",
+      "start": {
+        "utc": "2026-10-24T02:21:33Z",
+        "local": "2026-10-23T19:21:33-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1977-04-28T12:00:00Z",
+      "t": 1584249142,
+      "c": 1584248671,
+      "r": 1527593803,
+      "a": "Music115/v4/bb/49/98/bb49986e-7ed9-c7ad-5627-63a91606eec3/21UMGIM81137.rgb.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1977
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Actual Proof",
+      "artist": "Herbie Hancock",
+      "album": "Thrust",
+      "start": {
+        "utc": "2026-10-24T02:26:08Z",
+        "local": "2026-10-23T19:26:08-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1974-09-06T07:00:00Z",
+      "t": 186422296,
+      "c": 186421713,
+      "r": 51639,
+      "a": "Music1/v4/23/86/ec/2386ecc2-07a8-a190-fc0f-67539fb4bee1/dj.kfbtszgl.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1974
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Flute Salad",
+      "artist": "Bill Geldard",
+      "album": "Light And Shade",
+      "start": {
+        "utc": "2026-10-24T02:35:47Z",
+        "local": "2026-10-23T19:35:47-07:00",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Napa 86",
+      "artist": "Dana and Alden",
+      "album": "Papa's Boat",
+      "start": {
+        "utc": "2026-10-24T02:39:31Z",
+        "local": "2026-10-23T19:39:31-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2026-08-14T12:00:00Z",
+      "t": 1890233751,
+      "c": 1890233745,
+      "r": 1554761110,
+      "a": "Music211/v4/0b/aa/19/0baa1954-ab29-6602-55f5-a318eb94616c/26CRGIM54421.rgb.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2026
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Flutey Boogie",
+      "artist": "Paul Zaza",
+      "album": "Just a Little Bit",
+      "start": {
+        "utc": "2026-10-24T02:42:47Z",
+        "local": "2026-10-23T19:42:47-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2014-05-01T12:00:00Z",
+      "t": 1105072714,
+      "c": 1105072187,
+      "r": 253047144,
+      "a": "Music18/v4/52/28/ee/5228ee30-c5f1-c3ad-c72f-4c71a9dba7a1/8433391294383.jpg",
+      "h": 1,
+      "g": "Funk",
+      "y": 2014
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Sweet Andrea, Pt. 2",
+      "artist": "I Marc 4, Tivis",
+      "album": "New Sound N°1",
+      "start": {
+        "utc": "2026-10-24T02:46:42Z",
+        "local": "2026-10-23T19:46:42-07:00",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Everybody Loves the Sunshine",
+      "artist": "Kan Sano",
+      "album": "Sunshine",
+      "start": {
+        "utc": "2026-10-24T02:49:56Z",
+        "local": "2026-10-23T19:49:56-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2013-06-09T12:00:00Z",
+      "t": 1773567188,
+      "c": 1773567187,
+      "r": 291537675,
+      "a": "Music211/v4/ff/5d/d5/ff5dd593-0873-c1fb-29ce-ab954e4fa722/5054281879874.png",
+      "h": 1,
+      "g": "Funk",
+      "y": 2013
+    },
+    {
+      "date": "2026-10-23",
+      "title": "October",
+      "artist": "Chris Keys",
+      "album": "October",
+      "start": {
+        "utc": "2026-10-24T02:52:52Z",
+        "local": "2026-10-23T19:52:52-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2022-10-28T12:00:00Z",
+      "t": 1667687509,
+      "c": 1667687168,
+      "r": 431506952,
+      "a": "Music113/v4/3b/ed/01/3bed0183-60ca-4ee8-a3c5-fe5be0589f93/artwork.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2022
+    },
+    {
+      "date": "2026-10-23",
+      "title": "Nah Nah Hey Hey Goodbye",
+      "artist": "Claude Denjean",
+      "album": "Electric Experience",
+      "start": {
+        "utc": "2026-10-24T02:55:00Z",
+        "local": "2026-10-23T19:55:00-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1973-01-01T12:00:00Z",
+      "t": 1113323068,
+      "c": 1113322129,
+      "r": 79833866,
+      "a": "Music60/v4/5a/8d/c4/5a8dc471-54ea-ccaf-15a6-a8384349b969/5055373525815.png",
+      "h": 1,
+      "g": "Pop",
+      "y": 1973
     }
   ]
 }
