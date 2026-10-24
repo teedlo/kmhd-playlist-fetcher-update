@@ -1,0 +1,10 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-10-24",
+  "complete": true,
+  "tracks": {
+    "al di meola|midnight tango": {"t":185859087,"c":185858933,"r":814570,"a":"Music125/v4/04/2b/fd/042bfd1b-fef6-5cf0-370b-e8df67af73e0/mzi.bvwzkmjh.jpg","h":1,"g":"Fusion","y":1977},
+    "atlantis jazz ensemble|damocles": {"t":1869425705,"c":1869425704,"r":1090523856,"a":"Music211/v4/21/64/35/21643582-b5c6-9a95-d959-d6cabc321fe2/199900531742.jpg","h":1,"g":"Jazz","y":2026},
+    "harold mabern|greasy kid stuff": {"t":1443109781,"c":1443109161,"r":3075817,"a":"Music118/v4/8f/04/97/8f04974f-9568-9455-2c73-617a312676b3/00025218513425.rgb.jpg","h":1,"g":"Jazz","y":1970}
+  }
+}
