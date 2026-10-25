@@ -1,0 +1,32 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-10-25",
+  "complete": true,
+  "tracks": {
+    "5 miles out|set your mind free": {"t":1532252603,"c":1532252592,"r":1413909060,"a":"Music125/v4/c6/4d/ed/c64ded15-9cd9-4bd7-a3ea-051178b2427d/195497234301.jpg","h":1,"g":"Alte","y":2020},
+    "aaron frazer|it’s a shame": {"t":6800755250,"c":6800755046,"r":1016573557,"a":"Music211/v4/01/a4/b6/01a4b605-c341-3754-299f-685317d69a1a/68191.jpg","h":1,"g":"Alternative","y":2026},
+    "azymuth|dear limmertz": {"t":195285068,"c":195283823,"r":2699553,"a":"Music/3b/58/eb/mzi.nmeyvkql.jpg","h":1,"g":"Brazilian","y":1980},
+    "bill ravi harris & the prophets|cissy strut": null,
+    "brother jack mcduff|the shadow of your smile": {"t":68132473,"c":68133414,"r":7259239,"a":"Music/y2005/m06/d02/h03/s05.ojvfkyrp.jpg","h":1,"g":"Jazz","y":1967},
+    "charles earland|leaving this planet (feat. freddie hubbard & joe henderson) [vocal]": {"t":1443154726,"c":1443154479,"r":2780120,"a":"Music114/v4/57/e0/4a/57e04aa2-0d26-7e9e-d910-fbebea18dcd4/00888072394889.rgb.jpg","h":1,"g":"Jazz","y":1973},
+    "cissy houston|this empty place": {"t":1100416903,"c":1100416822,"r":20369822,"a":"Music49/v4/8f/88/ca/8f88ca14-a93d-ff4c-bcb3-9b6c7fab5a2b/894232610720.jpg","h":1,"g":"R&B/Soul","y":1977},
+    "hank crawford|funky pigeon": {"t":1893115462,"c":1893115459,"r":514550,"a":"Music211/v4/8a/5f/83/8a5f8302-eb15-3855-aa45-19705281a2c5/196874273470.jpg","h":1,"g":"Jazz","y":1976},
+    "hugo montenegro|moog power": {"t":1219122712,"c":1219122703,"r":5221964,"a":"Music122/v4/8e/bd/bd/8ebdbdb5-35b3-5e8e-cd60-057302284e4e/886446203089.jpg","h":1,"g":"Jazz","y":1969},
+    "johnny hammond|wild horses": {"t":467161412,"c":467160979,"r":649741,"a":"Music/3d/7d/c2/mzi.xizwwuub.jpg","h":1,"g":"Jazz","y":1972},
+    "lonnie smith|sideman": {"t":193011102,"c":193009888,"r":1523080,"a":"Music/8b/cc/c9/mzi.pamtpbsq.jpg","h":1,"g":"Jazz","y":1966},
+    "mel brown|chicken fat": {"t":1443824149,"c":1443824146,"r":5570309,"a":"Music128/v4/f6/ed/f2/f6edf295-7d08-a39c-796a-c8fe358bc855/00602498610473.rgb.jpg","h":1,"g":"Blues","y":1967},
+    "melvin sparks|conjunction mars": {"t":1652097116,"c":1652096853,"r":3075595,"a":"Music122/v4/d5/1b/ca/d51bcaac-1105-f9f4-790d-0a19381e4fc9/22CRGIM33390.rgb.jpg","h":1,"g":"Jazz","y":1971},
+    "mongo santamaria|cloud nine": {"t":186400538,"c":186399738,"r":1474096163,"a":"Music/1a/be/8f/mzi.guplxwbv.jpg","h":1,"g":"Latin Jazz","y":1970},
+    "nina simone|sinnerman (live in new york, 1965)": {"t":1469586230,"c":1469585670,"r":79798,"a":"Music221/v4/c4/57/33/c4573376-e0fa-5c1c-5241-9b362fb29bee/06UMGIM14266.rgb.jpg","h":1,"g":"Jazz","y":1965},
+    "richard \"groove\" holmes|groovin for mr. g": {"t":724917782,"c":724917464,"r":65745449,"a":"Music115/v4/4e/09/a6/4e09a6f2-a41d-8d39-a694-c17cfddf335f/00724353870157.jpg","h":1,"g":"Jazz","y":1974},
+    "sawaba soundz|ouwo": null,
+    "sir lattimore brown|shake and vibrate": {"t":983284313,"c":983283967,"r":293888467,"a":"Music3/v4/6a/00/af/6a00af4e-e629-f1ca-3f88-187ec8e60ccd/Loose_The_Funk_Sound_Stage_7.jpg","h":1,"g":"R&B/Soul","y":2015},
+    "syl johnson|different strokes": {"t":1340433353,"c":1340433157,"r":173726,"a":"Music118/v4/71/d8/b5/71d8b5f7-c886-bdf3-7487-c280b81ab1bf/cover.jpg","h":1,"g":"R&B/Soul","y":1967},
+    "the budos band|turn and burn": {"t":1674267088,"c":1674267017,"r":107334056,"a":"Music126/v4/ef/9c/4d/ef9c4d21-93cd-8de2-995f-d5d18c60cec3/38087.jpg","h":1,"g":"R&B/Soul","y":2014},
+    "the expansions|cannonball": {"t":1336078789,"c":1336078505,"r":423707659,"a":"Music128/v4/39/4a/56/394a5698-1613-8ade-0717-21a36ee2c675/cover.jpg","h":1,"g":"Jazz","y":2018},
+    "the fabulous counts|jan jan": {"t":1451951475,"c":1451951456,"r":79755459,"a":"Music114/v4/46/a2/db/46a2dbdb-b65a-fc6f-005a-6fcfbc8062a2/603497852314.jpg","h":1,"g":"R&B/Soul","y":1969},
+    "the illusions|it's just an illusion": {"t":1754139629,"c":1754139366,"r":1564286242,"a":"Music221/v4/ed/2d/75/ed2d7569-9eb1-4ad7-eaa7-82491c36ca23/5056032387065.png","h":1,"g":"Alternative","y":2024},
+    "wade bros. cro-shade sounds|smash inflation": null,
+    "yusef lateef|back home": {"t":81896875,"c":81896901,"r":55640,"a":"Music/y2005/m10/d05/h01/mzi.lwurtglm.jpg","h":1,"g":"Jazz","y":1968}
+  }
+}
