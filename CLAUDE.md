@@ -6,7 +6,7 @@ KMHD radio playlist fetcher + its public page. The session homed here is named "
 
 **/kmhd/ deploys from THIS repo**, not teedlo-site: push to `main` in github.com/teedlo/kmhd-playlist-fetcher-update and `.github/workflows/deploy.yml` runs `node --test`, then rsyncs each file over SSH to `teedlo.com/kmhd/`. Live in well under a minute. To add a new file to the site, add it to the `FILES` list in that workflow — the deploy uploads a fixed list, not a directory.
 
-The teedlo-site repo (github.com/teedlo/teedlo-site, local clone ~/Documents/Projects/teedlo-site — pull before use) deploys the *rest* of teedlo.com by committing under `site/` and pushing to main (~25s). It does **not** publish /kmhd/; there is no `site/kmhd/` there. It *does* own the webroot `.htaccess`, which 301s www to the apex host.
+The teedlo-site repo (github.com/teedlo/teedlo-site, local clone ~/Developer/teedlo-site — pull before use) deploys the *rest* of teedlo.com by committing under `site/` and pushing to main (~25s). It does **not** publish /kmhd/; there is no `site/kmhd/` there. It *does* own the webroot `.htaccess`, which 301s www to the apex host.
 
 The pages moved here from `/1/` on 2026-09-06; that directory was deleted from the server, so `/1/` is now a 404. Nothing referenced it.
 
