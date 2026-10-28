@@ -1,0 +1,21 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-10-28",
+  "complete": true,
+  "tracks": {
+    "art farmer|chanson": {"t":1717680443,"c":1717680174,"r":1552925732,"a":"Music221/v4/6f/e3/09/6fe30938-89fb-e4ae-d67a-648746c26db1/196871668248.jpg","h":1,"g":"Pop","y":2024},
+    "blue mitchell|togetherness": {"t":1438776711,"c":1438776424,"r":3007072,"a":"Music118/v4/26/bf/95/26bf9548-0409-a72f-d89e-ad7222badecc/00602577072444.rgb.jpg","h":1,"g":"Jazz","y":1967},
+    "bobby hutcherson|ummh": {"t":724923626,"c":724922796,"r":58090,"a":"Music/v4/e8/46/b1/e846b190-c019-6603-d35b-6a267603dfb7/00724382826859.jpg","h":1,"g":"Jazz","y":1971},
+    "cal tjader|i want you back": {"t":1552121931,"c":1552121308,"r":136784,"a":"Music114/v4/0b/92/6e/0b926e8f-3eb5-c212-ef2c-bbf5112e4b5b/21CRGIM25449.rgb.jpg","h":1,"g":"Jazz","y":1973},
+    "charles mingus|better git it in your soul": {"t":157399811,"c":157399743,"r":478880,"a":"Features/da/c2/82/dj.awowtxdf.jpg","h":1,"g":"Jazz","y":1938},
+    "charlie rouse|back to the tropics": {"t":1442878087,"c":1442878081,"r":901101,"a":"Music118/v4/c9/7c/d1/c97cd1cf-ad37-a54e-6cbd-2c52a95b8174/00602547693709.rgb.jpg","h":1,"g":"Jazz","y":1962},
+    "chico hamilton|gengis": {"t":1442698531,"c":1442697920,"r":55602,"a":"Music118/v4/9e/af/23/9eaf235a-6b94-96fe-52db-676e19d9c590/00888072303430.rgb.jpg","h":1,"g":"R&B/Soul","y":1973},
+    "governor's state university jazz band|crabmeat": {"t":1523244494,"c":1523244263,"r":1523244488,"a":"Music114/v4/83/cf/21/83cf21a0-2724-88f2-4f48-787c30dad266/4538182899809_cov.jpg","h":1,"g":"Jazz","y":2020},
+    "ramsey lewis|you've made me so very happy": {"t":1438813149,"c":1438812579,"r":541011,"a":"Music128/v4/e8/5c/85/e85c854b-131b-eda4-0f1f-b695c61ce715/00602577073021.rgb.jpg","h":1,"g":"Jazz","y":1970},
+    "ray bryant|stick with it": {"t":357476328,"c":357476304,"r":2995518,"a":"Music114/v4/2b/18/62/2b1862a8-db94-4a60-79ea-2e23e9070db4/mzi.hblogbua.tif","h":1,"g":"Jazz","y":2004},
+    "reverie|in every way": {"t":1750297454,"c":1750297439,"r":815635315,"a":"Music211/v4/95/30/cd/9530cd97-d001-99d9-ac2e-32c2633f6ec3/196872117424.jpg","h":1,"g":"Country","y":2024},
+    "secos & molhados|sangue latino": {"t":281165319,"c":281165288,"r":485783592,"a":"Music125/v4/81/cf/d1/81cfd1ab-7ecb-6525-eb20-22d8dc857766/085365739253.jpg","h":1,"g":"MPB","y":1973},
+    "toshiko akiyoshi-lew tabackin big band|feast in milano": {"t":1781140920,"c":1781140918,"r":3506852,"a":"Music211/v4/cf/4f/8b/cf4f8b35-19c4-73c3-2f97-f46040a58793/4547366717099.jpg","h":1,"g":"Jazz","y":1974},
+    "woo|earth angels": {"t":1792935143,"c":1792934740,"r":1496690,"a":"Music211/v4/fc/1d/e8/fc1de88b-88cd-877a-997f-bb7f800d0c69/4062548106091.png","h":1,"g":"Electronica","y":2025}
+  }
+}
