@@ -1,0 +1,22 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-10-31",
+  "complete": true,
+  "tracks": {
+    "bob brookmeyer|misty": {"t":219091910,"c":219091888,"r":407856,"a":"Music111/v4/c6/d8/7d/c6d87dc6-b07e-c85c-d68c-40c40e1a9029/828767763224.jpg","h":1,"g":"Jazz","y":1965},
+    "carmell jones|i'm gonna go fishin'": {"t":1450312744,"c":1450312743,"r":2766472,"a":"Music124/v4/af/e9/9d/afe99df3-7e4b-4fb4-9e25-fc108f34c13c/00602577338878.rgb.jpg","h":1,"g":"Jazz","y":1961},
+    "gloria scott|i think of you": {"t":1443588153,"c":1443587870,"r":14758667,"a":"Music124/v4/50/dd/fa/50ddfa4c-8fd8-affb-86cf-ae4824a50219/00602527512839.rgb.jpg","h":1,"g":"R&B/Soul","y":1974},
+    "herbie hancock|doin' it": {"t":762188909,"c":762188901,"r":51639,"a":"Music6/v4/07/ca/e9/07cae91c-891e-a9d4-65df-0f473448024f/886444334105.jpg","h":1,"g":"Jazz","y":1976},
+    "johnny griffin & matthew gee|twist city": {"t":68079008,"c":68079155,"r":2411663,"a":"Music/y2005/m06/d02/h00/s05.bfgcdbgn.jpg","h":1,"g":"Jazz","y":2005},
+    "marc johnson|ghost town": {"t":1444092381,"c":1444091783,"r":50904,"a":"Music124/v4/d6/b8/3a/d6b83a85-ccb3-9a3f-741c-c9fc40857026/00731453929920.rgb.jpg","h":1,"g":"Jazz","y":1998},
+    "moondog|pastoral ii": {"t":1795535036,"c":1795534466,"r":5372966,"a":"Music211/v4/03/08/3a/03083a45-df0a-f709-8e59-27e5f13f3088/199066679753.jpg","h":1,"g":"Jazz","y":1971},
+    "mr rogers|being present": {"t":1693761985,"c":1693761984,"r":1566444223,"a":"Music116/v4/9d/89/9e/9d899e7a-8164-3f9d-e2d2-3e0a78121259/artwork.jpg","h":1,"g":"Christian","y":2023},
+    "piero umiliani|sadico thrilling": {"t":1713838354,"c":1713837787,"r":32486918,"a":"Music126/v4/e8/4e/2d/e84e2d54-5354-687d-9100-77b5c7c1c7b7/23UM1IM09772.rgb.jpg","h":1,"g":"Soundtrack","y":2023},
+    "takeshi inomata and sound l.t.d.|lullaby for yuh": {"t":1721496909,"c":1721496903,"r":456851843,"a":"Music116/v4/37/60/73/37607333-3226-1067-06d0-7e7b5f6d023b/COKM-44703.jpg","h":1,"g":"Jazz","y":1970},
+    "the three sounds|poinciana (song of the tree) [remastered]": {"t":1380369595,"c":1380369583,"r":16509135,"a":"Music115/v4/07/70/58/077058a4-4c4d-f668-2aa9-6013ca6ede1e/00602567473459.rgb.jpg","h":1,"g":"Jazz","y":1961},
+    "tino contreras y su grupo|poinciana": {"t":1495433676,"c":1495433482,"r":689579757,"a":"Music113/v4/e7/9b/bc/e79bbc56-4873-58a1-7d30-71d103512a7e/19CRGIM18448.rgb.jpg","h":1,"g":"Latin","y":1962},
+    "tito puente|guayaba": {"t":1466115764,"c":1466115607,"r":105119,"a":"Music123/v4/9c/bf/83/9cbf831a-621e-09ca-4706-3456a32df5ae/18CRGIM08573.rgb.jpg","h":1,"g":"Música tropical","y":1972},
+    "toots thielemans & svend asmussen|the spirit feel": null,
+    "wil blades|miller's time": {"t":898988843,"c":898988839,"r":265054229,"a":"Music3/v4/1e/6a/42/1e6a42ee-bb41-c5f9-6058-2acb662756c9/886444712088.jpg","h":1,"g":"Jazz","y":2014}
+  }
+}
