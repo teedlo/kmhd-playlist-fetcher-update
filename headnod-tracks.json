@@ -130150,6 +130150,24 @@
       "h": 1,
       "g": "Pop",
       "y": 1973
+    },
+    {
+      "date": "2026-10-30",
+      "title": "Great Pumpkin Waltz",
+      "artist": "Vince Guaraldi",
+      "album": "Charlie Brown Holiday Hits",
+      "start": {
+        "utc": "2026-10-31T02:58:41Z",
+        "local": "2026-10-30T19:58:41-07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1440949579,
+      "c": 1440948781,
+      "r": 2084011,
+      "a": "Music211/v4/e8/83/ea/e883eade-52e2-fa74-fd1e-a69c114ef9ae/12CMGIM34347.rgb.jpg",
+      "h": 1,
+      "g": "Holiday",
+      "y": 1965
     }
   ]
 }
