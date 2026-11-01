@@ -1,0 +1,25 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-11-01",
+  "complete": true,
+  "tracks": {
+    "alan parker, william parrish & de wolfe music|main chance": {"t":1416226841,"c":1416224501,"r":121208117,"a":"Music118/v4/22/03/d9/2203d94d-1d9c-2a6b-3be4-948666578b22/5054526023550_1.jpg","h":1,"g":"Soundtrack","y":1972},
+    "alphonse mouzon|do i have to?": {"t":6820492128,"c":6820492114,"r":5297103,"a":"Music211/v4/5d/0f/39/5d0f39d3-c172-1683-668f-4daaceda090d/cover.jpg","h":1,"g":"Jazz","y":2026},
+    "ben sidran|hey hey baby": {"t":1443876572,"c":1443875854,"r":3564964,"a":"Music128/v4/ae/9e/2b/ae9e2b21-50e6-4068-4f86-789acb015531/00731454968829.rgb.jpg","h":1,"g":"Pop","y":1974},
+    "booker t. & the m.g.'s|soul clap '69": {"t":1443125696,"c":1443124972,"r":2776284,"a":"Music128/v4/d7/73/dc/d773dc72-0f11-e31a-5417-7d3bf2d4a94b/00025218861526.rgb.jpg","h":1,"g":"Pop","y":1998},
+    "brian auger|freedom jazz dance": {"t":1617366452,"c":1617366433,"r":3823986,"a":"Music112/v4/dc/1b/fb/dc1bfbf2-820f-2ee0-5843-4217bb0d1dac/4062548043990.png","h":1,"g":"Jazz","y":1965},
+    "eddie bo & the soul finders|we're doin' it (the thang), pt. 2": {"t":1641994880,"c":1641994653,"r":2486539,"a":"Music112/v4/06/e3/76/06e3764c-fbd8-1dee-1cd5-f99a7f772b8c/4.jpg","h":1,"g":"Funk","y":1997},
+    "george duke|faces in reflection no.2": {"t":960338165,"c":960336222,"r":11094,"a":"Music122/v4/0d/c6/45/0dc64565-3133-a565-28ee-ecf1f3834d54/cover.jpg","h":1,"g":"Jazz","y":2014},
+    "jimmy smith|back at the chicken shack": {"t":1442995200,"c":1442995192,"r":119650,"a":"Music118/v4/b2/5b/db/b25bdb03-8189-1ccc-91a1-7b098eb4d018/05099995836959.rgb.jpg","h":1,"g":"Jazz","y":1963},
+    "o'donel levy|bad, bad, simba (2024 remastered version)": {"t":1026922870,"c":1026922520,"r":196083655,"a":"Music221/v4/aa/b6/df/aab6df4c-8d5e-de89-1014-0b3497bad740/4057.jpg","h":1,"g":"Jazz","y":1971},
+    "osaka monaurail|the archipelago": null,
+    "peter herbolzheimer rhythm combination & brass|the catfish": null,
+    "the awakening|brand new feeling": {"t":1508213906,"c":1508213807,"r":1540124515,"a":"Music124/v4/99/78/82/99788231-6fb1-c11a-5f34-029877c0da46/195081379821.jpg","h":1,"g":"Jazz","y":1976},
+    "the crusaders|put it where you want it": {"t":1445668357,"c":1445668347,"r":27614,"a":"Music114/v4/22/c3/b0/22c3b09d-fd1c-baa5-0694-05bed41d8e49/17UM1IM15919.rgb.jpg","h":1,"g":"Jazz","y":1994},
+    "the j.b.'s|gimme some more": {"t":1444196470,"c":1444196156,"r":250518,"a":"Music124/v4/7b/23/da/7b23da19-a694-4405-8cd4-395309fbbb3e/00602547662194.rgb.jpg","h":1,"g":"R&B/Soul","y":1971},
+    "the meters|just kissed my baby": {"t":59401146,"c":59401178,"r":7314214,"a":"Music125/v4/dc/71/91/dc71916f-eabd-ae78-dda8-26ce039c02b6/s06.qsfyhnqw.jpg","h":1,"g":"R&B/Soul","y":1974},
+    "the mighty imperials|joseph's popcorn (feat. joseph henry)": {"t":1485031082,"c":1485031074,"r":45393118,"a":"Music124/v4/0d/c3/7c/0dc37ca5-651b-096e-074b-9807b6a65d2d/803680614259.jpg","h":1,"g":"R&B/Soul","y":2001},
+    "tim love lee|wack wack": {"t":1380915212,"c":1380911440,"r":27511116,"a":"Music125/v4/19/5f/79/195f79f1-a84a-3a59-9253-9d53d17bc1ce/091037970466_cover.jpg","h":1,"g":"Electronic","y":1997},
+    "tony williams|what you do to me": {"t":324204919,"c":324204773,"r":17991406,"a":"Music115/v4/fb/f2/b4/fbf2b432-8d17-a304-6927-cbcf654f0701/mzm.cqsdorfb.jpg","h":1,"g":"R&B/Soul","y":2000}
+  }
+}
