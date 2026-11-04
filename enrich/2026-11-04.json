@@ -1,0 +1,17 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-11-04",
+  "complete": true,
+  "tracks": {
+    "bob james|angela (theme from taxi)": {"t":1415654993,"c":1415654981,"r":368630,"a":"Music124/v4/2e/e7/06/2ee70611-4415-3adf-13f4-c08b01c1a6bf/4897012133743_3000.jpg","h":1,"g":"Jazz","y":1977},
+    "charles mingus|peggy's blue skylight": {"t":68193196,"c":68194551,"r":478880,"a":"Music/y2005/m06/d02/h05/s05.jvbbvcbf.jpg","h":1,"g":"Jazz","y":1965},
+    "gary mcfarland|simpatico": {"t":1444008455,"c":1444008432,"r":994175,"a":"Music118/v4/73/0d/40/730d4065-f1eb-0521-901a-017e59a55ec1/00602567350187.rgb.jpg","h":1,"g":"Jazz","y":1966},
+    "grant green|maybe tomorrow": {"t":1371788412,"c":1371788217,"r":44688,"a":"Music118/v4/23/70/26/23702608-da74-dd0e-2cc4-fc6250f55cfc/00602567553922.rgb.jpg","h":1,"g":"Jazz","y":1971},
+    "hermeto pascoal|fabiola": {"t":1686518317,"c":1686518029,"r":3897968,"a":"Music116/v4/5c/b9/c6/5cb9c605-68b4-73a5-5509-62c93d8d0f63/23CRGIM36825.rgb.jpg","h":1,"g":"Jazz","y":1970},
+    "j.j. johnson|walkin'": {"t":1240958995,"c":1240958432,"r":1238967936,"a":"Music124/v4/1b/61/cf/1b61cf18-7c44-80c6-a6f7-4d81dd2598fd/886446416007.jpg","h":1,"g":"Jazz","y":1958},
+    "jack dejohnette|central park west": {"t":1442460023,"c":1442460015,"r":125516,"a":"Music128/v4/54/03/ad/5403ad49-4b58-3df1-072c-98b63cfc3aff/00602537219650.rgb.jpg","h":1,"g":"Jazz","y":2012},
+    "lou donaldson|who's making love": {"t":1444199785,"c":1444199344,"r":394680,"a":"Music128/v4/8a/d1/1c/8ad11c26-5e1b-c2e1-0868-6507431d6f7b/00602537952694.rgb.jpg","h":1,"g":"Jazz","y":1969},
+    "novi singers|waltz in d-flat major, op. 64: no. 1": null,
+    "sonny rollins|misterioso": {"t":1442975654,"c":1442975380,"r":37020,"a":"Music221/v4/00/c2/ea/00c2eab9-3cb4-242a-0fa9-965ec800563e/13UAAIM69199.rgb.jpg","h":1,"g":"Jazz","y":1957}
+  }
+}
