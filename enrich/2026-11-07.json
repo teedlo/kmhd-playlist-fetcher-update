@@ -1,0 +1,13 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-11-07",
+  "complete": true,
+  "tracks": {
+    "art blakey & the jazz messengers|the witch doctor": {"t":724724242,"c":724724135,"r":999447,"a":"Music4/v4/17/e3/20/17e3209f-cd92-0fb2-e416-7f262044276d/00724352195756.tif","h":1,"g":"Jazz","y":1961},
+    "blossom dearie|chez moi": {"t":1443825482,"c":1443825193,"r":83107,"a":"Music128/v4/41/bd/46/41bd4606-93a5-cea1-f35f-c19b9e19aafc/00731451990526.rgb.jpg","h":1,"g":"Jazz","y":1959},
+    "generation band|heart to heart": {"t":1440830911,"c":1440830899,"r":487883,"a":"Music122/v4/6b/eb/a8/6beba879-07ae-a03f-c1bc-091ca7064842/13UMGIM47968.rgb.jpg","h":1,"g":"Rock","y":1976},
+    "king curtis|my sweet lord (feat. billy preston)": {"t":955202994,"c":955202983,"r":823440,"a":"Music114/v4/b0/19/0d/b0190d50-a265-3aea-0417-0bf149c3c145/603497994328.jpg","h":1,"g":"R&B/Soul","y":2005},
+    "sonny rollins|don't stop the carnival (1997 remastered)": {"t":303124964,"c":303124724,"r":37020,"a":"Music/d1/96/64/mzi.rzclpxxx.jpg","h":1,"g":"Jazz","y":1962},
+    "weather report|young and fine": {"t":516411425,"c":516411409,"r":499809,"a":"Music/v4/09/0f/fa/090ffa38-b3f3-eefe-0e69-27a3844a6061/886443431522.jpg","h":1,"g":"Jazz","y":1978}
+  }
+}
