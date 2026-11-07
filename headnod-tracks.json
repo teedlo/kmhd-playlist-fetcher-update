@@ -130168,6 +130168,712 @@
       "h": 1,
       "g": "Holiday",
       "y": 1965
+    },
+    {
+      "date": "2026-11-06",
+      "title": "You Got Something",
+      "artist": "B.T. Express",
+      "album": "Shout! (Shout It Out)",
+      "start": {
+        "utc": "2026-11-07T02:00:00Z",
+        "local": "2026-11-06T18:00:00-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1978-01-01T12:00:00Z",
+      "t": 1156693189,
+      "c": 1156692623,
+      "r": 63765487,
+      "a": "Music71/v4/4f/ef/41/4fef4153-95a8-775c-e717-ba0d9eb6527f/191018148614.jpg",
+      "h": 1,
+      "g": "Disco",
+      "y": 1978
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Dance and Shake Your Tambourine",
+      "artist": "Universal Robot Band",
+      "album": "Dance & Shake Your Tambourine",
+      "start": {
+        "utc": "2026-11-07T02:02:43Z",
+        "local": "2026-11-06T18:02:43-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1976-01-01T12:00:00Z",
+      "t": 284655495,
+      "c": 284655134,
+      "r": 147579196,
+      "a": "Music22/v4/c9/42/c1/c942c17f-0965-b0d4-9967-2e7b68b5ce93/mzm.pmxxpycl.jpg",
+      "h": 1,
+      "g": "Dance",
+      "y": 1976
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Rusty Letters",
+      "artist": "Puccio Roelens",
+      "album": "Lipstick",
+      "start": {
+        "utc": "2026-11-07T02:05:40Z",
+        "local": "2026-11-06T18:05:40-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1979-11-05T12:00:00Z",
+      "t": 1835497882,
+      "c": 1835497878,
+      "r": 255840202,
+      "a": "Music221/v4/dc/c5/00/dcc5009a-5e01-bea1-9f01-1d1575ee1a3e/198704692611_Cover.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1979
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Slidin'",
+      "artist": "Booker T. & The M.G.'s",
+      "album": "Stax Instrumentals",
+      "start": {
+        "utc": "2026-11-07T02:08:52Z",
+        "local": "2026-11-06T18:08:52-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2003-01-01T12:00:00Z",
+      "t": 1442903334,
+      "c": 1442903322,
+      "r": 2776284,
+      "a": "Music118/v4/11/68/ba/1168ba8d-52ea-cf4c-217b-9c782f6630bc/00025218860925.rgb.jpg",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 2003
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Caribbean Lullaby",
+      "artist": "Clive Zanda",
+      "album": "Clive Zanda Is Here With “Dat Kinda Ting”",
+      "start": {
+        "utc": "2026-11-07T02:11:32Z",
+        "local": "2026-11-06T18:11:32-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2017-11-10T12:00:00Z",
+      "t": 1306663230,
+      "c": 1306662638,
+      "r": 88615746,
+      "a": "Music118/v4/23/bd/68/23bd687b-4012-8747-8f8a-9bef826ab207/5397102122019_cover.jpg",
+      "h": 1,
+      "g": "Calypso",
+      "y": 2017
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Add 30 Sec.",
+      "artist": "Sarah, the Illstrumentalist",
+      "album": "Microwave Beats, Vol. 1",
+      "start": {
+        "utc": "2026-11-07T02:14:47Z",
+        "local": "2026-11-06T18:14:47-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2024-03-25T12:00:00Z",
+      "t": 1730887653,
+      "c": 1730887651,
+      "r": 1360842884,
+      "a": "Music126/v4/88/6d/97/886d978d-60e6-152c-1a2e-57cecbb36f11/artwork.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2024
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Stop Gap",
+      "artist": "David Gold",
+      "album": "Kpm 1000 Series: Move with the Times",
+      "start": {
+        "utc": "2026-11-07T02:16:51Z",
+        "local": "2026-11-06T18:16:51-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1973-04-01T12:00:00Z",
+      "t": 1188768885,
+      "c": 1188768462,
+      "r": 42583088,
+      "a": "Music122/v4/f7/8e/c7/f78ec722-7f40-602c-afda-71a19b8117db/191018093563.jpg",
+      "h": 1,
+      "g": "Easy Listening",
+      "y": 1973
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Higher",
+      "artist": "Oh No",
+      "album": "Dr. No's Oxperiment",
+      "start": {
+        "utc": "2026-11-07T02:19:03Z",
+        "local": "2026-11-06T18:19:03-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2007-07-31T12:00:00Z",
+      "t": 1753788904,
+      "c": 1753788894,
+      "r": 591899010,
+      "a": "Music221/v4/7a/8d/f0/7a8df039-2e09-30c8-a5f2-dea19a596b4d/075679644152.jpg",
+      "h": 1,
+      "g": "Afro-fusion",
+      "y": 2024
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Witch Doctor's Brew",
+      "artist": "Magnum",
+      "album": "Fully Loaded",
+      "start": {
+        "utc": "2026-11-07T02:20:51Z",
+        "local": "2026-11-06T18:20:51-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1974-01-01T12:00:00Z",
+      "t": 277923460,
+      "c": 277923330,
+      "r": 279012563,
+      "a": "Music114/v4/cd/eb/74/cdeb743b-aaeb-e196-bbaf-673698f3feee/mzi.sdpbfkhb.tif",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 1974
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Fantasy",
+      "artist": "Judy Roberts",
+      "album": "The Judy Roberts Band",
+      "start": {
+        "utc": "2026-11-07T02:26:14Z",
+        "local": "2026-11-06T18:26:14-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1979-01-01T12:00:00Z",
+      "t": 276438340,
+      "c": 276438337,
+      "r": 36623979,
+      "a": "Music/e9/dd/11/mzi.esgspxys.tif",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1979
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Moveit!",
+      "artist": "Knowsum",
+      "album": "Loops Are My Religion",
+      "start": {
+        "utc": "2026-11-07T02:31:22Z",
+        "local": "2026-11-06T18:31:22-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2026-09-25T12:00:00Z",
+      "t": 6811127608,
+      "c": 6811125616,
+      "r": 575737570,
+      "a": "Music211/v4/da/76/42/da7642d5-6382-f010-3058-15a6e9412c13/4064946808539_3000.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2026
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Mr. Connection",
+      "artist": "Dave Grusin",
+      "album": "Friends Of Eddie Coyle [OST]",
+      "start": {
+        "utc": "2026-11-07T02:33:06Z",
+        "local": "2026-11-06T18:33:06-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1442918829,
+      "c": 1442918281,
+      "r": 140749,
+      "a": "Music128/v4/60/1c/e4/601ce446-3be3-7765-961d-01a3da88ec35/00011105200523.rgb.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1991
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Chhodo Sanam (From \"Kudrat\")",
+      "artist": "Kishore Kumar & Annette Pinto",
+      "album": "The Bullet Train - R. D. Burman",
+      "start": {
+        "utc": "2026-11-07T02:34:11Z",
+        "local": "2026-11-06T18:34:11-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2019-06-20T12:00:00Z",
+      "t": 1366558435,
+      "c": 1366558432,
+      "r": 14291581,
+      "a": "Music115/v4/f3/57/53/f357530f-32a7-64c9-5613-aed77165e99c/191773204297.jpg",
+      "h": 1,
+      "g": "Bollywood",
+      "y": 1981
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Hair",
+      "artist": "John Sangster",
+      "album": "Ahead Of Hair",
+      "start": {
+        "utc": "2026-11-07T02:37:44Z",
+        "local": "2026-11-06T18:37:44-08:00",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Wax and Wane",
+      "artist": "Brandee Younger",
+      "album": "Wax & Wane",
+      "start": {
+        "utc": "2026-11-07T02:40:33Z",
+        "local": "2026-11-06T18:40:33-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2016-02-19T12:00:00Z",
+      "t": 1075400241,
+      "c": 1075399581,
+      "r": 327193278,
+      "a": "Music49/v4/bd/76/16/bd76166f-101c-ffcf-63a5-80787a4ee52d/888295387514.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2016
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Give It Up",
+      "artist": "Kool & The Gang",
+      "album": "Kool and the Gang",
+      "start": {
+        "utc": "2026-11-07T02:43:54Z",
+        "local": "2026-11-06T18:43:54-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1970-01-01T08:00:00Z",
+      "t": 911797167,
+      "c": 911795861,
+      "r": 128491,
+      "a": "Music123/v4/21/35/71/213571f6-5356-255d-636a-3cb4804a647f/00602537997244.rgb.jpg",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 1970
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Smokin' That Shit!",
+      "artist": "MF DOOM",
+      "album": "Metal Fingers Presents: Special Herbs, The Box Set Vol. 0 - 9",
+      "start": {
+        "utc": "2026-11-07T02:47:31Z",
+        "local": "2026-11-06T18:47:31-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2006-01-24T12:00:00Z",
+      "t": 1654810459,
+      "c": 1654808373,
+      "r": 3864756,
+      "a": "Music122/v4/e3/df/d6/e3dfd627-b0a1-b615-6435-94f701fd64b5/36766.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2006
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Here's Looking at You, Kid",
+      "artist": "Henry Mancini",
+      "album": "The Return of the Pink Panther (Original Motion Picture Soundtrack)",
+      "start": {
+        "utc": "2026-11-07T02:49:15Z",
+        "local": "2026-11-06T18:49:15-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1964-01-01T12:00:00Z",
+      "t": 953539281,
+      "c": 953539192,
+      "r": 24734,
+      "a": "Music49/v4/b7/0c/74/b70c7461-3d1b-0a91-4401-2baecdbe97ce/dj.azhlipzf.jpg",
+      "h": 1,
+      "g": "Pop",
+      "y": 1964
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Song For My Father",
+      "artist": "Groove Holmes",
+      "album": "Onsaya Joy",
+      "start": {
+        "utc": "2026-11-07T02:51:58Z",
+        "local": "2026-11-06T18:51:58-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1974-08-01T12:00:00Z",
+      "t": 1443137989,
+      "c": 1443137429,
+      "r": 65745449,
+      "a": "Music128/v4/c7/57/d8/c757d84d-164f-e7bb-ca5e-827237658e31/00888072350755.rgb.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1965
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Library of the Universe",
+      "artist": "cosmic collective",
+      "album": "Internet Dump",
+      "start": {
+        "utc": "2026-11-07T02:58:03Z",
+        "local": "2026-11-06T18:58:03-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2021-11-19T12:00:00Z",
+      "t": 1595961545,
+      "c": 1595961530,
+      "r": 1595944692,
+      "a": "Music116/v4/2a/11/4e/2a114e8b-16f1-1b43-a8f6-0479b4bb4122/artwork.jpg",
+      "h": 1,
+      "g": "Funk",
+      "y": 2021
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Soweto Friend",
+      "artist": "Ronald Snijders",
+      "album": "A Safe Return",
+      "start": {
+        "utc": "2026-11-07T02:59:03Z",
+        "local": "2026-11-06T18:59:03-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1980-02-10T12:00:00Z",
+      "t": 1790921102,
+      "c": 1790921096,
+      "r": 66326278,
+      "a": "Music221/v4/90/63/e2/9063e2fe-a69d-205b-8e8d-f9ec26614992/7300343419655.jpg",
+      "h": 1,
+      "g": "Fusion",
+      "y": 1980
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Mad Skillz",
+      "artist": "Remulak, Type.Raw",
+      "album": "Mad Skillz",
+      "start": {
+        "utc": "2026-11-07T03:03:43Z",
+        "local": "2026-11-06T19:03:43-08:00",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Samba da Benção (Samba of the Blessing) [feat. Marcelo D2]",
+      "artist": "Sergio Mendes",
+      "album": "Timeless",
+      "start": {
+        "utc": "2026-11-07T03:05:32Z",
+        "local": "2026-11-06T19:05:32-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2006-02-13T12:00:00Z",
+      "t": 1440800463,
+      "c": 1440800263,
+      "r": 93697,
+      "a": "Music115/v4/5d/91/3e/5d913e1e-3265-b256-cbf5-b48838504b43/00013431226321.rgb.jpg",
+      "h": 1,
+      "g": "Brazilian",
+      "y": 2006
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Uno Esta",
+      "artist": "Bobbi Humphrey",
+      "album": "Fancy Dancer",
+      "start": {
+        "utc": "2026-11-07T03:09:01Z",
+        "local": "2026-11-06T19:09:01-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1975-01-01T12:00:00Z",
+      "t": 715883160,
+      "c": 715882574,
+      "r": 1003753,
+      "a": "Music/v4/02/92/4c/02924c5c-2619-0912-bd40-1028572ef2c0/05099952237553.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1975
+    },
+    {
+      "date": "2026-11-06",
+      "title": "I've Got My Second Wind",
+      "artist": "Al Johnson",
+      "album": "Back for More",
+      "start": {
+        "utc": "2026-11-07T03:12:46Z",
+        "local": "2026-11-06T19:12:46-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1980-06-01T12:00:00Z",
+      "t": 527364814,
+      "c": 527363639,
+      "r": 2516110,
+      "a": "Music124/v4/c0/69/a2/c069a277-de18-ab70-72d4-c5fd2eedfe3e/886443279384.jpg",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 1980
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Daylight Savings",
+      "artist": "Surprise Chef",
+      "album": "Daylight Savings",
+      "start": {
+        "utc": "2026-11-07T03:16:48Z",
+        "local": "2026-11-06T19:16:48-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2020-10-16T12:00:00Z",
+      "t": 1862793629,
+      "c": 1862793292,
+      "r": 1337924455,
+      "a": "Music221/v4/6a/95/f8/6a95f81c-2aab-95d9-a43e-8106d204d52d/7119691267418_MRBLPSurpriseChefDaylightSavingsxpxls.jpg",
+      "h": 1,
+      "g": "Instrumental",
+      "y": 2020
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Track 19",
+      "artist": "J Dilla",
+      "album": "The King Of Beats (Box Set)",
+      "start": {
+        "utc": "2026-11-07T03:19:57Z",
+        "local": "2026-11-06T19:19:57-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1444441779,
+      "c": 1444441764,
+      "r": 16589310,
+      "a": "Music118/v4/b4/1d/73/b41d73fb-9198-58cc-2657-eeba1b5641dd/193483214283.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2001
+    },
+    {
+      "date": "2026-11-06",
+      "title": "The School Bus (Alternate) [Bonus Track]",
+      "artist": "Lalo Schifrin",
+      "album": "Dirty Harry (The Original Score)",
+      "start": {
+        "utc": "2026-11-07T03:21:53Z",
+        "local": "2026-11-06T19:21:53-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1971-01-01T12:00:00Z",
+      "t": 205809791,
+      "c": 205808060,
+      "r": 141398,
+      "a": "Music/a0/73/e8/mzi.qsjjcrrq.jpg",
+      "h": 1,
+      "g": "Soundtrack",
+      "y": 1971
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Bitter With the Sweet",
+      "artist": "Carole King",
+      "album": "Rhymes & Reasons",
+      "start": {
+        "utc": "2026-11-07T03:23:13Z",
+        "local": "2026-11-06T19:23:13-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1972-11-01T08:00:00Z",
+      "t": 186020260,
+      "c": 186020009,
+      "r": 34495,
+      "a": "Music/d2/2b/06/mzi.hmumktbg.jpg",
+      "h": 1,
+      "g": "Pop",
+      "y": 1972
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Dahlia",
+      "artist": "Okonski",
+      "album": "Entrance Music",
+      "start": {
+        "utc": "2026-11-07T03:25:36Z",
+        "local": "2026-11-06T19:25:36-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2025-02-04T12:00:00Z",
+      "t": 1781719902,
+      "c": 1781719888,
+      "r": 1653495191,
+      "a": "Music221/v4/ad/39/d7/ad39d73b-ee10-0f57-6a1e-88dd87015b31/50702.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2025
+    },
+    {
+      "date": "2026-11-06",
+      "title": "The Cats",
+      "artist": "Urszula Dudziak",
+      "album": "Future Talk",
+      "start": {
+        "utc": "2026-11-07T03:28:38Z",
+        "local": "2026-11-06T19:28:38-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1979-02-01T12:00:00Z",
+      "t": 283147955,
+      "c": 283147759,
+      "r": 129377296,
+      "a": "Music/03/5d/1a/mzi.msfywtjp.tif",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1979
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Zugulala 2 (feat. Dan Neville)",
+      "artist": "Headnodic & Jazz Mafia",
+      "album": "Remix - EP",
+      "start": {
+        "utc": "2026-11-07T03:33:23Z",
+        "local": "2026-11-06T19:33:23-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2026-10-16T07:00:00Z",
+      "t": 6825399371,
+      "c": 6825399370,
+      "r": 78026316,
+      "a": "Music211/v4/64/ae/92/64ae927a-873e-ffa0-6db0-33883a68ee63/0.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2026
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Have Clav Will Travel",
+      "artist": "Money Mark",
+      "album": "Mark's Keyboard Repair",
+      "start": {
+        "utc": "2026-11-07T03:36:58Z",
+        "local": "2026-11-06T19:36:58-08:00",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Don’t Stop The Music (feat. Nick Hakim)",
+      "artist": "Meshell Ndegeocello & Robert Glasper",
+      "album": "Synonym",
+      "start": {
+        "utc": "2026-11-07T03:38:53Z",
+        "local": "2026-11-06T19:38:53-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2026-10-01T12:00:00Z",
+      "t": 6789433571,
+      "c": 6789433556,
+      "r": 22728,
+      "a": "Music221/v4/0f/36/8b/0f368bfc-ad02-bbd5-9e0e-de3e3d9ffbe4/26UMGIM72096.rgb.jpg",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 2026
+    },
+    {
+      "date": "2026-11-06",
+      "title": "If They Left Us Alone Now",
+      "artist": "Wool",
+      "album": "Wool",
+      "start": {
+        "utc": "2026-11-07T03:42:17Z",
+        "local": "2026-11-06T19:42:17-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1969-01-01T12:00:00Z",
+      "t": 466268675,
+      "c": 466268669,
+      "r": 136115432,
+      "a": "Music115/v4/b9/7d/cf/b97dcf1b-6444-a357-9302-299c91f7acc9/790058163962_Cover.jpg",
+      "h": 1,
+      "g": "Pop/Rock",
+      "y": 1969
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Quiet Fire",
+      "artist": "Renato Anselmi",
+      "album": "All Over These Years",
+      "start": {
+        "utc": "2026-11-07T03:45:50Z",
+        "local": "2026-11-06T19:45:50-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2017-01-13T12:00:00Z",
+      "t": 1189639719,
+      "c": 1189639706,
+      "r": 211272437,
+      "a": "Music111/v4/ab/16/15/ab1615d3-e8ab-27c7-1f7c-6292fa408da1/cover_4260484384140.jpg",
+      "h": 1,
+      "g": "Smooth Jazz",
+      "y": 2017
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Our Day Will Come",
+      "artist": "Ruby & The Romantics",
+      "album": "Our Day Will Come",
+      "start": {
+        "utc": "2026-11-07T03:49:21Z",
+        "local": "2026-11-06T19:49:21-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1963-01-01T12:00:00Z",
+      "t": 1443805270,
+      "c": 1443805265,
+      "r": 328957975,
+      "a": "Music125/v4/a6/42/28/a6422826-1423-cb86-907d-ea57ae9f334a/00602547712585.rgb.jpg",
+      "h": 1,
+      "g": "Pop",
+      "y": 1963
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Get Up, Get Out, Get Into It (Instrumental)",
+      "artist": "Thes One",
+      "album": "Project 1992",
+      "start": {
+        "utc": "2026-11-07T03:51:42Z",
+        "local": "2026-11-06T19:51:42-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 220196115,
+      "c": 220195031,
+      "r": 14317116,
+      "a": "Music/a1/d3/05/mzi.nzfmzboj.jpg",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 2006
+    },
+    {
+      "date": "2026-11-06",
+      "title": "Funky But...",
+      "artist": "Mads Vindig Group",
+      "album": "Danish Design",
+      "start": {
+        "utc": "2026-11-07T03:53:46Z",
+        "local": "2026-11-06T19:53:46-08:00",
+        "timezone": "America/Los_Angeles"
+      }
     }
   ]
 }
