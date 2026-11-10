@@ -1,0 +1,26 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-11-10",
+  "complete": true,
+  "tracks": {
+    "ambiance|untitled original": {"t":1459366855,"c":1459366835,"r":1655389618,"a":"Music125/v4/08/28/db/0828db71-2bcd-441c-3a75-6211c64de8b4/4251648405252_3000.jpg","h":1,"g":"Jazz","y":2018},
+    "barbara lewis|windmills of your mind": {"t":1468025618,"c":1468025615,"r":3265500,"a":"Music123/v4/cf/da/79/cfda799d-0133-8bcd-d058-a6938f02d7e7/19CRGIM10431.rgb.jpg","h":1,"g":"Soul","y":1969},
+    "basia|miles away": {"t":424139303,"c":424139256,"r":484484,"a":"Music115/v4/f1/f4/29/f1f42981-0b0d-7305-92fa-e46b1e64c4cb/mzi.ofecilqu.jpg","h":1,"g":"Pop","y":1986},
+    "brian bennett|image": {"t":1188763251,"c":1188762675,"r":21443509,"a":"Music111/v4/a8/a3/c8/a8a3c859-390d-ba6b-3ac8-b3627f1018fc/191018093754.jpg","h":1,"g":"Easy Listening","y":1974},
+    "duke pearson|the moana surf": {"t":1445883447,"c":1445883152,"r":5652847,"a":"Music128/v4/d4/c1/17/d4c1172a-4b68-0e97-7a90-d8c3d5fbaa27/00602547869067.rgb.jpg","h":1,"g":"Jazz","y":1968},
+    "freddie hubbard|cry me not": {"t":723552690,"c":723552449,"r":30703,"a":"Music4/v4/bb/f6/55/bbf655ff-6a1d-28c8-0ed8-26000d48543b/00724354230257.jpg","h":1,"g":"Jazz","y":1960},
+    "gabor szabo|spellbinder": {"t":1444102381,"c":1444102378,"r":39726,"a":"Music125/v4/6e/40/ce/6e40ce9d-2ee7-0ec8-682d-db121360e29d/00602547710185.rgb.jpg","h":1,"g":"Jazz","y":1966},
+    "george benson|the changing world": {"t":192831040,"c":192830244,"r":1523080,"a":"Music/aa/24/53/mzi.rnbulekb.jpg","h":1,"g":"Jazz","y":1974},
+    "hank mobley|this i dig of you": {"t":1459439352,"c":1459439349,"r":999776,"a":"Music122/v4/58/3a/00/583a00f1-a679-a355-2cee-e2b4f881d087/19UMGIM32045.rgb.jpg","h":1,"g":"Jazz","y":1960},
+    "hill collective|fire in orbit (radio edit)": {"t":6762821882,"c":1895028802,"r":1688224914,"a":"Music211/v4/16/62/8c/16628c95-1050-de10-bfc8-a47cc7d22eb4/4062548143102.png","h":1,"g":"Jazz","y":2026},
+    "jackie mclean|mirage": {"t":1444179627,"c":1444179620,"r":802975,"a":"Music128/v4/46/5f/9a/465f9ac0-1030-9775-d0e7-5b6ae232d4ba/00025218580625.rgb.jpg","h":1,"g":"Jazz","y":1957},
+    "jeff gilson|valse pour helene": {"t":448393491,"c":448393482,"r":130514742,"a":"Music/e3/d4/9c/mzi.aunckjjp.jpg","h":1,"g":"Jazz","y":2011},
+    "joe sample|spanish moss": {"t":1472873707,"c":1472873566,"r":28724,"a":"Music125/v4/0a/bb/07/0abb0777-67a8-b4e5-4816-7b8ae125a4eb/886446257402.jpg","h":1,"g":"Jazz","y":2002},
+    "nina simone|suzanne": {"t":518086332,"c":518086331,"r":79798,"a":"Music114/v4/8c/af/de/8cafde56-fe5f-cb64-7a7c-aba324a4c98b/dj.fnhxnxyi.jpg","h":1,"g":"Jazz","y":1969},
+    "sonny stitt|them funky changes": {"t":1443142239,"c":1443141559,"r":3379243,"a":"Music118/v4/67/f0/69/67f06953-c201-ff64-f618-070f041a1bf4/00025218516921.rgb.jpg","h":1,"g":"Jazz","y":1996},
+    "the three sounds|repeat after me": {"t":716185530,"c":716184995,"r":16509135,"a":"Music4/v4/6d/94/04/6d94049d-fd57-f8c7-9b1c-403e63c0fad0/05099952238352.jpg","h":1,"g":"Jazz","y":1969},
+    "trevor bastow|shades": {"t":1109814955,"c":1109814542,"r":205384775,"a":"Music211/v4/c6/1a/da/c61adafd-b5cf-742b-f795-9635e6e52bc2/889326638544_Cover.jpg","h":1,"g":"Pop","y":2015},
+    "vi redd|perhaps/cool blues": {"t":1451675053,"c":1451674581,"r":537102805,"a":"Music124/v4/61/dc/67/61dc6738-cc9c-f6c2-5fc8-dc39703e49e4/00602577332616.rgb.jpg","h":1,"g":"Jazz","y":1962},
+    "yusef lateef|in a temple garden": {"t":1182631198,"c":1182630776,"r":55640,"a":"Music71/v4/0f/2a/6b/0f2a6b8d-64e9-a7d8-225c-fb7721b5252c/886446258065.jpg","h":1,"g":"Jazz","y":1979}
+  }
+}
