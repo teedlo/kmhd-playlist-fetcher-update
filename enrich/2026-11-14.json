@@ -1,0 +1,8 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-11-14",
+  "complete": true,
+  "tracks": {
+    "don drummond|musical communion": {"t":156030633,"c":156030264,"r":2532147,"a":"Features124/v4/af/fe/91/affe9161-bd43-6cd4-2064-c3ebed35c765/dj.xjtxnajm.jpg","h":1,"g":"Reggae","y":2006}
+  }
+}
