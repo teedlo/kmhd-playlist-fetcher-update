@@ -1,0 +1,29 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-11-15",
+  "complete": true,
+  "tracks": {
+    "abstract orchestra|all caps": {"t":1788884148,"c":1788884145,"r":1238569094,"a":"Music211/v4/70/db/a5/70dba5b4-db90-6a07-071d-41ba2d4049b6/5050580698994.png","h":1,"g":"Hip-Hop/Rap","y":2018},
+    "big john patton|the way i feel": {"t":1438179792,"c":1438179536,"r":133915489,"a":"Music118/v4/45/e1/57/45e157e2-1732-ad09-8c46-c25af0633ad0/00602577071485.rgb.jpg","h":1,"g":"Jazz","y":1964},
+    "billy cobham|stratus (2015 remastered)": {"t":1037514846,"c":1037513728,"r":460080,"a":"Music3/v4/25/d3/26/25d326dc-c286-1dd0-2b57-8d94880bd891/075678142826.jpg","h":1,"g":"Jazz","y":2015},
+    "bobby penn & the pen-pals|i don't care": null,
+    "eddie harris|funky doo (live @the village gate)": {"t":76049769,"c":76050592,"r":463784,"a":"Music/y2005/m07/d21/h15/mzi.fxszxdjw.jpg","h":1,"g":"Jazz","y":1969},
+    "eric burdon & war|tobacco road": {"t":1202357845,"c":1202357547,"r":1960014,"a":"Music111/v4/b9/a9/8b/b9a98b01-8f3d-2a3c-f3b9-4159fa80c942/602527596914.jpg","h":1,"g":"Rock","y":1995},
+    "fela kuti & afrika 70|shakara (oloje)": {"t":1783205875,"c":1783205871,"r":55088,"a":"Music211/v4/21/3b/a3/213ba30b-7c96-fcdb-18d6-1b8466808eb4/720841208303_Cover.jpg","h":1,"g":"Worldwide","y":1972},
+    "funk inc.|kool is back": {"t":1442684689,"c":1442683895,"r":2772910,"a":"Music124/v4/0b/32/d8/0b32d8c1-18f9-6599-f028-f9df5cf30e46/00888072025523.rgb.jpg","h":1,"g":"R&B/Soul","y":1971},
+    "gene ammons|jug eyes": {"t":1443209789,"c":1443209779,"r":41601,"a":"Music118/v4/e2/30/f2/e230f24b-81c7-f716-e983-3b022de157ce/00025218518826.rgb.jpg","h":1,"g":"Jazz","y":1997},
+    "gerson king combo|mandamentos black": {"t":374400196,"c":374400005,"r":62873314,"a":"Music/05/58/c3/mzi.obkhheto.jpg","h":1,"g":"Hip-Hop/Rap","y":2010},
+    "hank crawford|bluff city blues": {"t":1437823076,"c":1437822238,"r":514550,"a":"Music128/v4/af/b0/cf/afb0cfc5-c9dc-6612-4569-6d96cfbe0834/00888072060036.rgb.jpg","h":1,"g":"Jazz","y":1965},
+    "j.j. johnson|pull, jubal, pull": {"t":1532337692,"c":1532337668,"r":116904,"a":"Music124/v4/37/89/8a/37898afc-8941-c275-16da-ed965efc7d31/191773856663.jpg","h":1,"g":"Soundtrack","y":1971},
+    "john abercrombie, jan hammer & jack dejohnette|timeless": {"t":1443388942,"c":1443388139,"r":3264818,"a":"Music114/v4/66/80/17/66801750-44fe-2af5-186b-fecfc9310ee8/00602547809100.rgb.jpg","h":1,"g":"Jazz","y":1975},
+    "little beaver|groove on": {"t":1475101497,"c":1475101327,"r":79987294,"a":"Music124/v4/e7/50/e1/e750e111-e581-6895-5d71-369564dcc352/842474132821.jpg","h":1,"g":"Pop","y":1974},
+    "lou rawls|dead end street": {"t":723733258,"c":723733122,"r":640588,"a":"Music/v4/85/99/a5/8599a5fa-5fb9-b3f3-fea0-d5e030bd1deb/00077779830657.jpg","h":1,"g":"R&B/Soul","y":1992},
+    "marc gregor|mabusso": null,
+    "mr. clean & the cleansers|karate, pt. 1": {"t":1285416942,"c":1285416501,"r":219121077,"a":"Music118/v4/0a/02/8a/0a028a9e-f6d0-9954-db1e-858bc64169c2/5050580679313.png","h":1,"g":"Funk","y":2017},
+    "orgone|do your thing": {"t":1878053419,"c":1878053415,"r":41500528,"a":"Music211/v4/75/75/da/7575da8c-4c39-5f9f-a298-aefd9921821d/62902.jpg","h":1,"g":"Funk","y":2007},
+    "ramsey lewis trio|slipping into darkness": {"t":1609703236,"c":1609703235,"r":340467200,"a":"Music126/v4/d3/90/7c/d3907cb2-41c1-7aa5-0ae3-a1797082a8b5/886449891689.jpg","h":1,"g":"Jazz","y":1972},
+    "the hoctor band|i shot the sheriff": null,
+    "the impressions|it's all over": {"t":1444106240,"c":1444105981,"r":65222,"a":"Music124/v4/ae/c5/5b/aec55b7f-f0ac-d5ca-058e-582ff4879f91/00602557471212.rgb.jpg","h":1,"g":"R&B/Soul","y":1967},
+    "weather report|non-stop home": {"t":170405454,"c":170405148,"r":499809,"a":"Music/80/7c/f9/mzi.etotkitn.jpg","h":1,"g":"Jazz","y":1973}
+  }
+}
