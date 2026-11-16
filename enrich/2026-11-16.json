@@ -1,0 +1,21 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-11-16",
+  "complete": true,
+  "tracks": {
+    "blue mitchell|waverley street": {"t":1444082032,"c":1444082021,"r":3007072,"a":"Music128/v4/5d/57/bf/5d57bfa1-dfae-7fab-861a-18e8de5c317c/00888072305083.rgb.jpg","h":1,"g":"Jazz","y":1959},
+    "charles mingus|celia": {"t":1444105008,"c":1444104538,"r":478880,"a":"Music126/v4/e5/a1/b5/e5a1b58a-6f95-7161-3f54-cd89f1fe5006/06UMGIM04311.rgb.jpg","h":1,"g":"Jazz","y":1963},
+    "etta james|a sunday kind of love": {"t":1440839199,"c":1440838775,"r":10811,"a":"Music112/v4/25/46/17/2546176c-0f7c-b1a0-20b8-5200ebc6c473/16UMGIM27321.rgb.jpg","h":1,"g":"Blues","y":1960},
+    "gene shaw|samba nova": {"t":1606431185,"c":1606430664,"r":570391937,"a":"Music116/v4/f6/e4/b8/f6e4b8c7-4c93-88e5-97f6-33d70ae31711/21UM1IM25282.rgb.jpg","h":1,"g":"Jazz","y":1964},
+    "georges arvanitas trio|three a.m": null,
+    "horace parlan|wadin'": {"t":716219706,"c":716218033,"r":4833960,"a":"Music/v4/d3/9f/b2/d39fb270-85f7-4fce-30ef-d737573b98be/05099973551454.jpg","h":1,"g":"Jazz","y":2000},
+    "matthew halsall|water street (radio edit)": null,
+    "menagerie|leroy the lion featuring roy ayers": {"t":1371851040,"c":1371851030,"r":1371851034,"a":"Music128/v4/a7/97/9a/a7979aa1-69af-da45-674f-924f0fc4479d/5060205153883.jpg","h":1,"g":"Jazz","y":2012},
+    "miles davis|eighty-one": {"t":203773689,"c":203773370,"r":44984,"a":"Music124/v4/29/a5/b9/29a5b96c-8d4c-74c5-a886-58623e33de4c/mzi.gemrcyis.jpg","h":1,"g":"Jazz","y":1965},
+    "oscar peterson|the more i see you": {"t":1669820459,"c":1669820179,"r":31620,"a":"Music126/v4/04/13/55/04135557-d11a-7349-de59-fe819fb61616/22CRGIM35445.rgb.jpg","h":1,"g":"Jazz","y":1995},
+    "the breathing effect|moki dreams of brazil": {"t":1822743682,"c":1822743676,"r":789870184,"a":"Music221/v4/c2/02/1d/c2021d09-4194-95ae-201a-ea6f4d0602b8/805049.jpg","h":1,"g":"Jazz","y":2021},
+    "the ramsey lewis trio|slipping into darkness": {"t":1343983566,"c":1343983565,"r":541011,"a":"Music128/v4/86/48/43/86484320-6324-a518-3fae-d7277b431498/886446533605.jpg","h":1,"g":"Jazz","y":2018},
+    "wayne shorter|juju": {"t":1444117522,"c":1444117518,"r":51643,"a":"Music125/v4/86/77/08/86770876-1f94-8be0-056a-93d16b2643d5/13UMGIM28468.rgb.jpg","h":1,"g":"Jazz","y":1965},
+    "wynton kelly|what's new": {"t":1510031834,"c":1510031519,"r":119646,"a":"Music116/v4/2e/12/25/2e12258d-5d05-b759-4a8d-b333c290d716/20UMGIM30156.rgb.jpg","h":1,"g":"Jazz","y":1965}
+  }
+}
