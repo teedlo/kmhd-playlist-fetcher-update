@@ -131577,6 +131577,655 @@
       "h": 1,
       "g": "Jazz",
       "y": 2025
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Hang Loose",
+      "artist": "Don Thompson",
+      "album": "Fanny Brown",
+      "start": {
+        "utc": "2026-11-21T02:00:00Z",
+        "local": "2026-11-20T18:00:00-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1977-01-01T12:00:00Z",
+      "t": 1362061936,
+      "c": 1362061678,
+      "r": 31350840,
+      "a": "Music62/v4/30/8a/8f/308a8f5a-115d-a297-61e4-ae1e4fc4f9fc/Don_Thompson_-_Fanny_Brown_3000px.jpg",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 1977
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Mr. Funky Samba",
+      "artist": "Banda Black Rio",
+      "album": "Maria Fumaça",
+      "start": {
+        "utc": "2026-11-21T02:03:42Z",
+        "local": "2026-11-20T18:03:42-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1977-06-15T12:00:00Z",
+      "t": 358423800,
+      "c": 358423752,
+      "r": 18233851,
+      "a": "Music/a3/de/52/mzi.ebwjtmhw.jpg",
+      "h": 1,
+      "g": "MPB",
+      "y": 1977
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Fo Sho",
+      "artist": "Delvon Lamarr Organ Trio",
+      "album": "Fo Sho / Inner City Blues - Single",
+      "start": {
+        "utc": "2026-11-21T02:07:16Z",
+        "local": "2026-11-20T18:07:16-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2020-01-17T12:00:00Z",
+      "t": 1537207212,
+      "c": 1537206995,
+      "r": 1303936656,
+      "a": "Music125/v4/6d/fe/93/6dfe93c8-7a66-576a-938e-d47285254cc0/674862655168.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2020
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Be Real",
+      "artist": "Feather",
+      "album": "Praise Poems, Vol. 3",
+      "start": {
+        "utc": "2026-11-21T02:11:26Z",
+        "local": "2026-11-20T18:11:26-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2016-02-12T12:00:00Z",
+      "t": 1072006589,
+      "c": 1072006586,
+      "r": 2546494,
+      "a": "Music69/v4/6a/8f/e2/6a8fe27a-a13e-ff90-c944-b57f3f5554e4/5050580647756.jpg",
+      "h": 1,
+      "g": "Soul",
+      "y": 2016
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Rapper Dapper Snapper (Instrumental)",
+      "artist": "Edwin Birdsong",
+      "album": "Funtaztik",
+      "start": {
+        "utc": "2026-11-21T02:14:02Z",
+        "local": "2026-11-20T18:14:02-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1981-01-01T12:00:00Z",
+      "t": 1436514297,
+      "c": 1436514285,
+      "r": 13075897,
+      "a": "Music128/v4/30/2e/3b/302e3bb3-e4d7-5d40-f7cb-96f5269ec348/0617465397653.jpg",
+      "h": 1,
+      "g": "Dance",
+      "y": 1981
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Consulate Case",
+      "artist": "Surprise Chef",
+      "album": "Superb",
+      "start": {
+        "utc": "2026-11-21T02:16:13Z",
+        "local": "2026-11-20T18:16:13-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2025-05-16T12:00:00Z",
+      "t": 1792495407,
+      "c": 1792495146,
+      "r": 1337924455,
+      "a": "Music221/v4/5c/a4/c9/5ca4c95a-de3e-bb00-f340-18ced551f5eb/51878.jpg",
+      "h": 1,
+      "g": "Alternative",
+      "y": 2025
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Spiro",
+      "artist": "Anton Valotti",
+      "album": "Blackout",
+      "start": {
+        "utc": "2026-11-21T02:19:38Z",
+        "local": "2026-11-20T18:19:38-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 1686564098,
+      "c": 1686563715,
+      "r": 1686564102,
+      "a": "Music126/v4/ef/55/54/ef5554f6-477c-2255-3dbe-8171e12886c2/197188040451.jpg",
+      "h": 1,
+      "g": "Rock",
+      "y": 2023
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Lefty Lucy",
+      "artist": "Headnodic",
+      "album": "Thursday",
+      "start": {
+        "utc": "2026-11-21T02:21:01Z",
+        "local": "2026-11-20T18:21:01-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2002-11-25T12:00:00Z",
+      "t": 1545683366,
+      "c": 1545683360,
+      "r": 78026316,
+      "a": "Music124/v4/0f/90/da/0f90da2a-304f-0477-a20a-1218bb7ed0d8/artwork.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2002
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Cleo's Asp",
+      "artist": "Paul Gonsalves",
+      "album": "Cleopatra Feelin' Jazzy",
+      "start": {
+        "utc": "2026-11-21T02:23:14Z",
+        "local": "2026-11-20T18:23:14-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1963-05-21T12:00:00Z",
+      "t": 1443529925,
+      "c": 1443529542,
+      "r": 74260,
+      "a": "Music118/v4/c9/74/08/c974081b-fd67-f083-a18b-da4ba251d847/00602567432739.rgb.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1963
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Grow (Instrumental)",
+      "artist": "Funky DL",
+      "album": "Cool Classic Jazzstrumentals, Vol. 4",
+      "start": {
+        "utc": "2026-11-21T02:29:49Z",
+        "local": "2026-11-20T18:29:49-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2011-10-10T12:00:00Z",
+      "t": 461505165,
+      "c": 461505021,
+      "r": 127247244,
+      "a": "Music/28/fa/fb/mzi.elytjkvz.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2011
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Funky Flute",
+      "artist": "John Fiddy",
+      "album": "Kpm 1000 Series: Flutes of Fancy",
+      "start": {
+        "utc": "2026-11-21T02:31:54Z",
+        "local": "2026-11-20T18:31:54-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1978-01-01T12:00:00Z",
+      "t": 1180618444,
+      "c": 1180617757,
+      "r": 193503154,
+      "a": "Music22/v4/e2/84/33/e28433f4-2aca-95bf-a742-0f56cab6ffc8/191018090593.jpg",
+      "h": 1,
+      "g": "Easy Listening",
+      "y": 1978
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Shhthebandstartsplaying",
+      "artist": "Knowsum",
+      "album": "Loops Are My Religion",
+      "start": {
+        "utc": "2026-11-21T02:34:37Z",
+        "local": "2026-11-20T18:34:37-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2026-09-25T12:00:00Z",
+      "t": 6811126232,
+      "c": 6811125616,
+      "r": 575737570,
+      "a": "Music211/v4/da/76/42/da7642d5-6382-f010-3058-15a6e9412c13/4064946808539_3000.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2026
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Mamiya 7",
+      "artist": "Ciao Ciao Marigold",
+      "album": "We Don't Deserve Dogs",
+      "start": {
+        "utc": "2026-11-21T02:35:19Z",
+        "local": "2026-11-20T18:35:19-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2023-11-03T12:00:00Z",
+      "t": 1712210733,
+      "c": 1712210731,
+      "r": 1654586004,
+      "a": "Music116/v4/4f/44/3b/4f443b76-4526-aa63-1ec3-1437b9cdac82/artwork.jpg",
+      "h": 1,
+      "g": "Downtempo",
+      "y": 2023
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Que Bandeira",
+      "artist": "Evinha",
+      "album": "Cartão Postal",
+      "start": {
+        "utc": "2026-11-21T02:37:36Z",
+        "local": "2026-11-20T18:37:36-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1971-01-05T12:00:00Z",
+      "t": 1487008072,
+      "c": 1487008069,
+      "r": 122126904,
+      "a": "Music113/v4/ba/dc/d4/badcd4b5-84b5-f765-76ba-06c0cb787eb7/18UMGIM61405.rgb.jpg",
+      "h": 1,
+      "g": "Bossa Nova",
+      "y": 1971
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Spacing Out",
+      "artist": "The Invaders",
+      "album": "Spacing Out",
+      "start": {
+        "utc": "2026-11-21T02:39:54Z",
+        "local": "2026-11-20T18:39:54-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1970-05-14T12:00:00Z",
+      "t": 343753146,
+      "c": 343753041,
+      "r": 157035113,
+      "a": "Music/03/41/ef/mzi.bshhzima.jpg",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 1970
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Nuggets of Wisdom (Instrumental)",
+      "artist": "BADBADNOTGOOD & Ghostface Killah",
+      "album": "Sour Soul (Instrumentals)",
+      "start": {
+        "utc": "2026-11-21T02:41:50Z",
+        "local": "2026-11-20T18:41:50-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2015-05-18T12:00:00Z",
+      "t": 1829721399,
+      "c": 1829720929,
+      "r": 505464105,
+      "a": "Music221/v4/f5/78/d1/f578d11c-a1b9-1bb5-ea04-cbe509dbec60/0878390003723_cover.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2015
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Beat Goes On",
+      "artist": "Pete Rock",
+      "album": "Petestrumentals 2",
+      "start": {
+        "utc": "2026-11-21T02:43:53Z",
+        "local": "2026-11-20T18:43:53-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2015-06-23T12:00:00Z",
+      "t": 6792900980,
+      "c": 6792900783,
+      "r": 3450395,
+      "a": "Music211/v4/3c/90/7a/3c907ad6-d0cd-117d-1205-49c6e56a8779/889176412899.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2015
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Hallucinate",
+      "artist": "The Crusaders",
+      "album": "Chain Reaction",
+      "start": {
+        "utc": "2026-11-21T02:45:56Z",
+        "local": "2026-11-20T18:45:56-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1975-01-01T12:00:00Z",
+      "t": 1443834734,
+      "c": 1443834614,
+      "r": 27614,
+      "a": "Music128/v4/5e/b0/37/5eb0377e-f1d7-7c3d-a116-0169a2ca8adc/00076732164822.rgb.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1975
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Up On The Hill",
+      "artist": "Monk Higgins",
+      "album": "Heavyweight",
+      "start": {
+        "utc": "2026-11-21T02:50:43Z",
+        "local": "2026-11-20T18:50:43-08:00",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Last Night's Business",
+      "artist": "The Rugged Nuggets",
+      "album": "Odds & Ends",
+      "start": {
+        "utc": "2026-11-21T02:55:25Z",
+        "local": "2026-11-20T18:55:25-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2021-09-24T12:00:00Z",
+      "t": 1573809395,
+      "c": 1573809002,
+      "r": 593264334,
+      "a": "Music125/v4/de/2e/ff/de2eff24-d315-278c-aa31-cf063c3ba7a0/19943.jpg",
+      "h": 1,
+      "g": "R&B/Soul",
+      "y": 2021
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Robot Autokrata",
+      "artist": "Jerzy Milian & Orkiestra Rozrywkowa PRiTV w Katowicach",
+      "album": "Znak Wodnika",
+      "start": {
+        "utc": "2026-11-21T02:58:02Z",
+        "local": "2026-11-20T18:58:02-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2021-02-26T12:00:00Z",
+      "t": 1556104942,
+      "c": 1556104930,
+      "r": 301263843,
+      "a": "Music114/v4/a0/2f/87/a02f874a-42bf-a98e-08cf-c799760ebbc3/5903068121494.jpg",
+      "h": 1,
+      "g": "Easy Listening",
+      "y": 2021
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Abeja",
+      "artist": "Mndsgn & Sofie",
+      "album": "Sofie's SOS Tape",
+      "start": {
+        "utc": "2026-11-21T02:59:09Z",
+        "local": "2026-11-20T18:59:09-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2016-12-16T12:00:00Z",
+      "t": 1177268584,
+      "c": 1177268567,
+      "r": 415847666,
+      "a": "Music122/v4/d9/59/d7/d959d797-e391-5fdc-b76f-e5ca285f7776/684.jpg",
+      "h": 1,
+      "g": "Electronic",
+      "y": 2016
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Camden Square",
+      "artist": "Butcher Brown",
+      "album": "Camden Session",
+      "start": {
+        "utc": "2026-11-21T03:02:06Z",
+        "local": "2026-11-20T19:02:06-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2018-10-12T12:00:00Z",
+      "t": 1707244263,
+      "c": 1707244144,
+      "r": 570681436,
+      "a": "Music126/v4/d7/92/d3/d792d3d0-6b61-e85a-a408-9637faf4a580/cover.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2018
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Gentle Thoughts (Live on Danish TV, 1976)",
+      "artist": "Herbie Hancock",
+      "album": "Unreleased",
+      "start": {
+        "utc": "2026-11-21T03:07:48Z",
+        "local": "2026-11-20T19:07:48-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 762188916,
+      "c": 762188901,
+      "r": 51639,
+      "a": "Music6/v4/07/ca/e9/07cae91c-891e-a9d4-65df-0f473448024f/886444334105.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1976
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Act Right",
+      "artist": "Saib",
+      "album": "Ipanema",
+      "start": {
+        "utc": "2026-11-21T03:16:15Z",
+        "local": "2026-11-20T19:16:15-08:00",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Montara",
+      "artist": "Blue Lab Beats",
+      "album": "Blue Note Re:imagined",
+      "start": {
+        "utc": "2026-11-21T03:18:00Z",
+        "local": "2026-11-20T19:18:00-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2020-10-16T12:00:00Z",
+      "t": 1517262944,
+      "c": 1517262368,
+      "r": 1141402427,
+      "a": "Music125/v4/e8/73/e3/e873e355-4b97-5019-4180-7f9ffa6cce9a/20UMGIM34503.rgb.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2020
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Ode To Chicken George",
+      "artist": "Charles Earland And Odyssey",
+      "album": "Revelation",
+      "start": {
+        "utc": "2026-11-21T03:23:44Z",
+        "local": "2026-11-20T19:23:44-08:00",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Show Us a Feeling",
+      "artist": "Roy Ayers Ubiquity",
+      "album": "A Tear To A Smile",
+      "start": {
+        "utc": "2026-11-21T03:29:01Z",
+        "local": "2026-11-20T19:29:01-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1975-04-01T07:00:00Z",
+      "t": 1444100682,
+      "c": 1444100535,
+      "r": 51261,
+      "a": "Music221/v4/8b/74/4f/8b744fd1-0285-2884-7187-7f9c633ba243/09UMGIM22200.rgb.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1975
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Lightworks (Instrumental)",
+      "artist": "Raymond Scott",
+      "album": "Manhattan Research Inc.",
+      "start": {
+        "utc": "2026-11-21T03:32:13Z",
+        "local": "2026-11-20T19:32:13-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2000-02-02T08:00:00Z",
+      "t": 105529928,
+      "c": 105530256,
+      "r": 320294,
+      "a": "Music/a5/47/85/mzi.ringfaqr.tif",
+      "h": 1,
+      "g": "Electronic",
+      "y": 2000
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Mash",
+      "artist": "J Dilla",
+      "album": "Donuts",
+      "start": {
+        "utc": "2026-11-21T03:33:41Z",
+        "local": "2026-11-20T19:33:41-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2006-02-07T08:00:00Z",
+      "t": 108232654,
+      "c": 108233171,
+      "r": 16589310,
+      "a": "Music115/v4/63/d3/c5/63d3c537-ac30-86e7-8e69-8a03a5346209/792.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2006
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Pull My Coat",
+      "artist": "Eddy Jacobs Exchange",
+      "album": "single",
+      "start": {
+        "utc": "2026-11-21T03:35:01Z",
+        "local": "2026-11-20T19:35:01-08:00",
+        "timezone": "America/Los_Angeles"
+      }
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Sticker",
+      "artist": "Volker Kriegel",
+      "album": "Biton Grooves",
+      "start": {
+        "utc": "2026-11-21T03:37:31Z",
+        "local": "2026-11-20T19:37:31-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1982-01-01T12:00:00Z",
+      "t": 1449157357,
+      "c": 1449156659,
+      "r": 13077018,
+      "a": "Music124/v4/e7/1f/76/e71f76ba-4edb-9163-c588-8471c5f1287a/cover.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 1982
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Ell's Boogie (feat. Casey Benjamin)",
+      "artist": "Stefon Harris & Blackout",
+      "album": "Legacy Dances (feat. Casey Benjamin)",
+      "start": {
+        "utc": "2026-11-21T03:39:54Z",
+        "local": "2026-11-20T19:39:54-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2026-08-28T12:00:00Z",
+      "t": 6767256676,
+      "c": 1896445815,
+      "r": 1017987,
+      "a": "Music221/v4/34/93/37/34933715-819a-2822-b3dc-07ea0a4285be/820233108539.jpg",
+      "h": 1,
+      "g": "Jazz",
+      "y": 2026
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Twist Of Time (Instrumental)",
+      "artist": "Blackalicious",
+      "album": "Imani, Vol. 1 (Instrumentals)",
+      "start": {
+        "utc": "2026-11-21T03:44:27Z",
+        "local": "2026-11-20T19:44:27-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "2015-12-11T12:00:00Z",
+      "t": 6815301903,
+      "c": 6815298144,
+      "r": 68050,
+      "a": "Music211/v4/2b/21/4a/2b214a5d-0c74-1e79-16d7-b9343915d979/885288539769.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2015
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Liberty City (feat. Herbie Hancock)",
+      "artist": "Jaco Pastorius",
+      "album": "Word of Mouth",
+      "start": {
+        "utc": "2026-11-21T03:46:02Z",
+        "local": "2026-11-20T19:46:02-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "releaseDate": "1981-12-01T12:00:00Z",
+      "t": 504179394,
+      "c": 504179391,
+      "r": 205965,
+      "a": "Music/9c/15/28/mzi.yqkazmfo.jpg",
+      "h": 1,
+      "g": "Fusion",
+      "y": 1981
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Geek Down",
+      "artist": "J Dilla",
+      "album": "Donuts",
+      "start": {
+        "utc": "2026-11-21T03:58:45Z",
+        "local": "2026-11-20T19:58:45-08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "t": 108232764,
+      "c": 108233171,
+      "r": 16589310,
+      "a": "Music115/v4/63/d3/c5/63d3c537-ac30-86e7-8e69-8a03a5346209/792.jpg",
+      "h": 1,
+      "g": "Hip-Hop/Rap",
+      "y": 2006
     }
   ]
 }
