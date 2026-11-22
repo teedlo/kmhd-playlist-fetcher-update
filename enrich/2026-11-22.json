@@ -3,21 +3,28 @@
   "date": "2026-11-22",
   "complete": true,
   "tracks": {
+    "bear garden (martin wiren)|electric butterfly": null,
     "bernard purdie|hap'nin'": {"t":1790494580,"c":1790494409,"r":3075652,"a":"Music221/v4/d0/69/4e/d0694e87-edf6-3b0f-4cab-33bdd3b27b1f/32.jpg","h":1,"g":"R&B/Soul","y":2008},
     "bill doggett|honky tonk popcorn": {"t":6833055614,"c":6833055350,"r":407886,"a":"Music221/v4/5b/b8/eb/5bb8eb77-ab5a-d758-9b8a-ebd57bf0563b/343.jpg","h":1,"g":"R&B/Soul","y":1956},
     "bob james|storm king": {"t":1406256106,"c":1406255049,"r":368630,"a":"Music125/v4/3f/6b/28/3f6b289c-1dd5-69b7-3e6c-91600ac9afd3/4897012133712_3000.jpg","h":1,"g":"Jazz","y":1976},
     "bobby oroza|this love (feat. cold diamond & mink)": {"t":1486929087,"c":1486929074,"r":1155126414,"a":"Music123/v4/c0/22/bc/c022bc0e-62e4-8693-41b7-d725c705e3a4/cover.jpg","h":1,"g":"R&B/Soul","y":2018},
     "compost|buzzard feathers": {"t":466530640,"c":466530606,"r":430006433,"a":"Music/48/6e/6c/mzi.dothntvv.jpg","h":1,"g":"Jazz","y":1973},
+    "cortex|mister j": null,
     "david axelrod|terri's tune": null,
+    "devaloop|saturns dream": {"t":1657053932,"c":1657053931,"r":1143951673,"a":"Music112/v4/fc/95/00/fc950061-c2e2-8812-2edf-512a0c39f99f/195334070710_cover.jpg","h":1,"g":"Hip-Hop/Rap","y":2020},
     "dieter reith|my kind of sunshine": {"t":1100543905,"c":1100543465,"r":15100377,"a":"Music126/v4/bb/82/ff/bb82ffc2-1021-dccf-e859-ad47e52dd820/cover.jpg","h":1,"g":"Jazz","y":1971},
     "don thompson|just plain' funk": {"t":1362061932,"c":1362061678,"r":31350840,"a":"Music62/v4/30/8a/8f/308a8f5a-115d-a297-61e4-ae1e4fc4f9fc/Don_Thompson_-_Fanny_Brown_3000px.jpg","h":1,"g":"R&B/Soul","y":1977},
     "dr john|mama roux": {"t":106224674,"c":106225386,"r":28962,"a":"Music115/v4/43/05/92/4305923f-644f-9c6f-8774-54724b0f49ab/mzi.pzhhpoen.jpg","h":1,"g":"Rock","y":1968},
     "frankie beverly's raw soul|color blind": {"t":713551884,"c":713550873,"r":199400,"a":"Music124/v4/0e/51/55/0e515528-8eec-de4a-629c-c53e521f175c/00724359647654.jpg","h":1,"g":"R&B/Soul","y":1977},
+    "george otsuka|sea breeze": null,
+    "heatwave|the star of a story": {"t":1542826985,"c":1542826548,"r":868364,"a":"Music124/v4/a6/4e/3b/a64e3bbf-3f61-44d5-f34d-beadff97feda/886448942450.jpg","h":1,"g":"R&B/Soul","y":1978},
     "horace silver|jungle juice": {"t":724491113,"c":724490548,"r":27820,"a":"Music6/v4/b4/e5/45/b4e54549-9512-0fa3-3ae4-cb82a0f40056/00724359432151.jpg","h":1,"g":"Jazz","y":1968},
     "horst jankowski|you are the sunshine of my life": {"t":803897062,"c":803897034,"r":196116,"a":"Music6/v4/8c/88/c2/8c88c216-0657-427e-6d0d-17aa16489fd5/cover.jpg","h":1,"g":"Jazz","y":1970},
+    "ibrahim maalouf|doubts": {"t":717274991,"c":717274890,"r":266468377,"a":"Music113/v4/64/ad/60/64ad6035-9108-7670-23f9-e56717c78265/3700551754687_cover.jpg","h":1,"g":"Jazz","y":2012},
     "irvin brown|run come": null,
     "lloyd miller & the heliocentrics|nava": {"t":381523184,"c":381523135,"r":274480782,"a":"Music/2d/3a/79/mzi.ticwgsuf.jpg","h":1,"g":"Worldwide","y":2010},
     "mardo bump society|stick up in jewel street": null,
+    "maynard ferguson|mister mellow": {"t":192659197,"c":192658984,"r":46623,"a":"Music/3f/dc/a9/mzi.skatowib.jpg","h":1,"g":"Jazz","y":1977},
     "mickey & the soul generation|how good is good": {"t":39931703,"c":39931733,"r":39931682,"a":"Music/y2004/m12/d22/h02/s05.vktfblpj.jpg","h":1,"g":"R&B/Soul","y":2002},
     "mike nock|lady love": {"t":958955613,"c":958955600,"r":210146149,"a":"Music112/v4/a8/8e/e4/a88ee427-24ea-c924-171b-f8983531812b/cover.jpg","h":1,"g":"Jazz","y":1970},
     "moses boyd|btb": {"t":1488971580,"c":1488971573,"r":1067848788,"a":"Music114/v4/1d/99/da/1d99da12-f3b9-6887-2af1-c1087e69db61/194491654573.jpg","h":1,"g":"Contemporary Jazz","y":2020},
@@ -31,6 +38,7 @@
     "the soul scratchers|scratch my back, pts. 1 & 2": {"t":1235015339,"c":1235015312,"r":1235015345,"a":"Music122/v4/0b/a2/7c/0ba27ccd-f9f2-bfce-8c0e-6794ca7c90be/5414165083719.png","h":1,"g":"R&B/Soul","y":2017},
     "the sugarman 3|soul donkey": {"t":1485047864,"c":1485047863,"r":1452669930,"a":"Music113/v4/73/4d/6c/734d6cad-5c91-e58f-afbb-2a46631a8700/803680618653.jpg","h":1,"g":"Funk","y":2000},
     "thee sacred souls|will i see you again?": {"t":1537029566,"c":1537029565,"r":1498110847,"a":"Music211/v4/fa/6c/e5/fa6ce555-8ca4-e80e-ae6c-1b22778eae32/29745.jpg","h":1,"g":"R&B/Soul","y":2020},
-    "whitefield brothers|chokin'": {"t":1705346536,"c":1705346503,"r":1658900484,"a":"Music126/v4/41/0c/1a/410c1ad8-d237-7d79-21eb-e235eff7b8da/659457503925_Cover.jpg","h":1,"g":"R&B/Soul","y":2001}
+    "whitefield brothers|chokin'": {"t":1705346536,"c":1705346503,"r":1658900484,"a":"Music126/v4/41/0c/1a/410c1ad8-d237-7d79-21eb-e235eff7b8da/659457503925_Cover.jpg","h":1,"g":"R&B/Soul","y":2001},
+    "willie west|fairchild": {"t":1612420316,"c":1612419565,"r":6437091,"a":"Music126/v4/9d/05/62/9d0562aa-80f8-ba2b-b95f-a5b1edfe5cfc/5059460127982.jpg","h":1,"g":"R&B/Soul","y":2006}
   }
 }
