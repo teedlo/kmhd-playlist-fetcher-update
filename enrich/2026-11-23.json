@@ -1,0 +1,12 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-11-23",
+  "complete": true,
+  "tracks": {
+    "eiji nakayama|yellow living": {"t":354606921,"c":354606628,"r":297473128,"a":"Music124/v4/b7/b4/27/b7b427ba-74e6-9399-89ec-085008f1ca59/mzi.todadenx.jpg","h":1,"g":"Jazz","y":1978},
+    "freddie hubbard|lament for booker": {"t":725818546,"c":725818025,"r":30703,"a":"Music/v4/18/00/2b/18002b03-c8ae-809a-92af-eb8d1f4ab39f/00724349900851.jpg","h":1,"g":"Jazz","y":1960},
+    "john coltrane|but not for me": {"t":962193197,"c":962193155,"r":120199,"a":"Music125/v4/38/49/44/384944a8-297f-0844-77da-1ae3b976c457/603497893119.jpg","h":1,"g":"Jazz","y":1961},
+    "shirley scott|deep down soul": {"t":1612737683,"c":1612736906,"r":76917,"a":"Music116/v4/08/76/3e/08763e65-13c1-1b2c-991c-c74d1ed7d0ab/22CRGIM31548.rgb.jpg","h":1,"g":"Jazz","y":1963},
+    "yusef lateef|chandra": {"t":204725514,"c":204725395,"r":55640,"a":"Music/91/6a/05/mzi.orthkyys.jpg","h":1,"g":"Jazz","y":1970}
+  }
+}
