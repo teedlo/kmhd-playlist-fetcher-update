@@ -1,0 +1,15 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-11-25",
+  "complete": true,
+  "tracks": {
+    "curtis mayfield|no thing on me (cocaine song)": {"t":1048472555,"c":1048472205,"r":169711,"a":"Music124/v4/c4/34/f0/c434f094-4c7e-3c62-8f15-cd02028e1ce7/603497885978.jpg","h":1,"g":"Soundtrack","y":1972},
+    "dizzy gillespie / milt jackson / joe carroll|we love to boogie": {"t":275341052,"c":275341008,"artistViewUrl":"https://books.apple.com/us/artist/alice-roberts/261323683?uo=4","a":"Music/69/cf/80/mzi.iqejisut.jpg","h":1,"g":"Jazz","y":2000},
+    "keith jarrett, gary peacock & jack dejohnette|god bless the child": {"t":1440840266,"c":1440839750,"r":72348,"a":"Music118/v4/54/47/98/54479810-3c8b-64fd-f1a9-5de20d4afe1b/00602547301529.rgb.jpg","h":1,"g":"Jazz","y":1983},
+    "neal creque|what'cha wanna do-do it!": null,
+    "nobuyoshi ino|window": {"t":1547562950,"c":1547562949,"r":339887959,"a":"Music124/v4/b9/75/79/b975799e-dfeb-903f-8123-44fa1f0815d6/COKM-43053.jpg","h":1,"g":"Jazz","y":1981},
+    "pharoah sanders|after the rain": null,
+    "ramsey lewis trio|roda moinho (whirlpool)": {"t":1653028639,"c":1653027811,"r":340467200,"a":"Music112/v4/82/79/bc/8279bc0d-bb56-c6d2-35d3-4703e6b9b318/22UM1IM25783.rgb.jpg","h":1,"g":"Jazz","y":1962},
+    "the descendants of mike and phoebe|coltrane": {"t":1850074695,"c":1850074692,"r":206816531,"a":"Music221/v4/35/11/9a/35119aba-a61c-cf64-0334-3f75046026e7/118229.jpg","h":1,"g":"Jazz","y":1974}
+  }
+}
