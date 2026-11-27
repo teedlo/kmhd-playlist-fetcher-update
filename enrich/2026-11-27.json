@@ -1,0 +1,9 @@
+{
+  "note": "Built by scripts/build-enrich.js: iTunes Search results for every track KMHD played this day, keyed \"artist|title\" (lowercased). null means iTunes found no Apple Music match. Entries are compact (t: track id, c: album id, r: artist id, a/h: artwork path and host, g: genre, y: year; see PlaylistUtils.expandEntry). Do not edit by hand; rerun the script instead.",
+  "date": "2026-11-27",
+  "complete": true,
+  "tracks": {
+    "roy ayers|vibrations": {"t":1443858224,"c":1443857110,"r":51261,"a":"Music211/v4/2c/d8/30/2cd83037-240f-1553-27a8-5e6b35bcea6a/08UMGIM03858.rgb.jpg","h":1,"g":"Jazz","y":1976},
+    "the crusaders|a shade of blues": {"t":1442939383,"c":1442939153,"r":27614,"a":"Music128/v4/e4/79/3f/e4793fe6-ffdb-b5e7-40dd-e10fa73a8ece/00602517040663.rgb.jpg","h":1,"g":"Jazz","y":1972}
+  }
+}
